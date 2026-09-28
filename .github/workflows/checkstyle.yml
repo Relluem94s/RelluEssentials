@@ -18,5 +18,5 @@ jobs:
         uses: nikitasavinov/checkstyle-action@master
         with:
           checkstyle_config: 'google_checks.xml'
-          fail_on_error: true
-          exclude: 'src/test/**'
+          fail_level: 'error'
+          args: '--exclude-regexp .*src/test/.*'

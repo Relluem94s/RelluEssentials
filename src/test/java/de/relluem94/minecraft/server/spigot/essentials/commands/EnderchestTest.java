@@ -30,30 +30,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class EnderchestTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   @Mock
   private Inventory enderChestInventory;
-
   private Enderchest enderchest;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -69,51 +61,44 @@ class EnderchestTest {
   void getCommandsReturnsEmptyArray() {
     CommandsEnum[] result = enderchest.getCommands();
 
-    assertAll(
-        () -> assertEquals(0, result.length)
-    );
+    assertAll(() -> assertEquals(0, result.length));
   }
 
   @Test
   void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(nonPlayerSender, command, "enderchest", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
   void onCommandSendsPermissionMissingWhenPlayerIsNotVip() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).openInventory(enderChestInventory)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).openInventory(enderChestInventory));
   }
 
   @Test
   void onCommandOpensSelfEnderChestWhenNoArgsAndPlayerIsVip() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(player.getEnderChest()).thenReturn(enderChestInventory);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_ENDERCHEST)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_ENDERCHEST)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).openInventory(enderChestInventory),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).openInventory(enderChestInventory),
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -121,15 +106,13 @@ class EnderchestTest {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+        targetName)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).openInventory(enderChestInventory)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).openInventory(enderChestInventory));
   }
 
   @Test
@@ -139,15 +122,13 @@ class EnderchestTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(offlinePlayerEntity);
     when(offlinePlayerEntity.getPlayer()).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+        targetName)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).openInventory(enderChestInventory)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).openInventory(enderChestInventory));
   }
 
   @Test
@@ -158,15 +139,13 @@ class EnderchestTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
     when(targetPlayer.getPlayer()).thenReturn(targetPlayer);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).openInventory(enderChestInventory)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).openInventory(enderChestInventory));
   }
 
   @Test
@@ -181,15 +160,13 @@ class EnderchestTest {
     when(targetPlayer.getPlayer()).thenReturn(targetPlayer);
     when(targetPlayer.getEnderChest()).thenReturn(targetEnderChest);
     when(targetPlayer.getCustomName()).thenReturn(targetCustomName);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_ENDERCHEST_PLAYER, targetCustomName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_ENDERCHEST_PLAYER,
+        targetCustomName)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = enderchest.onCommand(player, command, "enderchest", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).openInventory(targetEnderChest),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).openInventory(targetEnderChest),
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -197,7 +174,8 @@ class EnderchestTest {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
 
-    List<String> result = enderchest.onTabComplete(nonModSender, command, "enderchest", new String[]{"a"});
+    List<String> result = enderchest.onTabComplete(nonModSender, command, "enderchest",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -208,7 +186,8 @@ class EnderchestTest {
     CommandSender modSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(modSender, "mod")).thenReturn(true);
 
-    List<String> result = enderchest.onTabComplete(modSender, command, "enderchest", new String[]{"arg1", "arg2"});
+    List<String> result = enderchest.onTabComplete(modSender, command, "enderchest",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -219,7 +198,8 @@ class EnderchestTest {
     CommandSender modSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(modSender, "mod")).thenReturn(true);
 
-    List<String> result = enderchest.onTabComplete(modSender, command, "enderchest", new String[]{"partial"});
+    List<String> result = enderchest.onTabComplete(modSender, command, "enderchest",
+        new String[]{"partial"});
 
     assertNotNull(result);
   }

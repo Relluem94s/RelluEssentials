@@ -128,7 +128,8 @@ class BankRepositoryTest {
     double currentBalance = 500.0;
     int tierId = 3;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance, tierId);
+    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+        tierId);
 
     verify(bankDao).insertBankTransaction(playerFK, bankAccountFK, transactionValue);
     verify(bankDao).updateBankAccount(playerFK, currentBalance + transactionValue, tierId);
@@ -136,7 +137,8 @@ class BankRepositoryTest {
 
   @Test
   void addTransactionToBankPropagatesExceptionOnInsert() {
-    doThrow(new RuntimeException("db error")).when(bankDao).insertBankTransaction(anyInt(), anyInt(), anyDouble());
+    doThrow(new RuntimeException("db error")).when(bankDao)
+        .insertBankTransaction(anyInt(), anyInt(), anyDouble());
 
     assertThrows(RuntimeException.class,
         () -> bankRepository.addTransactionToBank(1, 2, 100.0, 500.0, 3));
@@ -144,7 +146,8 @@ class BankRepositoryTest {
 
   @Test
   void addTransactionToBankPropagatesExceptionOnUpdate() {
-    doThrow(new RuntimeException("db error")).when(bankDao).updateBankAccount(anyInt(), anyDouble(), anyInt());
+    doThrow(new RuntimeException("db error")).when(bankDao)
+        .updateBankAccount(anyInt(), anyDouble(), anyInt());
 
     assertThrows(RuntimeException.class,
         () -> bankRepository.addTransactionToBank(1, 2, 100.0, 500.0, 3));
@@ -158,7 +161,8 @@ class BankRepositoryTest {
     double currentBalance = 750.0;
     int tierId = 1;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance, tierId);
+    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+        tierId);
 
     verify(bankDao).updateBankAccount(playerFK, 1000.0, tierId);
   }
@@ -171,7 +175,8 @@ class BankRepositoryTest {
     double currentBalance = 500.0;
     int tierId = 1;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance, tierId);
+    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+        tierId);
 
     verify(bankDao).insertBankTransaction(playerFK, bankAccountFK, transactionValue);
     verify(bankDao).updateBankAccount(playerFK, 300.0, tierId);
@@ -199,7 +204,8 @@ class BankRepositoryTest {
 
   @Test
   void updateBankAccountPropagatesException() {
-    doThrow(new RuntimeException("db error")).when(bankDao).updateBankAccount(anyInt(), anyDouble(), anyInt());
+    doThrow(new RuntimeException("db error")).when(bankDao)
+        .updateBankAccount(anyInt(), anyDouble(), anyInt());
 
     assertThrows(RuntimeException.class,
         () -> bankRepository.updateBankAccount(1, 100.0, 400.0, 2));
@@ -219,7 +225,8 @@ class BankRepositoryTest {
 
   @Test
   void findTransactionsByBankAccountIdReturnsDaoResult() {
-    List<BankTransactionEntry> expected = List.of(new BankTransactionEntry(), new BankTransactionEntry());
+    List<BankTransactionEntry> expected = List.of(new BankTransactionEntry(),
+        new BankTransactionEntry());
     when(bankDao.findTransactionsByBankAccountId(10)).thenReturn(expected);
 
     List<BankTransactionEntry> result = bankRepository.findTransactionsByBankAccountId(10);
@@ -239,7 +246,8 @@ class BankRepositoryTest {
 
   @Test
   void findTransactionsByBankAccountIdPropagatesException() {
-    when(bankDao.findTransactionsByBankAccountId(anyInt())).thenThrow(new RuntimeException("db error"));
+    when(bankDao.findTransactionsByBankAccountId(anyInt())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> bankRepository.findTransactionsByBankAccountId(10));
   }

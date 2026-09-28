@@ -93,7 +93,8 @@ class HomeTest {
 
   @Test
   void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        "not a player");
 
     boolean result = homeCommand.onCommand(nonPlayerSender, command, "home", new String[]{});
 
@@ -104,7 +105,8 @@ class HomeTest {
   @Test
   void onCommandPlayerNotAuthorizedSendsPermissionMissingMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn("no permission");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        "no permission");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{});
 
@@ -138,9 +140,12 @@ class HomeTest {
     when(serviceContext.getMessageService()).thenReturn(messageService);
     when(messageService.locationToString(any())).thenReturn("world 0 0 0");
     when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST))).thenReturn("homes:");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_NAME), anyString(), anyString())).thenReturn("home name");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS))).thenReturn("deaths:");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME), anyString(), anyString())).thenReturn("death name");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_NAME), anyString(),
+        anyString())).thenReturn("home name");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS))).thenReturn(
+        "deaths:");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME),
+        anyString(), anyString())).thenReturn("death name");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"list"});
 
@@ -175,7 +180,8 @@ class HomeTest {
     when(serviceContext.getMessageService()).thenReturn(messageService);
     when(messageService.locationToString(any())).thenReturn("world 0 0 0");
     when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST))).thenReturn("homes:");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_NAME), anyString(), anyString())).thenReturn("home name");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_LIST_NAME), anyString(),
+        anyString())).thenReturn("home name");
 
     homeCommand.onCommand(player, command, "home", new String[]{"list"});
 
@@ -187,7 +193,8 @@ class HomeTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"unknown"});
 
@@ -206,7 +213,8 @@ class HomeTest {
     when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_EXISTS), anyString())).thenReturn("home exists");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_EXISTS),
+        anyString())).thenReturn("home exists");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"set", "myHome"});
 
@@ -223,9 +231,11 @@ class HomeTest {
     when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_RESERVED), anyString())).thenReturn("reserved name");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_RESERVED),
+        anyString())).thenReturn("reserved name");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"set", "death_myHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"set", "death_myHome"});
 
     verify(player).sendMessage("reserved name");
     assertTrue(result);
@@ -240,14 +250,16 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_SET), anyString())).thenReturn("home set");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_SET), anyString())).thenReturn(
+        "home set");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"set", "newHome"});
 
     verify(locationService).save(any(LocationEntry.class));
     verify(player).sendMessage("home set");
     assertTrue(result);
-    assertTrue(playerEntry.getHomes().stream().anyMatch(h -> h.getLocationName().equals("newHome")));
+    assertTrue(
+        playerEntry.getHomes().stream().anyMatch(h -> h.getLocationName().equals("newHome")));
   }
 
   @Test
@@ -275,9 +287,11 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DELETE), anyString())).thenReturn("home deleted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DELETE),
+        anyString())).thenReturn("home deleted");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"delete", "myHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"delete", "myHome"});
 
     verify(locationService).delete(existingHome);
     verify(player).sendMessage("home deleted");
@@ -298,9 +312,11 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DEATH_DELETE), anyString())).thenReturn("death deleted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DEATH_DELETE),
+        anyString())).thenReturn("death deleted");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"delete", "death_1"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"delete", "death_1"});
 
     verify(locationService).delete(existingDeath);
     verify(player).sendMessage("death deleted");
@@ -324,9 +340,11 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DEATH_DELETE), anyString())).thenReturn("death deleted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DEATH_DELETE),
+        anyString())).thenReturn("death deleted");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"delete", "death_*"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"delete", "death_*"});
 
     verify(locationService).delete(death1);
     verify(locationService).delete(death2);
@@ -342,9 +360,11 @@ class HomeTest {
     when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND), anyString())).thenReturn("not found");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND),
+        anyString())).thenReturn("not found");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"delete", "nonExistent"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"delete", "nonExistent"});
 
     verify(player).sendMessage("not found");
     assertTrue(result);
@@ -396,7 +416,8 @@ class HomeTest {
     when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND), anyString())).thenReturn("not found");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND),
+        anyString())).thenReturn("not found");
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"tp", "ghost"});
 
@@ -413,7 +434,8 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"unknown", "myHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"unknown", "myHome"});
 
     assertTrue(result);
   }
@@ -424,7 +446,8 @@ class HomeTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"set", "myHome", "extra"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"set", "myHome", "extra"});
 
     assertTrue(result);
   }
@@ -433,7 +456,8 @@ class HomeTest {
   void onTabCompleteNonPlayerReturnsEmptyList() {
     when(groupService.isSenderAuthorized(nonPlayerSender, "user")).thenReturn(true);
 
-    List<String> result = homeCommand.onTabComplete(nonPlayerSender, command, "home", new String[]{"s"});
+    List<String> result = homeCommand.onTabComplete(nonPlayerSender, command, "home",
+        new String[]{"s"});
 
     assertTrue(result.isEmpty());
   }
@@ -463,7 +487,8 @@ class HomeTest {
   void onTabCompleteSecondArgAfterSetReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"set", ""});
+    List<String> result = homeCommand.onTabComplete(player, command, "home",
+        new String[]{"set", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -472,7 +497,8 @@ class HomeTest {
   void onTabCompleteSecondArgAfterListReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"list", ""});
+    List<String> result = homeCommand.onTabComplete(player, command, "home",
+        new String[]{"list", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -481,9 +507,11 @@ class HomeTest {
   void onTabCompleteSecondArgAfterDeleteReturnsHomeAndDeathNames() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(playerService.getHomeAndDeathLocationNames(player)).thenReturn(List.of("myHome", "death_1"));
+    when(playerService.getHomeAndDeathLocationNames(player)).thenReturn(
+        List.of("myHome", "death_1"));
 
-    List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"delete", ""});
+    List<String> result = homeCommand.onTabComplete(player, command, "home",
+        new String[]{"delete", ""});
 
     assertTrue(result.contains("myHome"));
     assertTrue(result.contains("death_1"));
@@ -493,9 +521,11 @@ class HomeTest {
   void onTabCompleteSecondArgAfterTpReturnsHomeAndDeathNames() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(playerService.getHomeAndDeathLocationNames(player)).thenReturn(List.of("myHome", "death_1"));
+    when(playerService.getHomeAndDeathLocationNames(player)).thenReturn(
+        List.of("myHome", "death_1"));
 
-    List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"tp", ""});
+    List<String> result = homeCommand.onTabComplete(player, command, "home",
+        new String[]{"tp", ""});
 
     assertTrue(result.contains("myHome"));
     assertTrue(result.contains("death_1"));
@@ -505,7 +535,8 @@ class HomeTest {
   void onTabCompleteThirdArgReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"tp", "myHome", ""});
+    List<String> result = homeCommand.onTabComplete(player, command, "home",
+        new String[]{"tp", "myHome", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -520,9 +551,11 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_SET), anyString())).thenReturn("home set");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_SET), anyString())).thenReturn(
+        "home set");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{subCommand, "newHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{subCommand, "newHome"});
 
     verify(locationService).save(any(LocationEntry.class));
     assertTrue(result);
@@ -542,9 +575,11 @@ class HomeTest {
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(serviceContext.getLocationService()).thenReturn(locationService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DELETE), anyString())).thenReturn("home deleted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_DELETE),
+        anyString())).thenReturn("home deleted");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{subCommand, "myHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{subCommand, "myHome"});
 
     verify(locationService).delete(existingHome);
     assertTrue(result);
@@ -564,7 +599,8 @@ class HomeTest {
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{subCommand, "myHome"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{subCommand, "myHome"});
 
     verify(teleportService).teleportHome(player, existingHome);
     assertTrue(result);
@@ -603,9 +639,11 @@ class HomeTest {
     when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(homeTypeEntry));
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND), anyString())).thenReturn("not found");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_HOME_NOT_FOUND),
+        anyString())).thenReturn("not found");
 
-    boolean result = homeCommand.onCommand(player, command, "home", new String[]{"delete", "death_ghost"});
+    boolean result = homeCommand.onCommand(player, command, "home",
+        new String[]{"delete", "death_ghost"});
 
     verify(player).sendMessage("not found");
     assertTrue(result);

@@ -33,250 +33,252 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TypeHelperTest {
 
-    @Mock
-    private Block block;
+  @Mock
+  private Block block;
 
-    @Mock
-    private Player player;
+  @Mock
+  private Player player;
 
-    @Mock
-    private ConsoleCommandSender consoleCommandSender;
+  @Mock
+  private ConsoleCommandSender consoleCommandSender;
 
-    @Mock
-    private BlockCommandSender blockCommandSender;
+  @Mock
+  private BlockCommandSender blockCommandSender;
 
-    @Mock
-    private CommandSender commandSender;
+  @Mock
+  private CommandSender commandSender;
 
-    @Test
-    void constructorThrowsIllegalStateException() throws Exception {
-        Constructor<TypeHelper> constructor = TypeHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        InvocationTargetException thrownException = assertThrows(InvocationTargetException.class, constructor::newInstance);
-        assertInstanceOf(IllegalStateException.class, thrownException.getCause());
-    }
+  private static Stream<Arguments> provideMaterialListPresenceScenarios() {
+    return Stream.of(
+        Arguments.of(Material.STONE, Arrays.asList(Material.STONE, Material.DIRT), true),
+        Arguments.of(Material.DIRT, Arrays.asList(Material.STONE, Material.DIRT), true),
+        Arguments.of(Material.GRASS_BLOCK, Arrays.asList(Material.STONE, Material.DIRT), false),
+        Arguments.of(Material.STONE, Collections.emptyList(), false),
+        Arguments.of(Material.STONE, Collections.singletonList(Material.STONE), true));
+  }
 
-    @Test
-    void constructorIllegalStateExceptionMessageMatchesConstant() throws Exception {
-        Constructor<TypeHelper> constructor = TypeHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        InvocationTargetException thrownException = assertThrows(InvocationTargetException.class, constructor::newInstance);
-        assertEquals(Constants.PLUGIN_INTERNAL_UTILITY_CLASS, thrownException.getCause().getMessage());
-    }
+  private static Stream<Arguments> provideMaterialArrayPresenceScenarios() {
+    return Stream.of(
+        Arguments.of(Material.STONE, new Material[]{Material.STONE, Material.DIRT}, true),
+        Arguments.of(Material.DIRT, new Material[]{Material.STONE, Material.DIRT}, true),
+        Arguments.of(Material.GRASS_BLOCK, new Material[]{Material.STONE, Material.DIRT}, false),
+        Arguments.of(Material.STONE, new Material[]{}, false),
+        Arguments.of(Material.STONE, new Material[]{Material.STONE}, true));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"0", "1", "-1", "2147483647", "-2147483648", "42"})
-    void isIntReturnsTrueForValidIntegers(String value) {
-        assertTrue(TypeHelper.isInt(value));
-    }
+  @Test
+  void constructorThrowsIllegalStateException() throws Exception {
+    Constructor<TypeHelper> constructor = TypeHelper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrownException = assertThrows(InvocationTargetException.class,
+        constructor::newInstance);
+    assertInstanceOf(IllegalStateException.class, thrownException.getCause());
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"1.5", "abc", "", " ", "2147483648", "null", "1,0"})
-    void isIntReturnsFalseForInvalidIntegers(String value) {
-        assertFalse(TypeHelper.isInt(value));
-    }
+  @Test
+  void constructorIllegalStateExceptionMessageMatchesConstant() throws Exception {
+    Constructor<TypeHelper> constructor = TypeHelper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrownException = assertThrows(InvocationTargetException.class,
+        constructor::newInstance);
+    assertEquals(Constants.PLUGIN_INTERNAL_UTILITY_CLASS, thrownException.getCause().getMessage());
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"0.0", "1.5", "-1.5", "3.14", "42", "1e10"})
-    void isDoubleReturnsTrueForValidDoubles(String value) {
-        assertTrue(TypeHelper.isDouble(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"0", "1", "-1", "2147483647", "-2147483648", "42"})
+  void isIntReturnsTrueForValidIntegers(String value) {
+    assertTrue(TypeHelper.isInt(value));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"abc", "", " ", "null", "1,0", "1.2.3"})
-    void isDoubleReturnsFalseForInvalidDoubles(String value) {
-        assertFalse(TypeHelper.isDouble(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"1.5", "abc", "", " ", "2147483648", "null", "1,0"})
+  void isIntReturnsFalseForInvalidIntegers(String value) {
+    assertFalse(TypeHelper.isInt(value));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"0.0", "1.5", "-1.5", "3.14", "42", "1e10"})
-    void isFloatReturnsTrueForValidFloats(String value) {
-        assertTrue(TypeHelper.isFloat(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"0.0", "1.5", "-1.5", "3.14", "42", "1e10"})
+  void isDoubleReturnsTrueForValidDoubles(String value) {
+    assertTrue(TypeHelper.isDouble(value));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"abc", "", " ", "null", "1,0", "1.2.3"})
-    void isFloatReturnsFalseForInvalidFloats(String value) {
-        assertFalse(TypeHelper.isFloat(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"abc", "", " ", "null", "1,0", "1.2.3"})
+  void isDoubleReturnsFalseForInvalidDoubles(String value) {
+    assertFalse(TypeHelper.isDouble(value));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"0", "1", "-1", "9223372036854775807", "-9223372036854775808", "42"})
-    void isLongReturnsTrueForValidLongs(String value) {
-        assertTrue(TypeHelper.isLong(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"0.0", "1.5", "-1.5", "3.14", "42", "1e10"})
+  void isFloatReturnsTrueForValidFloats(String value) {
+    assertTrue(TypeHelper.isFloat(value));
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"1.5", "abc", "", " ", "9223372036854775808", "null", "1,0"})
-    void isLongReturnsFalseForInvalidLongs(String value) {
-        assertFalse(TypeHelper.isLong(value));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"abc", "", " ", "null", "1,0", "1.2.3"})
+  void isFloatReturnsFalseForInvalidFloats(String value) {
+    assertFalse(TypeHelper.isFloat(value));
+  }
 
-    @Test
-    void areBlocksMaterialReturnsTrueWhenAllBlocksMatchMaterial() {
-        Block secondBlock = mock(Block.class);
-        when(block.getType()).thenReturn(Material.STONE);
-        when(secondBlock.getType()).thenReturn(Material.STONE);
-        List<Block> blocks = Arrays.asList(block, secondBlock);
-        assertTrue(TypeHelper.areBlocksMaterial(blocks, Material.STONE));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"0", "1", "-1", "9223372036854775807", "-9223372036854775808", "42"})
+  void isLongReturnsTrueForValidLongs(String value) {
+    assertTrue(TypeHelper.isLong(value));
+  }
 
-    @Test
-    void areBlocksMaterialReturnsFalseWhenOneBlockDoesNotMatchMaterial() {
-        Block secondBlock = mock(Block.class);
-        when(block.getType()).thenReturn(Material.STONE);
-        when(secondBlock.getType()).thenReturn(Material.DIRT);
-        List<Block> blocks = Arrays.asList(block, secondBlock);
-        assertFalse(TypeHelper.areBlocksMaterial(blocks, Material.STONE));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {"1.5", "abc", "", " ", "9223372036854775808", "null", "1,0"})
+  void isLongReturnsFalseForInvalidLongs(String value) {
+    assertFalse(TypeHelper.isLong(value));
+  }
 
-    @Test
-    void areBlocksMaterialReturnsTrueForEmptyList() {
-        assertTrue(TypeHelper.areBlocksMaterial(Collections.emptyList(), Material.STONE));
-    }
+  @Test
+  void areBlocksMaterialReturnsTrueWhenAllBlocksMatchMaterial() {
+    Block secondBlock = mock(Block.class);
+    when(block.getType()).thenReturn(Material.STONE);
+    when(secondBlock.getType()).thenReturn(Material.STONE);
+    List<Block> blocks = Arrays.asList(block, secondBlock);
+    assertTrue(TypeHelper.areBlocksMaterial(blocks, Material.STONE));
+  }
 
-    @Test
-    void isBlockOneOfMaterialsReturnsTrueWhenBlockMaterialIsInList() {
-        when(block.getType()).thenReturn(Material.STONE);
-        List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
-        assertTrue(TypeHelper.isBlockOneOfMaterials(block, materials));
-    }
+  @Test
+  void areBlocksMaterialReturnsFalseWhenOneBlockDoesNotMatchMaterial() {
+    Block secondBlock = mock(Block.class);
+    when(block.getType()).thenReturn(Material.STONE);
+    when(secondBlock.getType()).thenReturn(Material.DIRT);
+    List<Block> blocks = Arrays.asList(block, secondBlock);
+    assertFalse(TypeHelper.areBlocksMaterial(blocks, Material.STONE));
+  }
 
-    @Test
-    void isBlockOneOfMaterialsReturnsFalseWhenBlockMaterialIsNotInList() {
-        when(block.getType()).thenReturn(Material.GRASS_BLOCK);
-        List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
-        assertFalse(TypeHelper.isBlockOneOfMaterials(block, materials));
-    }
+  @Test
+  void areBlocksMaterialReturnsTrueForEmptyList() {
+    assertTrue(TypeHelper.areBlocksMaterial(Collections.emptyList(), Material.STONE));
+  }
 
-    @Test
-    void isBlockOneOfMaterialsReturnsFalseForEmptyMaterialList() {
-        assertFalse(TypeHelper.isBlockOneOfMaterials(block, Collections.emptyList()));
-    }
+  @Test
+  void isBlockOneOfMaterialsReturnsTrueWhenBlockMaterialIsInList() {
+    when(block.getType()).thenReturn(Material.STONE);
+    List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
+    assertTrue(TypeHelper.isBlockOneOfMaterials(block, materials));
+  }
 
-    @Test
-    void isPlayerReturnsTrueForPlayerSender() {
-        assertTrue(TypeHelper.isPlayer(player));
-    }
+  @Test
+  void isBlockOneOfMaterialsReturnsFalseWhenBlockMaterialIsNotInList() {
+    when(block.getType()).thenReturn(Material.GRASS_BLOCK);
+    List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
+    assertFalse(TypeHelper.isBlockOneOfMaterials(block, materials));
+  }
 
-    @Test
-    void isPlayerReturnsFalseForConsoleSender() {
-        assertFalse(TypeHelper.isPlayer(consoleCommandSender));
-    }
+  @Test
+  void isBlockOneOfMaterialsReturnsFalseForEmptyMaterialList() {
+    assertFalse(TypeHelper.isBlockOneOfMaterials(block, Collections.emptyList()));
+  }
 
-    @Test
-    void isPlayerReturnsFalseForBlockCommandSender() {
-        assertFalse(TypeHelper.isPlayer(blockCommandSender));
-    }
+  @Test
+  void isPlayerReturnsTrueForPlayerSender() {
+    assertTrue(TypeHelper.isPlayer(player));
+  }
 
-    @Test
-    void isPlayerReturnsFalseForGenericCommandSender() {
-        assertFalse(TypeHelper.isPlayer(commandSender));
-    }
+  @Test
+  void isPlayerReturnsFalseForConsoleSender() {
+    assertFalse(TypeHelper.isPlayer(consoleCommandSender));
+  }
 
-    @Test
-    void isCmdBlockReturnsTrueForBlockCommandSender() {
-        assertTrue(TypeHelper.isCmdBlock(blockCommandSender));
-    }
+  @Test
+  void isPlayerReturnsFalseForBlockCommandSender() {
+    assertFalse(TypeHelper.isPlayer(blockCommandSender));
+  }
 
-    @Test
-    void isCmdBlockReturnsFalseForPlayerSender() {
-        assertFalse(TypeHelper.isCmdBlock(player));
-    }
+  @Test
+  void isPlayerReturnsFalseForGenericCommandSender() {
+    assertFalse(TypeHelper.isPlayer(commandSender));
+  }
 
-    @Test
-    void isCmdBlockReturnsFalseForConsoleSender() {
-        assertFalse(TypeHelper.isCmdBlock(consoleCommandSender));
-    }
+  @Test
+  void isCmdBlockReturnsTrueForBlockCommandSender() {
+    assertTrue(TypeHelper.isCmdBlock(blockCommandSender));
+  }
 
-    @Test
-    void isCmdBlockReturnsFalseForGenericCommandSender() {
-        assertFalse(TypeHelper.isCmdBlock(commandSender));
-    }
+  @Test
+  void isCmdBlockReturnsFalseForPlayerSender() {
+    assertFalse(TypeHelper.isCmdBlock(player));
+  }
 
-    @Test
-    void isConsoleReturnsTrueForConsoleCommandSender() {
-        assertTrue(TypeHelper.isConsole(consoleCommandSender));
-    }
+  @Test
+  void isCmdBlockReturnsFalseForConsoleSender() {
+    assertFalse(TypeHelper.isCmdBlock(consoleCommandSender));
+  }
 
-    @Test
-    void isConsoleReturnsFalseForPlayerSender() {
-        assertFalse(TypeHelper.isConsole(player));
-    }
+  @Test
+  void isCmdBlockReturnsFalseForGenericCommandSender() {
+    assertFalse(TypeHelper.isCmdBlock(commandSender));
+  }
 
-    @Test
-    void isConsoleReturnsFalseForBlockCommandSender() {
-        assertFalse(TypeHelper.isConsole(blockCommandSender));
-    }
+  @Test
+  void isConsoleReturnsTrueForConsoleCommandSender() {
+    assertTrue(TypeHelper.isConsole(consoleCommandSender));
+  }
 
-    @Test
-    void isConsoleReturnsFalseForGenericCommandSender() {
-        assertFalse(TypeHelper.isConsole(commandSender));
-    }
+  @Test
+  void isConsoleReturnsFalseForPlayerSender() {
+    assertFalse(TypeHelper.isConsole(player));
+  }
 
-    @Test
-    void isMaterialInListReturnsTrueWhenMaterialIsPresent() {
-        List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
-        assertTrue(TypeHelper.isMaterialInList(Material.STONE, materials));
-    }
+  @Test
+  void isConsoleReturnsFalseForBlockCommandSender() {
+    assertFalse(TypeHelper.isConsole(blockCommandSender));
+  }
 
-    @Test
-    void isMaterialInListReturnsFalseWhenMaterialIsAbsent() {
-        List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
-        assertFalse(TypeHelper.isMaterialInList(Material.GRASS_BLOCK, materials));
-    }
+  @Test
+  void isConsoleReturnsFalseForGenericCommandSender() {
+    assertFalse(TypeHelper.isConsole(commandSender));
+  }
 
-    @Test
-    void isMaterialInListReturnsFalseForEmptyList() {
-        assertFalse(TypeHelper.isMaterialInList(Material.STONE, Collections.emptyList()));
-    }
+  @Test
+  void isMaterialInListReturnsTrueWhenMaterialIsPresent() {
+    List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
+    assertTrue(TypeHelper.isMaterialInList(Material.STONE, materials));
+  }
 
-    @Test
-    void isMaterialInArrayReturnsTrueWhenMaterialIsPresent() {
-        Material[] materials = {Material.STONE, Material.DIRT};
-        assertTrue(TypeHelper.isMaterialInArray(Material.STONE, materials));
-    }
+  @Test
+  void isMaterialInListReturnsFalseWhenMaterialIsAbsent() {
+    List<Material> materials = Arrays.asList(Material.STONE, Material.DIRT);
+    assertFalse(TypeHelper.isMaterialInList(Material.GRASS_BLOCK, materials));
+  }
 
-    @Test
-    void isMaterialInArrayReturnsFalseWhenMaterialIsAbsent() {
-        Material[] materials = {Material.STONE, Material.DIRT};
-        assertFalse(TypeHelper.isMaterialInArray(Material.GRASS_BLOCK, materials));
-    }
+  @Test
+  void isMaterialInListReturnsFalseForEmptyList() {
+    assertFalse(TypeHelper.isMaterialInList(Material.STONE, Collections.emptyList()));
+  }
 
-    @Test
-    void isMaterialInArrayReturnsFalseForEmptyArray() {
-        assertFalse(TypeHelper.isMaterialInArray(Material.STONE, new Material[]{}));
-    }
+  @Test
+  void isMaterialInArrayReturnsTrueWhenMaterialIsPresent() {
+    Material[] materials = {Material.STONE, Material.DIRT};
+    assertTrue(TypeHelper.isMaterialInArray(Material.STONE, materials));
+  }
 
-    @ParameterizedTest
-    @MethodSource("provideMaterialListPresenceScenarios")
-    void isMaterialInListHandlesVariousScenarios(Material target, List<Material> list, boolean expected) {
-        assertEquals(expected, TypeHelper.isMaterialInList(target, list));
-    }
+  @Test
+  void isMaterialInArrayReturnsFalseWhenMaterialIsAbsent() {
+    Material[] materials = {Material.STONE, Material.DIRT};
+    assertFalse(TypeHelper.isMaterialInArray(Material.GRASS_BLOCK, materials));
+  }
 
-    private static Stream<Arguments> provideMaterialListPresenceScenarios() {
-        return Stream.of(
-            Arguments.of(Material.STONE, Arrays.asList(Material.STONE, Material.DIRT), true),
-            Arguments.of(Material.DIRT, Arrays.asList(Material.STONE, Material.DIRT), true),
-            Arguments.of(Material.GRASS_BLOCK, Arrays.asList(Material.STONE, Material.DIRT), false),
-            Arguments.of(Material.STONE, Collections.emptyList(), false),
-            Arguments.of(Material.STONE, Collections.singletonList(Material.STONE), true)
-        );
-    }
+  @Test
+  void isMaterialInArrayReturnsFalseForEmptyArray() {
+    assertFalse(TypeHelper.isMaterialInArray(Material.STONE, new Material[]{}));
+  }
 
-    @ParameterizedTest
-    @MethodSource("provideMaterialArrayPresenceScenarios")
-    void isMaterialInArrayHandlesVariousScenarios(Material target, Material[] array, boolean expected) {
-        assertEquals(expected, TypeHelper.isMaterialInArray(target, array));
-    }
+  @ParameterizedTest
+  @MethodSource("provideMaterialListPresenceScenarios")
+  void isMaterialInListHandlesVariousScenarios(Material target, List<Material> list,
+      boolean expected) {
+    assertEquals(expected, TypeHelper.isMaterialInList(target, list));
+  }
 
-    private static Stream<Arguments> provideMaterialArrayPresenceScenarios() {
-        return Stream.of(
-            Arguments.of(Material.STONE, new Material[]{Material.STONE, Material.DIRT}, true),
-            Arguments.of(Material.DIRT, new Material[]{Material.STONE, Material.DIRT}, true),
-            Arguments.of(Material.GRASS_BLOCK, new Material[]{Material.STONE, Material.DIRT}, false),
-            Arguments.of(Material.STONE, new Material[]{}, false),
-            Arguments.of(Material.STONE, new Material[]{Material.STONE}, true)
-        );
-    }
+  @ParameterizedTest
+  @MethodSource("provideMaterialArrayPresenceScenarios")
+  void isMaterialInArrayHandlesVariousScenarios(Material target, Material[] array,
+      boolean expected) {
+    assertEquals(expected, TypeHelper.isMaterialInArray(target, array));
+  }
 }

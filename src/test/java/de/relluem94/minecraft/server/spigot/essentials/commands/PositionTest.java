@@ -73,7 +73,8 @@ class PositionTest {
   @Test
   void onCommandUnauthorizedSenderSendsPermissionMissingMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn("no permission");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        "no permission");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{});
 
@@ -84,9 +85,11 @@ class PositionTest {
   @Test
   void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
     when(groupService.isSenderAuthorized(nonPlayerSender, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        "not a player");
 
-    boolean result = positionCommand.onCommand(nonPlayerSender, command, "position", new String[]{});
+    boolean result = positionCommand.onCommand(nonPlayerSender, command, "position",
+        new String[]{});
 
     verify(nonPlayerSender).sendMessage("not a player");
     assertTrue(result);
@@ -96,7 +99,8 @@ class PositionTest {
   void onCommandNoArgsWithNoPositionsSendsNoPositionsMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(positionService.hasPositions(player)).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn("no positions");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn(
+        "no positions");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{});
 
@@ -118,8 +122,12 @@ class PositionTest {
     when(messageService.locationToString(first)).thenReturn("0 64 0");
     when(messageService.locationToString(second)).thenReturn("0 64 0");
     when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_1)).thenReturn("info1");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2), any())).thenReturn("info2");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3), any())).thenReturn("info3");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2), any())).thenReturn(
+        "info2");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3), any())).thenReturn(
+        "info3");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{});
 
@@ -142,8 +150,11 @@ class PositionTest {
     when(messageService.locationToString(second)).thenReturn("0 64 0");
     when(translationService.get(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn("N/A");
     when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_1)).thenReturn("info1");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2), eq("N/A"))).thenReturn("info2 N/A");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3), any())).thenReturn("info3");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2),
+        eq("N/A"))).thenReturn("info2 N/A");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3), any())).thenReturn(
+        "info3");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{});
 
@@ -164,8 +175,11 @@ class PositionTest {
     when(messageService.locationToString(first)).thenReturn("0 64 0");
     when(translationService.get(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn("N/A");
     when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_1)).thenReturn("info1");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2), any())).thenReturn("info2");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3), eq("N/A"))).thenReturn("info3 N/A");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_2), any())).thenReturn(
+        "info2");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_INFO_3),
+        eq("N/A"))).thenReturn("info3 N/A");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{});
 
@@ -176,9 +190,11 @@ class PositionTest {
   @Test
   void onCommandClearWithExtraArgsSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"clear", "extra"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"clear", "extra"});
 
     verify(player).sendMessage("wrong sub");
     verify(positionService, never()).clearPositions(any());
@@ -201,7 +217,8 @@ class PositionTest {
   @Test
   void onCommandSetWithWrongArgCountSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{"set"});
 
@@ -215,9 +232,11 @@ class PositionTest {
     when(serviceContext.getMessageService()).thenReturn(messageService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
     when(messageService.locationToString(any())).thenReturn("0 64 0");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_FIRST), any())).thenReturn("first set");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_FIRST),
+        any())).thenReturn("first set");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"set", "first"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"set", "first"});
 
     verify(positionService).setFirstPosition(eq(player), any(Location.class));
     verify(player).sendMessage("first set");
@@ -230,9 +249,11 @@ class PositionTest {
     when(serviceContext.getMessageService()).thenReturn(messageService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
     when(messageService.locationToString(any())).thenReturn("0 64 0");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_SECOND), any())).thenReturn("second set");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_SECOND),
+        any())).thenReturn("second set");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"set", "second"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"set", "second"});
 
     verify(positionService).setSecondPosition(eq(player), any(Location.class));
     verify(player).sendMessage("second set");
@@ -243,9 +264,11 @@ class PositionTest {
   void onCommandSetUnknownSubCommandSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"set", "unknown"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"set", "unknown"});
 
     verify(player).sendMessage("wrong sub");
     assertTrue(result);
@@ -254,7 +277,8 @@ class PositionTest {
   @Test
   void onCommandRemoveWithWrongArgCountSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
     boolean result = positionCommand.onCommand(player, command, "position", new String[]{"remove"});
 
@@ -265,9 +289,11 @@ class PositionTest {
   @Test
   void onCommandRemoveFirstRemovesFirstPositionAndSendsMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST)).thenReturn("first removed");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST)).thenReturn(
+        "first removed");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"remove", "first"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"remove", "first"});
 
     verify(positionService).removeFirstPosition(player);
     verify(player).sendMessage("first removed");
@@ -277,9 +303,11 @@ class PositionTest {
   @Test
   void onCommandRemoveSecondRemovesSecondPositionAndSendsMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_SECOND)).thenReturn("second removed");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_SECOND)).thenReturn(
+        "second removed");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"remove", "second"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"remove", "second"});
 
     verify(positionService).removeSecondPosition(player);
     verify(player).sendMessage("second removed");
@@ -289,9 +317,11 @@ class PositionTest {
   @Test
   void onCommandRemoveUnknownSubCommandSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"remove", "unknown"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"remove", "unknown"});
 
     verify(player).sendMessage("wrong sub");
     assertTrue(result);
@@ -300,9 +330,11 @@ class PositionTest {
   @Test
   void onCommandShiftWithInvalidAmountSendsInvalidAmountMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INVALID_AMOUNT)).thenReturn("invalid amount");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INVALID_AMOUNT)).thenReturn(
+        "invalid amount");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"shift", "notANumber"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"shift", "notANumber"});
 
     verify(player).sendMessage("invalid amount");
     assertTrue(result);
@@ -314,9 +346,11 @@ class PositionTest {
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(null);
     when(positionStore.getSecondValue()).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn("no positions");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS)).thenReturn(
+        "no positions");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"shift", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"shift", "5"});
 
     verify(player).sendMessage("no positions");
     verify(positionService, never()).shiftPositions(any(), any(), anyInt());
@@ -331,9 +365,11 @@ class PositionTest {
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(first);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn("shifted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn(
+        "shifted");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"shift", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"shift", "5"});
 
     verify(positionService).shiftPositions(eq(player), any(Vector.class), eq(5));
     verify(player).sendMessage("shifted");
@@ -348,9 +384,12 @@ class PositionTest {
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(first);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(10))).thenReturn("shifted");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(10))).thenReturn(
+        "shifted");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"shift", "10"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"shift", "10"});
 
     verify(positionService).shiftPositions(eq(player), any(Vector.class), eq(10));
     verify(player).sendMessage("shifted");
@@ -365,12 +404,15 @@ class PositionTest {
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(first);
     when(positionStore.getSecondValue()).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS)).thenReturn("need both");
+    when(translationService.getWithPrefix(
+        MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS)).thenReturn("need both");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"expand", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"expand", "5"});
 
     verify(player).sendMessage("need both");
-    verify(positionService, never()).expandOrDecreasePositions(any(), any(), anyInt(), any(Boolean.class));
+    verify(positionService, never()).expandOrDecreasePositions(any(), any(), anyInt(),
+        any(Boolean.class));
     assertTrue(result);
   }
 
@@ -379,9 +421,11 @@ class PositionTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS)).thenReturn("need both");
+    when(translationService.getWithPrefix(
+        MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS)).thenReturn("need both");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"expand", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"expand", "5"});
 
     verify(player).sendMessage("need both");
     assertTrue(result);
@@ -397,11 +441,15 @@ class PositionTest {
     when(positionStore.getValue()).thenReturn(first);
     when(positionStore.getSecondValue()).thenReturn(second);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_EXPAND), eq(5))).thenReturn("expanded");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_EXPAND), eq(5))).thenReturn(
+        "expanded");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"expand", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"expand", "5"});
 
-    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(5), eq(true));
+    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(5),
+        eq(true));
     verify(player).sendMessage("expanded");
     assertTrue(result);
   }
@@ -416,11 +464,14 @@ class PositionTest {
     when(positionStore.getValue()).thenReturn(first);
     when(positionStore.getSecondValue()).thenReturn(second);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_DECREASE), eq(3))).thenReturn("decreased");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_DECREASE),
+        eq(3))).thenReturn("decreased");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"decrease", "3"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"decrease", "3"});
 
-    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(3), eq(false));
+    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(3),
+        eq(false));
     verify(player).sendMessage("decreased");
     assertTrue(result);
   }
@@ -428,9 +479,11 @@ class PositionTest {
   @Test
   void onCommandUnknownSubCommandSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"unknown", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"unknown", "5"});
 
     verify(player).sendMessage("wrong sub");
     assertTrue(result);
@@ -439,9 +492,11 @@ class PositionTest {
   @Test
   void onCommandUnknownSubCommandWithoutAmountSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"unknown"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"unknown"});
 
     verify(player).sendMessage("wrong sub");
     assertTrue(result);
@@ -453,7 +508,8 @@ class PositionTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_CLEAR)).thenReturn("cleared");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand});
 
     verify(positionService).clearPositions(player);
     assertTrue(result);
@@ -466,9 +522,11 @@ class PositionTest {
     when(serviceContext.getMessageService()).thenReturn(messageService);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
     when(messageService.locationToString(any())).thenReturn("0 64 0");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_FIRST), any())).thenReturn("first set");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SET_FIRST),
+        any())).thenReturn("first set");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand, "first"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand, "first"});
 
     verify(positionService).setFirstPosition(eq(player), any(Location.class));
     assertTrue(result);
@@ -478,9 +536,11 @@ class PositionTest {
   @ValueSource(strings = {"remove", "REMOVE", "Remove"})
   void onCommandRemoveIsCaseInsensitive(String subCommand) {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST)).thenReturn("first removed");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST)).thenReturn(
+        "first removed");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand, "first"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand, "first"});
 
     verify(positionService).removeFirstPosition(player);
     assertTrue(result);
@@ -495,9 +555,11 @@ class PositionTest {
     when(positionService.getPositions(player)).thenReturn(positionStore);
     when(positionStore.getValue()).thenReturn(first);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn("shifted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn(
+        "shifted");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand, "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand, "5"});
 
     verify(positionService).shiftPositions(eq(player), any(Vector.class), eq(5));
     assertTrue(result);
@@ -514,11 +576,15 @@ class PositionTest {
     when(positionStore.getValue()).thenReturn(first);
     when(positionStore.getSecondValue()).thenReturn(second);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_EXPAND), eq(5))).thenReturn("expanded");
+    when(
+        translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_EXPAND), eq(5))).thenReturn(
+        "expanded");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand, "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand, "5"});
 
-    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(5), eq(true));
+    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(5),
+        eq(true));
     assertTrue(result);
   }
 
@@ -533,11 +599,14 @@ class PositionTest {
     when(positionStore.getValue()).thenReturn(first);
     when(positionStore.getSecondValue()).thenReturn(second);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_DECREASE), eq(3))).thenReturn("decreased");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_DECREASE),
+        eq(3))).thenReturn("decreased");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{subCommand, "3"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{subCommand, "3"});
 
-    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(3), eq(false));
+    verify(positionService).expandOrDecreasePositions(eq(player), any(Vector.class), eq(3),
+        eq(false));
     assertTrue(result);
   }
 
@@ -545,7 +614,8 @@ class PositionTest {
   void onTabCompleteUnauthorizedReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"c"});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"c"});
 
     assertTrue(result.isEmpty());
   }
@@ -554,7 +624,8 @@ class PositionTest {
   void onTabCompleteFirstArgReturnsAllSubCommands() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"c"});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"c"});
 
     assertTrue(result.contains("set"));
     assertTrue(result.contains("remove"));
@@ -568,7 +639,8 @@ class PositionTest {
   void onTabCompleteSecondArgAfterSetReturnsFirstAndSecond() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"set", ""});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"set", ""});
 
     assertTrue(result.contains("first"));
     assertTrue(result.contains("second"));
@@ -578,7 +650,8 @@ class PositionTest {
   void onTabCompleteSecondArgAfterRemoveReturnsFirstAndSecond() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"remove", ""});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"remove", ""});
 
     assertTrue(result.contains("first"));
     assertTrue(result.contains("second"));
@@ -588,7 +661,8 @@ class PositionTest {
   void onTabCompleteSecondArgAfterShiftReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"shift", ""});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"shift", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -597,7 +671,8 @@ class PositionTest {
   void onTabCompleteSecondArgAfterClearReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"clear", ""});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"clear", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -606,7 +681,8 @@ class PositionTest {
   void onTabCompleteThirdArgReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = positionCommand.onTabComplete(player, command, "position", new String[]{"set", "first", ""});
+    List<String> result = positionCommand.onTabComplete(player, command, "position",
+        new String[]{"set", "first", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -673,9 +749,11 @@ class PositionTest {
     when(positionStore.getValue()).thenReturn(null);
     when(positionStore.getSecondValue()).thenReturn(second);
     when(player.getLocation()).thenReturn(buildBukkitLocation());
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn("shifted");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_POSITION_SHIFT), eq(5))).thenReturn(
+        "shifted");
 
-    boolean result = positionCommand.onCommand(player, command, "position", new String[]{"shift", "5"});
+    boolean result = positionCommand.onCommand(player, command, "position",
+        new String[]{"shift", "5"});
 
     verify(positionService).shiftPositions(eq(player), any(Vector.class), eq(5));
     verify(player).sendMessage("shifted");

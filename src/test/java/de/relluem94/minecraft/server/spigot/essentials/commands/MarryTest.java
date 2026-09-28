@@ -44,39 +44,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MarryTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private PlayerService playerService;
-
   @Mock
   private SchedulerService schedulerService;
-
   @Mock
   private ProtectionService protectionService;
-
   @Mock
   private ProtectionActionService protectionActionService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private Marry marry;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -96,27 +85,21 @@ class MarryTest {
   void getCommandsReturnsAllEnumValues() {
     CommandsEnum[] result = marry.getCommands();
 
-    assertAll(
-        () -> assertEquals(2, result.length),
+    assertAll(() -> assertEquals(2, result.length),
         () -> assertEquals("accept", result[0].getName()),
-        () -> assertEquals("divorce", result[1].getName())
-    );
+        () -> assertEquals("divorce", result[1].getName()));
   }
 
   @Test
   void commandsEnumAcceptHasCorrectName() {
-    assertAll(
-        () -> assertEquals("accept", Marry.Commands.ACCEPT.getName()),
-        () -> assertNotNull(Marry.Commands.ACCEPT.getSubCommands())
-    );
+    assertAll(() -> assertEquals("accept", Marry.Commands.ACCEPT.getName()),
+        () -> assertNotNull(Marry.Commands.ACCEPT.getSubCommands()));
   }
 
   @Test
   void commandsEnumDivorceHasCorrectName() {
-    assertAll(
-        () -> assertEquals("divorce", Marry.Commands.DIVORCE.getName()),
-        () -> assertNotNull(Marry.Commands.DIVORCE.getSubCommands())
-    );
+    assertAll(() -> assertEquals("divorce", Marry.Commands.DIVORCE.getName()),
+        () -> assertNotNull(Marry.Commands.DIVORCE.getSubCommands()));
   }
 
   @Test
@@ -125,52 +108,41 @@ class MarryTest {
 
     boolean result = marry.onCommand(nonPlayerSender, command, "marry", new String[]{});
 
-    assertAll(
-        () -> assertFalse(result)
-    );
+    assertAll(() -> assertFalse(result));
   }
 
   @Test
   void onCommandSendsPermissionMissingWhenPlayerIsNotVip() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
   void onCommandSendsInfoMessageWhenNoArgsProvided() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(command.getName()).thenReturn("marry");
-    when(translationService.getWithPrefix(
-        MessageKey.COMMAND_MARRY_INFO,
-        "marry", "marry", "accept", "marry", "divorce"
-    )).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_INFO, "marry", "marry", "accept",
+        "marry", "divorce")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
   void onCommandSendsNoRequestMessageWhenAcceptWithNoPendingRequest() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_ACCEPT_NO_REQUEST)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_ACCEPT_NO_REQUEST)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"accept"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -179,14 +151,12 @@ class MarryTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPartner()).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -194,14 +164,12 @@ class MarryTest {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+        targetName)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -213,14 +181,12 @@ class MarryTest {
     when(targetPlayer.getName()).thenReturn("SomePlayer");
 
     when(serverService.getPlayer("SomePlayer")).thenReturn(targetPlayer);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"SomePlayer"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -250,13 +216,18 @@ class MarryTest {
     when(player.getCustomName()).thenReturn("SenderPlayer");
     when(targetPlayer.getCustomName()).thenReturn(targetName);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, targetName)).thenReturn("send-request");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, "SenderPlayer")).thenReturn("receive-request");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn("married");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
+        targetName)).thenReturn("send-request");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
+        "SenderPlayer")).thenReturn("receive-request");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn(
+        "married");
     when(playerService.getPartner(any())).thenReturn(playerPartnerEntry);
 
-    when(protectionService.getProtectionEntriesOwnedBy(2)).thenReturn(List.of(firstProtectionEntry));
-    when(protectionService.getProtectionEntriesOwnedBy(1)).thenReturn(List.of(secondProtectionEntry));
+    when(protectionService.getProtectionEntriesOwnedBy(2)).thenReturn(
+        List.of(firstProtectionEntry));
+    when(protectionService.getProtectionEntriesOwnedBy(1)).thenReturn(
+        List.of(secondProtectionEntry));
 
     doAnswer(_ -> null).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
@@ -265,14 +236,12 @@ class MarryTest {
     marry.onCommand(player, command, "marry", new String[]{targetName});
     marry.onCommand(targetPlayer, command, "marry", new String[]{"accept"});
 
-    assertAll(
-        () -> assertTrue(marry.onCommand(targetPlayer, command, "marry", new String[]{})),
+    assertAll(() -> assertTrue(marry.onCommand(targetPlayer, command, "marry", new String[]{})),
         () -> verify(player).sendMessage("send-request"),
         () -> verify(targetPlayer).sendMessage("receive-request"),
         () -> verify(schedulerService).runTaskLater(any(Runnable.class), anyLong()),
         () -> verify(protectionActionService).addRight(targetPlayer, firstProtectionEntry, 1, true),
-        () -> verify(protectionActionService).addRight(player, secondProtectionEntry, 2, true)
-    );
+        () -> verify(protectionActionService).addRight(player, secondProtectionEntry, 2, true));
   }
 
   @Test
@@ -291,28 +260,24 @@ class MarryTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPartner()).thenReturn(existingPartner);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(schedulerService, never()).runTaskLater(any(Runnable.class), anyLong())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(schedulerService, never()).runTaskLater(any(Runnable.class), anyLong()));
   }
 
   @Test
   void onCommandSendsTooManyArgumentsMessageWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"arg1", "arg2"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -320,7 +285,8 @@ class MarryTest {
     CommandSender unauthorizedSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(unauthorizedSender, "user")).thenReturn(false);
 
-    List<String> result = marry.onTabComplete(unauthorizedSender, command, "marry", new String[]{"a"});
+    List<String> result = marry.onTabComplete(unauthorizedSender, command, "marry",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -341,7 +307,8 @@ class MarryTest {
   void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    List<String> result = marry.onTabComplete(player, command, "marry", new String[]{"arg1", "arg2"});
+    List<String> result = marry.onTabComplete(player, command, "marry",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -357,11 +324,9 @@ class MarryTest {
     List<String> result = marry.onTabComplete(player, command, "marry", new String[]{"partial"});
 
     assertNotNull(result);
-    assertAll(
-        () -> assertTrue(result.contains("accept")),
+    assertAll(() -> assertTrue(result.contains("accept")),
         () -> assertTrue(result.contains("divorce")),
-        () -> assertTrue(result.contains("OnlinePlayer"))
-    );
+        () -> assertTrue(result.contains("OnlinePlayer")));
   }
 
   @Test
@@ -383,15 +348,13 @@ class MarryTest {
     when(playerEntry.getPartner()).thenReturn(null);
     when(targetEntry.getPartner()).thenReturn(existingPartner);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(schedulerService, never()).runTaskLater(any(Runnable.class), anyLong())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(schedulerService, never()).runTaskLater(any(Runnable.class), anyLong()));
   }
 
   @Test
@@ -415,9 +378,12 @@ class MarryTest {
     when(player.getCustomName()).thenReturn("SenderPlayer");
     when(targetPlayer.getCustomName()).thenReturn(targetName);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, targetName)).thenReturn("send-request");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, "SenderPlayer")).thenReturn("receive-request");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED)).thenReturn("request-expired");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
+        targetName)).thenReturn("send-request");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
+        "SenderPlayer")).thenReturn("receive-request");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED)).thenReturn(
+        "request-expired");
 
     Runnable[] capturedTask = new Runnable[1];
     doAnswer(invocation -> {
@@ -429,10 +395,8 @@ class MarryTest {
 
     capturedTask[0].run();
 
-    assertAll(
-        () -> verify(player).sendMessage("request-expired"),
-        () -> verify(targetPlayer).sendMessage("request-expired")
-    );
+    assertAll(() -> verify(player).sendMessage("request-expired"),
+        () -> verify(targetPlayer).sendMessage("request-expired"));
   }
 
   @Test
@@ -457,9 +421,12 @@ class MarryTest {
     when(player.getCustomName()).thenReturn("SenderPlayer");
     when(targetPlayer.getCustomName()).thenReturn(targetName);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, targetName)).thenReturn("send-request");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, "SenderPlayer")).thenReturn("receive-request");
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn("married");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
+        targetName)).thenReturn("send-request");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
+        "SenderPlayer")).thenReturn("receive-request");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn(
+        "married");
     when(playerService.getPartner(any())).thenReturn(playerPartnerEntry);
 
     Runnable[] capturedTask = new Runnable[1];
@@ -475,10 +442,8 @@ class MarryTest {
 
     capturedTask[0].run();
 
-    assertAll(
-        () -> verify(player, never()).sendMessage("request-expired"),
-        () -> verify(targetPlayer, never()).sendMessage("request-expired")
-    );
+    assertAll(() -> verify(player, never()).sendMessage("request-expired"),
+        () -> verify(targetPlayer, never()).sendMessage("request-expired"));
   }
 
   @Test
@@ -497,10 +462,7 @@ class MarryTest {
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerService, never()).deletePartner(any())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(playerService, never()).deletePartner(any()));
   }
 
   @Test
@@ -526,11 +488,8 @@ class MarryTest {
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerService).getPlayerEntryByInternalId(1),
-        () -> verify(playerService, never()).deletePartner(any())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(playerService).getPlayerEntryByInternalId(1),
+        () -> verify(playerService, never()).deletePartner(any()));
   }
 
   @Test
@@ -548,10 +507,7 @@ class MarryTest {
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerService, never()).deletePartner(any())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(playerService, never()).deletePartner(any()));
   }
 
   @Test
@@ -571,10 +527,7 @@ class MarryTest {
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerService, never()).deletePartner(any())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(playerService, never()).deletePartner(any()));
   }
 
   @Test
@@ -604,15 +557,18 @@ class MarryTest {
     when(ownedBySecond.getCreatedBy()).thenReturn(2);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(
+        secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(true);
     when(serverService.getPlayer("SecondPlayer")).thenReturn(secondPlayer);
     when(secondPlayer.getDisplayName()).thenReturn("SecondPlayer");
     when(player.getCustomName()).thenReturn("FirstPlayer");
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "SecondPlayer")).thenReturn("divorced-first");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "FirstPlayer")).thenReturn("divorced-second");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        "SecondPlayer")).thenReturn("divorced-first");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        "FirstPlayer")).thenReturn("divorced-second");
 
     java.util.Map<Location, ProtectionEntry> protectionEntries = new java.util.HashMap<>();
     protectionEntries.put(mock(Location.class), ownedByFirst);
@@ -621,14 +577,11 @@ class MarryTest {
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("divorced-first"),
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("divorced-first"),
         () -> verify(secondPlayer).sendMessage("divorced-second"),
         () -> verify(playerService).deletePartner(partnerEntry),
         () -> verify(protectionActionService).removeRight(player, ownedByFirst, 2, true),
-        () -> verify(protectionActionService).removeRight(ownedBySecond, 1)
-    );
+        () -> verify(protectionActionService).removeRight(ownedBySecond, 1));
   }
 
   @Test
@@ -651,21 +604,20 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(
+        secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(false);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "SecondPlayer")).thenReturn("divorced-offline");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        "SecondPlayer")).thenReturn("divorced-offline");
 
     when(protectionService.getAllProtectionEntries()).thenReturn(new java.util.HashMap<>());
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("divorced-offline"),
-        () -> verify(playerService).deletePartner(partnerEntry)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("divorced-offline"),
+        () -> verify(playerService).deletePartner(partnerEntry));
   }
 
   @Test
@@ -688,15 +640,13 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(
+        secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn(null);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerService, never()).deletePartner(any())
-    );
+    assertAll(() -> assertTrue(result), () -> verify(playerService, never()).deletePartner(any()));
   }
 
   @Test
@@ -719,21 +669,20 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(
+        secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(true);
     when(serverService.getPlayer("SecondPlayer")).thenReturn(null);
 
-    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "SecondPlayer")).thenReturn("divorced-offline");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        "SecondPlayer")).thenReturn("divorced-offline");
 
     when(protectionService.getAllProtectionEntries()).thenReturn(new java.util.HashMap<>());
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("divorced-offline"),
-        () -> verify(playerService).deletePartner(partnerEntry)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("divorced-offline"),
+        () -> verify(playerService).deletePartner(partnerEntry));
   }
 }

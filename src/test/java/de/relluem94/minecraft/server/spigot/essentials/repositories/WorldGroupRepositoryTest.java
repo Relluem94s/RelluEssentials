@@ -73,34 +73,42 @@ class WorldGroupRepositoryTest {
 
   @Test
   void findWorldsByGroupPropagatesException() {
-    when(worldGroupDao.findWorldsByGroup(worldGroupEntry)).thenThrow(new RuntimeException("dao failure"));
+    when(worldGroupDao.findWorldsByGroup(worldGroupEntry)).thenThrow(
+        new RuntimeException("dao failure"));
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.findWorldsByGroup(worldGroupEntry));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.findWorldsByGroup(worldGroupEntry));
   }
 
   @Test
   void findInventoryByGroupAndPlayerReturnsDaoResult() {
-    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(worldGroupInventoryEntry);
+    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(
+        worldGroupInventoryEntry);
 
-    WorldGroupInventoryEntry result = worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry);
+    WorldGroupInventoryEntry result = worldGroupRepository.findInventoryByGroupAndPlayer(
+        playerEntry, worldGroupEntry);
 
     assertEquals(worldGroupInventoryEntry, result);
   }
 
   @Test
   void findInventoryByGroupAndPlayerReturnsNullWhenDaoReturnsNull() {
-    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
+    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(
+        null);
 
-    WorldGroupInventoryEntry result = worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry);
+    WorldGroupInventoryEntry result = worldGroupRepository.findInventoryByGroupAndPlayer(
+        playerEntry, worldGroupEntry);
 
     assertNull(result);
   }
 
   @Test
   void findInventoryByGroupAndPlayerPropagatesException() {
-    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenThrow(new RuntimeException("dao failure"));
+    when(worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenThrow(
+        new RuntimeException("dao failure"));
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry));
   }
 
   @Test
@@ -112,9 +120,11 @@ class WorldGroupRepositoryTest {
 
   @Test
   void saveInventoryPropagatesException() {
-    doThrow(new RuntimeException("dao failure")).when(worldGroupDao).insertInventory(worldGroupInventoryEntry);
+    doThrow(new RuntimeException("dao failure")).when(worldGroupDao)
+        .insertInventory(worldGroupInventoryEntry);
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.saveInventory(worldGroupInventoryEntry));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.saveInventory(worldGroupInventoryEntry));
   }
 
   @Test
@@ -126,9 +136,11 @@ class WorldGroupRepositoryTest {
 
   @Test
   void updateInventoryPropagatesException() {
-    doThrow(new RuntimeException("dao failure")).when(worldGroupDao).updateInventory(worldGroupInventoryEntry);
+    doThrow(new RuntimeException("dao failure")).when(worldGroupDao)
+        .updateInventory(worldGroupInventoryEntry);
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.updateInventory(worldGroupInventoryEntry));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.updateInventory(worldGroupInventoryEntry));
   }
 
   @Test
@@ -140,9 +152,11 @@ class WorldGroupRepositoryTest {
 
   @Test
   void saveWorldGroupPropagatesException() {
-    doThrow(new RuntimeException("dao failure")).when(worldGroupDao).insertWorldGroup(worldGroupEntry);
+    doThrow(new RuntimeException("dao failure")).when(worldGroupDao)
+        .insertWorldGroup(worldGroupEntry);
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.saveWorldGroup(worldGroupEntry));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.saveWorldGroup(worldGroupEntry));
   }
 
   @Test
@@ -168,9 +182,11 @@ class WorldGroupRepositoryTest {
   @Test
   void findWorldGroupByNamePropagatesException() {
     String groupName = "overworld";
-    when(worldGroupDao.findWorldGroupByName(groupName)).thenThrow(new RuntimeException("dao failure"));
+    when(worldGroupDao.findWorldGroupByName(groupName)).thenThrow(
+        new RuntimeException("dao failure"));
 
-    assertThrows(RuntimeException.class, () -> worldGroupRepository.findWorldGroupByName(groupName));
+    assertThrows(RuntimeException.class,
+        () -> worldGroupRepository.findWorldGroupByName(groupName));
   }
 
   @Test

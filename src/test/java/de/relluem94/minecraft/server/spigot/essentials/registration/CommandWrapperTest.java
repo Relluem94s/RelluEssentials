@@ -29,112 +29,111 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CommandWrapperTest {
 
-    @Mock
-    private RelluEssentials javaPlugin;
+  @Mock
+  private RelluEssentials javaPlugin;
 
-    @Mock
-    private PluginCommand pluginCommand;
+  @Mock
+  private PluginCommand pluginCommand;
 
-    private CommandWrapper commandWrapper;
-    private CommandWrapper commandWrapperNoSubCommands;
+  private CommandWrapper commandWrapper;
+  private CommandWrapper commandWrapperNoSubCommands;
 
-    @Mock
-    private CommandConstruct commandConstructWithRegistry;
+  @Mock
+  private CommandConstruct commandConstructWithRegistry;
 
-    @BeforeEach
-    void setUp() {
-        commandWrapper = new CommandWrapper(new Admin());
-        commandWrapperNoSubCommands = new CommandWrapper(new Afk());
-    }
+  @BeforeEach
+  void setUp() {
+    commandWrapper = new CommandWrapper(new Admin());
+    commandWrapperNoSubCommands = new CommandWrapper(new Afk());
+  }
 
-    @AfterEach
-    void tearDown() {
-        commandWrapper = null;
-        commandWrapperNoSubCommands = null;
-    }
+  @AfterEach
+  void tearDown() {
+    commandWrapper = null;
+    commandWrapperNoSubCommands = null;
+  }
 
-    @Test
-    void hasSubCommandsReturnsTrueWhenSubCommandsPresent() {
-        assertTrue(commandWrapper.hasSubCommands());
-    }
+  @Test
+  void hasSubCommandsReturnsTrueWhenSubCommandsPresent() {
+    assertTrue(commandWrapper.hasSubCommands());
+  }
 
-    @Test
-    void hasSubCommandsReturnsFalseWhenNoSubCommandsPresent() {
-        assertFalse(commandWrapperNoSubCommands.hasSubCommands());
-    }
+  @Test
+  void hasSubCommandsReturnsFalseWhenNoSubCommandsPresent() {
+    assertFalse(commandWrapperNoSubCommands.hasSubCommands());
+  }
 
-    @Test
-    void getSubCommandsReturnsNonEmptyArrayWhenSubCommandsPresent() {
-        assertNotEquals(0, commandWrapper.getSubCommands().length);
-    }
+  @Test
+  void getSubCommandsReturnsNonEmptyArrayWhenSubCommandsPresent() {
+    assertNotEquals(0, commandWrapper.getSubCommands().length);
+  }
 
-    @Test
-    void getSubCommandsReturnsEmptyArrayWhenNoSubCommandsPresent() {
-        assertEquals(0, commandWrapperNoSubCommands.getSubCommands().length);
-    }
+  @Test
+  void getSubCommandsReturnsEmptyArrayWhenNoSubCommandsPresent() {
+    assertEquals(0, commandWrapperNoSubCommands.getSubCommands().length);
+  }
 
-    @Test
-    void getCommandNameReturnsNonNullValue() {
-        assertNotNull(commandWrapper.getCommandName());
-    }
+  @Test
+  void getCommandNameReturnsNonNullValue() {
+    assertNotNull(commandWrapper.getCommandName());
+  }
 
-    @Test
-    void initSetsExecutorAndTabCompleterAndMarksInitialised() throws Exception {
-        Admin adminConstruct = new Admin();
-        CommandWrapper wrapper = new CommandWrapper(adminConstruct);
-        String commandName = wrapper.getCommandName();
-        ServiceContext serviceContext = new ServiceContext();
-        when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
+  @Test
+  void initSetsExecutorAndTabCompleterAndMarksInitialised() throws Exception {
+    Admin adminConstruct = new Admin();
+    CommandWrapper wrapper = new CommandWrapper(adminConstruct);
+    String commandName = wrapper.getCommandName();
+    ServiceContext serviceContext = new ServiceContext();
+    when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
-        wrapper.init(javaPlugin, serviceContext);
+    wrapper.init(javaPlugin, serviceContext);
 
-        Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
-        initialisedField.setAccessible(true);
+    Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
+    initialisedField.setAccessible(true);
 
-        assertAll(
-                () -> assertTrue((boolean) initialisedField.get(wrapper)),
-                () -> verify(pluginCommand).setExecutor(adminConstruct),
-                () -> verify(pluginCommand).setTabCompleter(adminConstruct)
-        );
-    }
+    assertAll(() -> assertTrue((boolean) initialisedField.get(wrapper)),
+        () -> verify(pluginCommand).setExecutor(adminConstruct),
+        () -> verify(pluginCommand).setTabCompleter(adminConstruct));
+  }
 
-    @Test
-    void initDoesNothingWhenAlreadyInitialised() {
-        Admin adminConstruct = new Admin();
-        CommandWrapper wrapper = new CommandWrapper(adminConstruct);
-        String commandName = wrapper.getCommandName();
+  @Test
+  void initDoesNothingWhenAlreadyInitialised() {
+    Admin adminConstruct = new Admin();
+    CommandWrapper wrapper = new CommandWrapper(adminConstruct);
+    String commandName = wrapper.getCommandName();
 
-        ServiceContext serviceContext = new ServiceContext();
-        when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
+    ServiceContext serviceContext = new ServiceContext();
+    when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
-        wrapper.init(javaPlugin, serviceContext);
-        wrapper.init(javaPlugin, serviceContext);
+    wrapper.init(javaPlugin, serviceContext);
+    wrapper.init(javaPlugin, serviceContext);
 
-        verify(pluginCommand, times(1)).setExecutor(adminConstruct);
-        verify(pluginCommand, times(1)).setTabCompleter(adminConstruct);
-    }
+    verify(pluginCommand, times(1)).setExecutor(adminConstruct);
+    verify(pluginCommand, times(1)).setTabCompleter(adminConstruct);
+  }
 
-    @Test
-    void initDoesNothingWhenPluginCommandIsNull() throws Exception {
-        Admin adminConstruct = new Admin();
-        CommandWrapper wrapper = new CommandWrapper(adminConstruct);
-        String commandName = wrapper.getCommandName();
+  @Test
+  void initDoesNothingWhenPluginCommandIsNull() throws Exception {
+    Admin adminConstruct = new Admin();
+    CommandWrapper wrapper = new CommandWrapper(adminConstruct);
+    String commandName = wrapper.getCommandName();
 
-        ServiceContext serviceContext = new ServiceContext();
-        when(javaPlugin.getCommand(commandName)).thenReturn(null);
+    ServiceContext serviceContext = new ServiceContext();
+    when(javaPlugin.getCommand(commandName)).thenReturn(null);
 
-        wrapper.init(javaPlugin, serviceContext);
+    wrapper.init(javaPlugin, serviceContext);
 
-        Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
-        initialisedField.setAccessible(true);
+    Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
+    initialisedField.setAccessible(true);
 
-        assertFalse((boolean) initialisedField.get(wrapper));
-    }
+    assertFalse((boolean) initialisedField.get(wrapper));
+  }
 
-    @Test
-    void hasSubCommandsReturnsTrueWhenSubCommandRegistryIsPresent() {
-        when(commandConstructWithRegistry.getSubCommandRegistry()).thenReturn(Optional.of(mock(/* SubCommandRegistry class */)));
-        CommandWrapper wrapper = new CommandWrapper(commandConstructWithRegistry);
-        assertTrue(wrapper.hasSubCommands());
-    }
+  @Test
+  void hasSubCommandsReturnsTrueWhenSubCommandRegistryIsPresent() {
+    when(commandConstructWithRegistry.getSubCommandRegistry()).thenReturn(
+        Optional.of(mock(/* SubCommandRegistry class */)));
+    CommandWrapper wrapper = new CommandWrapper(commandConstructWithRegistry);
+    assertTrue(wrapper.hasSubCommands());
+  }
 }
