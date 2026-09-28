@@ -18,4 +18,5 @@ jobs:
         uses: nikitasavinov/checkstyle-action@master
         with:
           checkstyle_config: '.github/checkstyle/checkstyle.xml'
+          checkstyle_version: '13.8.0'
           fail_level: 'error'
