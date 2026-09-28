@@ -17,6 +17,5 @@ jobs:
       - name: Run Checkstyle
         uses: nikitasavinov/checkstyle-action@master
         with:
-          checkstyle_config: 'google_checks.xml'
+          checkstyle_config: '.github/checkstyle/checkstyle.xml'
           fail_level: 'error'
-          args: '-e src/test'
