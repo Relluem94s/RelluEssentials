@@ -29,34 +29,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TitleTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private Title title;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
     title = new Title();
     title.injectContext(serviceContext);
 
-    org.mockito.Mockito.lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
+    org.mockito.Mockito.lenient().when(serviceContext.getTranslationService())
+        .thenReturn(translationService);
     org.mockito.Mockito.lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
     org.mockito.Mockito.lenient().when(serviceContext.getServerService()).thenReturn(serverService);
   }
@@ -71,7 +65,8 @@ class TitleTest {
 
   @Test
   void onCommandSendsTooLessArgumentsMessageWhenNoArgsProvided() {
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = title.onCommand(player, command, "title", new String[]{});
 
@@ -81,7 +76,8 @@ class TitleTest {
 
   @Test
   void onCommandSendsTooLessArgumentsMessageWhenOnlyOneArgProvided() {
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = title.onCommand(player, command, "title", new String[]{"TargetPlayer"});
 
@@ -92,9 +88,11 @@ class TitleTest {
   @Test
   void onCommandSendsPermissionMissingWhenSenderIsNotMod() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
-    boolean result = title.onCommand(player, command, "title", new String[]{"TargetPlayer", "Hello"});
+    boolean result = title.onCommand(player, command, "title",
+        new String[]{"TargetPlayer", "Hello"});
 
     assertTrue(result);
     verify(player).sendMessage(TRANSLATED_MESSAGE);
@@ -104,9 +102,11 @@ class TitleTest {
   void onCommandSendsTargetNotAPlayerMessageWhenTargetNotFound() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
-    boolean result = title.onCommand(player, command, "title", new String[]{"UnknownPlayer", "Hello"});
+    boolean result = title.onCommand(player, command, "title",
+        new String[]{"UnknownPlayer", "Hello"});
 
     assertTrue(result);
     verify(player).sendMessage(TRANSLATED_MESSAGE);
@@ -119,7 +119,8 @@ class TitleTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("TargetPlayer")).thenReturn(targetPlayer);
 
-    boolean result = title.onCommand(player, command, "title", new String[]{"TargetPlayer", "§aHello"});
+    boolean result = title.onCommand(player, command, "title",
+        new String[]{"TargetPlayer", "§aHello"});
 
     assertTrue(result);
     verify(targetPlayer).sendTitle("§aHello", "", 5, 80, 5);
@@ -132,7 +133,8 @@ class TitleTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("TargetPlayer")).thenReturn(targetPlayer);
 
-    boolean result = title.onCommand(player, command, "title", new String[]{"TargetPlayer", "§aHello", "§bWorld"});
+    boolean result = title.onCommand(player, command, "title",
+        new String[]{"TargetPlayer", "§aHello", "§bWorld"});
 
     assertTrue(result);
     verify(targetPlayer).sendTitle("§aHello", "§bWorld ", 5, 80, 5);
@@ -145,7 +147,8 @@ class TitleTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("TargetPlayer")).thenReturn(targetPlayer);
 
-    boolean result = title.onCommand(player, command, "title", new String[]{"TargetPlayer", "§aHello", "§bBig", "World"});
+    boolean result = title.onCommand(player, command, "title",
+        new String[]{"TargetPlayer", "§aHello", "§bBig", "World"});
 
     assertTrue(result);
     verify(targetPlayer).sendTitle("§aHello", "§bBig World ", 5, 80, 5);
@@ -155,12 +158,14 @@ class TitleTest {
   void onCommandDoesNotSendTitleToSenderWhenTargetNotFound() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     title.onCommand(player, command, "title", new String[]{"UnknownPlayer", "Hello"});
 
-    verify(player, never()).sendTitle(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(),
-        org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.anyInt());
+    verify(player, never()).sendTitle(org.mockito.ArgumentMatchers.any(),
+        org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.anyInt(),
+        org.mockito.ArgumentMatchers.anyInt(), org.mockito.ArgumentMatchers.anyInt());
   }
 
   @Test
@@ -168,7 +173,8 @@ class TitleTest {
     CommandSender unauthorizedSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(unauthorizedSender, "mod")).thenReturn(false);
 
-    List<String> result = title.onTabComplete(unauthorizedSender, command, "title", new String[]{"a"});
+    List<String> result = title.onTabComplete(unauthorizedSender, command, "title",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -189,7 +195,8 @@ class TitleTest {
   void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = title.onTabComplete(player, command, "title", new String[]{"arg1", "arg2"});
+    List<String> result = title.onTabComplete(player, command, "title",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());

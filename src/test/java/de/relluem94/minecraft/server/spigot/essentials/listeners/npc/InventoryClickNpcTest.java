@@ -239,7 +239,8 @@ class InventoryClickNpcTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    String npcTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = buildClickEvent(player, npcTitle, clickedItem);
 
     CustomItem disabledItem = mock(CustomItem.class);
@@ -268,7 +269,8 @@ class InventoryClickNpcTest {
     when(clickedItem.getItemMeta()).thenReturn(meta);
     when(meta.getDisplayName()).thenReturn("world_name");
 
-    String worldsTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
+    String worldsTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
     InventoryClickEvent event = buildClickEvent(player, worldsTitle, clickedItem);
 
     listener.onInventoryClickItem(event);
@@ -286,7 +288,8 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(itemService.isItemStack(any(), eq(clickedItem))).thenReturn(true);
 
-    String worldsTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
+    String worldsTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
     InventoryClickEvent event = buildClickEvent(player, worldsTitle, clickedItem);
 
     listener.onInventoryClickItem(event);
@@ -304,7 +307,8 @@ class InventoryClickNpcTest {
     when(itemService.isItemStack(any(), eq(clickedItem))).thenReturn(false);
     when(clickedItem.getItemMeta()).thenReturn(null);
 
-    String worldsTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
+    String worldsTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
     InventoryClickEvent event = buildClickEvent(player, worldsTitle, clickedItem);
 
     listener.onInventoryClickItem(event);
@@ -393,7 +397,8 @@ class InventoryClickNpcTest {
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       listener.onInventoryClickItem(event);
       inventoryHelper.verify(() -> InventoryHelper.closeInventory(player));
       inventoryHelper.verify(() -> InventoryHelper.openInventory(player, depositGui));
@@ -420,13 +425,15 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), anyString(), anyString()))
-        .thenReturn("balance message");
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), anyString(),
+        anyString())).thenReturn("balance message");
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       try (MockedStatic<StringHelper> stringHelper = Mockito.mockStatic(StringHelper.class)) {
         stringHelper.when(() -> StringHelper.formatDouble(1000.0)).thenReturn("1000.00");
         listener.onInventoryClickItem(event);
@@ -458,13 +465,15 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankerNpc.getBalanceGui()).thenReturn(balanceGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       listener.onInventoryClickItem(event);
       inventoryHelper.verify(() -> InventoryHelper.closeInventory(player));
       inventoryHelper.verify(() -> InventoryHelper.openInventory(player, balanceGui));
@@ -494,14 +503,16 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
     when(bankerNpc.getWithdrawGui(1000.0)).thenReturn(withdrawGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       listener.onInventoryClickItem(event);
       inventoryHelper.verify(() -> InventoryHelper.closeInventory(player));
       inventoryHelper.verify(() -> InventoryHelper.openInventory(player, withdrawGui));
@@ -530,7 +541,8 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
 
@@ -572,12 +584,16 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(transactionsItem);
-    when(bankService.findTransactionsByBankAccountId(10)).thenReturn(List.of(positiveTransaction, negativeTransaction));
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION)).thenReturn("header");
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(
+        transactionsItem);
+    when(bankService.findTransactionsByBankAccountId(10)).thenReturn(
+        List.of(positiveTransaction, negativeTransaction));
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION)).thenReturn("header");
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST),
         eq(PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE), eq(PLUGIN_COLOR_MONEY), anyString(),
         eq(PLUGIN_NAME_MONEY), eq("2024-01-01"))).thenReturn("positive entry");
@@ -587,7 +603,8 @@ class InventoryClickNpcTest {
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       try (MockedStatic<StringHelper> stringHelper = Mockito.mockStatic(StringHelper.class)) {
         stringHelper.when(() -> StringHelper.formatDouble(100.0)).thenReturn("100.00");
         stringHelper.when(() -> StringHelper.formatDouble(0.5)).thenReturn("0.50");
@@ -625,16 +642,19 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(transactionsItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(
+        transactionsItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(upgradeItem);
     when(bankerNpc.getUpgradeGui()).thenReturn(upgradeGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       listener.onInventoryClickItem(event);
       inventoryHelper.verify(() -> InventoryHelper.closeInventory(player));
       inventoryHelper.verify(() -> InventoryHelper.openInventory(player, upgradeGui));
@@ -666,15 +686,18 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(
+        totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
-    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(transactionsItem);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(
+        transactionsItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(upgradeItem);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
-    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(InventoryHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelper = Mockito.mockStatic(
+        InventoryHelper.class)) {
       listener.onInventoryClickItem(event);
       inventoryHelper.verify(() -> InventoryHelper.closeInventory(player));
     }
@@ -687,7 +710,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Deposit5");
@@ -703,7 +727,8 @@ class InventoryClickNpcTest {
     lenient().when(depositPercentItem.toItemStack()).thenReturn(depositPercentItemStack);
     lenient().when(depositPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(depositPercentItem.displayName()).thenReturn("Deposit5");
-    RelluEssentialsNamespacedKey deposit5Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
+    RelluEssentialsNamespacedKey deposit5Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
     when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit5Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -730,7 +755,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Withdraw5");
@@ -746,7 +772,8 @@ class InventoryClickNpcTest {
     lenient().when(withdrawPercentItem.toItemStack()).thenReturn(withdrawPercentItemStack);
     lenient().when(withdrawPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(withdrawPercentItem.displayName()).thenReturn("Withdraw5");
-    RelluEssentialsNamespacedKey withdraw5Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT);
+    RelluEssentialsNamespacedKey withdraw5Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT);
     when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw5Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -773,7 +800,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("UnknownItem");
@@ -789,7 +817,8 @@ class InventoryClickNpcTest {
     lenient().when(someOtherItem.toItemStack()).thenReturn(someOtherItemStack);
     lenient().when(someOtherItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(someOtherItem.displayName()).thenReturn("SomethingElse");
-    RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
+    RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
@@ -817,7 +846,8 @@ class InventoryClickNpcTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    String npcTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = buildClickEvent(player, npcTitle, clickedItem);
 
     CustomItem disabledItem = mock(CustomItem.class);
@@ -837,7 +867,8 @@ class InventoryClickNpcTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    String npcTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = buildClickEvent(player, npcTitle, clickedItem);
 
     when(itemService.find(any())).thenReturn(Optional.empty());
@@ -854,7 +885,8 @@ class InventoryClickNpcTest {
 
     lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    String npcTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = mock(InventoryClickEvent.class);
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
@@ -874,7 +906,8 @@ class InventoryClickNpcTest {
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE)).thenReturn("CustomHeadsTitle");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE)).thenReturn(
+        "CustomHeadsTitle");
 
     InventoryClickEvent event = buildClickEvent(player, "CustomHeadsTitle", clickedItem);
 
@@ -893,7 +926,8 @@ class InventoryClickNpcTest {
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(mock(PlayerEntry.class));
-    when(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE)).thenReturn("CustomHeadsTitle");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE)).thenReturn(
+        "CustomHeadsTitle");
 
     InventoryClickEvent event = buildClickEvent(player, "CompletelyUnknownTitle", clickedItem);
 
@@ -911,7 +945,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Deposit20");
@@ -924,7 +959,8 @@ class InventoryClickNpcTest {
 
     CustomItem depositPercentItem = mock(CustomItem.class);
     when(depositPercentItem.displayName()).thenReturn("Deposit20");
-    RelluEssentialsNamespacedKey deposit20Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
+    RelluEssentialsNamespacedKey deposit20Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
     when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit20Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -951,7 +987,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Deposit50");
@@ -964,7 +1001,8 @@ class InventoryClickNpcTest {
 
     CustomItem depositPercentItem = mock(CustomItem.class);
     when(depositPercentItem.displayName()).thenReturn("Deposit50");
-    RelluEssentialsNamespacedKey deposit50Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT);
+    RelluEssentialsNamespacedKey deposit50Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT);
     when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit50Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -991,7 +1029,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("DepositAll");
@@ -1004,7 +1043,8 @@ class InventoryClickNpcTest {
 
     CustomItem depositPercentItem = mock(CustomItem.class);
     when(depositPercentItem.displayName()).thenReturn("DepositAll");
-    RelluEssentialsNamespacedKey depositAllKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL);
+    RelluEssentialsNamespacedKey depositAllKey = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL);
     when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(depositAllKey);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -1031,7 +1071,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Withdraw20");
@@ -1044,7 +1085,8 @@ class InventoryClickNpcTest {
 
     CustomItem withdrawPercentItem = mock(CustomItem.class);
     when(withdrawPercentItem.displayName()).thenReturn("Withdraw20");
-    RelluEssentialsNamespacedKey withdraw20Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT);
+    RelluEssentialsNamespacedKey withdraw20Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT);
     when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw20Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -1071,7 +1113,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("Withdraw50");
@@ -1084,7 +1127,8 @@ class InventoryClickNpcTest {
 
     CustomItem withdrawPercentItem = mock(CustomItem.class);
     when(withdrawPercentItem.displayName()).thenReturn("Withdraw50");
-    RelluEssentialsNamespacedKey withdraw50Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT);
+    RelluEssentialsNamespacedKey withdraw50Key = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT);
     when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw50Key);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -1111,7 +1155,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("WithdrawAll");
@@ -1124,7 +1169,8 @@ class InventoryClickNpcTest {
 
     CustomItem withdrawPercentItem = mock(CustomItem.class);
     when(withdrawPercentItem.displayName()).thenReturn("WithdrawAll");
-    RelluEssentialsNamespacedKey withdrawAllKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL);
+    RelluEssentialsNamespacedKey withdrawAllKey = new RelluEssentialsNamespacedKey(
+        "relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL);
     when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdrawAllKey);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -1151,7 +1197,8 @@ class InventoryClickNpcTest {
 
     lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    String npcTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = mock(InventoryClickEvent.class);
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
@@ -1171,7 +1218,8 @@ class InventoryClickNpcTest {
 
     lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    String worldsTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
+    String worldsTitle =
+        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
     InventoryClickEvent event = mock(InventoryClickEvent.class);
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
@@ -1202,7 +1250,8 @@ class InventoryClickNpcTest {
 
     CustomItem someItem = mock(CustomItem.class);
     when(someItem.displayName()).thenReturn("SomeDisplayName");
-    RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
+    RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials",
+        PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
@@ -1229,7 +1278,8 @@ class InventoryClickNpcTest {
     BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
-    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(
+        org.bukkit.inventory.meta.ItemMeta.class);
     when(clickedItem.getType()).thenReturn(Material.STONE);
     when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
     when(clickedItemMeta.getDisplayName()).thenReturn("MatchedDisplayName");
@@ -1240,7 +1290,8 @@ class InventoryClickNpcTest {
     when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
-    RelluEssentialsNamespacedKey unknownKey = new RelluEssentialsNamespacedKey("relluessentials", "bank_unknown_action");
+    RelluEssentialsNamespacedKey unknownKey = new RelluEssentialsNamespacedKey("relluessentials",
+        "bank_unknown_action");
     CustomItem matchedItem = mock(CustomItem.class);
     when(matchedItem.displayName()).thenReturn("MatchedDisplayName");
     when(matchedItem.relluEssentialsNamespacedKey()).thenReturn(unknownKey);

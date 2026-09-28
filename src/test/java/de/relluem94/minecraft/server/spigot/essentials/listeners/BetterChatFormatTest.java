@@ -86,12 +86,12 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(chatEvent).setCancelled(true),
+    assertAll(() -> verify(chatEvent).setCancelled(true),
         () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -108,11 +108,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -128,11 +128,9 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(chatService).sendMessageInChannel(
-            anyString(), eq(player), eq(BetterChatFormat.VIP_CHANNEL), eq(vipGroupEntry)),
-        () -> verify(serverService, never()).broadcastMessage(anyString())
-    );
+    assertAll(() -> verify(chatService).sendMessageInChannel(anyString(), eq(player),
+            eq(BetterChatFormat.VIP_CHANNEL), eq(vipGroupEntry)),
+        () -> verify(serverService, never()).broadcastMessage(anyString()));
   }
 
   @Test
@@ -149,11 +147,9 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(chatService).sendMessageInChannel(
-            anyString(), eq(player), eq(BetterChatFormat.MOD_CHANNEL), eq(modGroupEntry)),
-        () -> verify(serverService, never()).broadcastMessage(anyString())
-    );
+    assertAll(() -> verify(chatService).sendMessageInChannel(anyString(), eq(player),
+            eq(BetterChatFormat.MOD_CHANNEL), eq(modGroupEntry)),
+        () -> verify(serverService, never()).broadcastMessage(anyString()));
   }
 
   @Test
@@ -170,11 +166,9 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(chatService).sendMessageInChannel(
-            anyString(), eq(player), eq(BetterChatFormat.ADMIN_CHANNEL), eq(adminGroupEntry)),
-        () -> verify(serverService, never()).broadcastMessage(anyString())
-    );
+    assertAll(() -> verify(chatService).sendMessageInChannel(anyString(), eq(player),
+            eq(BetterChatFormat.ADMIN_CHANNEL), eq(adminGroupEntry)),
+        () -> verify(serverService, never()).broadcastMessage(anyString()));
   }
 
   @Test
@@ -192,11 +186,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -214,11 +208,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -235,11 +229,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -260,11 +254,9 @@ class BetterChatFormatTest {
 
   @Test
   void channelConstantsHaveExpectedValues() {
-    assertAll(
-        () -> assertEquals("#v ", BetterChatFormat.VIP_CHANNEL),
+    assertAll(() -> assertEquals("#v ", BetterChatFormat.VIP_CHANNEL),
         () -> assertEquals("#m ", BetterChatFormat.MOD_CHANNEL),
-        () -> assertEquals("#a ", BetterChatFormat.ADMIN_CHANNEL)
-    );
+        () -> assertEquals("#a ", BetterChatFormat.ADMIN_CHANNEL));
   }
 
   @Test
@@ -281,11 +273,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -302,11 +294,11 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 
   @Test
@@ -323,10 +315,10 @@ class BetterChatFormatTest {
 
     betterChatFormat.onChat(chatEvent);
 
-    assertAll(
-        () -> verify(serverService).broadcastMessage(anyString()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
-        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
-    );
+    assertAll(() -> verify(serverService).broadcastMessage(anyString()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(),
+            any()),
+        () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(),
+            any()));
   }
 }

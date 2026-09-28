@@ -10,6 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * Test fixture representing a command class annotated with {@link CommandName},
+ * used to verify command discovery and registration logic.
+ *
+ * @author rellu
+ */
 @SuppressWarnings("unused")
 @CommandName("AnnotatedCommandFixture")
 public class AnnotatedCommandFixture implements CommandConstruct {

@@ -130,8 +130,7 @@ class BetterPlayerQuitTest {
 
       assertAll(() -> sudoMock.verify(
               () -> de.relluem94.minecraft.server.spigot.essentials.commands.Sudo.exitSudo(player,
-                  serviceContext)),
-          () -> verify(playerService).savePlayer(player),
+                  serviceContext)), () -> verify(playerService).savePlayer(player),
           () -> verify(buyBackService).clearBuyBackHistory(player),
           () -> verify(serverService).broadcastMessage("TestPlayer left the game"),
           () -> verify(teleportService).teleportWorld(player, PLUGIN_WORLD_LOBBY, true),

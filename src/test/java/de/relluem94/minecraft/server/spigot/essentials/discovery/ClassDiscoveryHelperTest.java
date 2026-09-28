@@ -33,7 +33,8 @@ class ClassDiscoveryHelperTest {
   void privateConstructorThrowsIllegalStateException() throws Exception {
     Constructor<ClassDiscoveryHelper> constructor = ClassDiscoveryHelper.class.getDeclaredConstructor();
     constructor.setAccessible(true);
-    InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
+    InvocationTargetException thrown = assertThrows(InvocationTargetException.class,
+        constructor::newInstance);
     assertInstanceOf(IllegalStateException.class, thrown.getCause());
   }
 
@@ -41,17 +42,14 @@ class ClassDiscoveryHelperTest {
   void findAnnotatedClassesReturnsEmptyListWhenResourceNotFound() {
     ClassLoader classLoader = new URLClassLoader(new URL[0], null);
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
-        "de.nonexistent.package",
-        Deprecated.class,
-        Runnable.class,
-        classLoader
-    );
+        "de.nonexistent.package", Deprecated.class, Runnable.class, classLoader);
     assertTrue(result.isEmpty());
   }
 
   @Test
   void findAnnotatedClassesReturnsEmptyListForUnknownProtocol() {
-    ClassLoader fakeProtocolClassLoader = new ClassLoader(ClassDiscoveryHelperTest.class.getClassLoader()) {
+    ClassLoader fakeProtocolClassLoader = new ClassLoader(
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         try {
@@ -63,11 +61,8 @@ class ClassDiscoveryHelperTest {
     };
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
-        "de.relluem94.minecraft.server.spigot.essentials.discovery",
-        Deprecated.class,
-        Runnable.class,
-        fakeProtocolClassLoader
-    );
+        "de.relluem94.minecraft.server.spigot.essentials.discovery", Deprecated.class,
+        Runnable.class, fakeProtocolClassLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -78,10 +73,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Annotation>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Annotation.class,
-        classLoader
-    );
+        TestAnnotation.class, Annotation.class, classLoader);
 
     assertFalse(result.isEmpty());
     assertTrue(result.stream().allMatch(c -> c.isAnnotationPresent(TestAnnotation.class)));
@@ -93,10 +85,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Runnable.class,
-        classLoader
-    );
+        TestAnnotation.class, Runnable.class, classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -107,10 +96,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Number>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Number.class,
-        classLoader
-    );
+        TestAnnotation.class, Number.class, classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -119,12 +105,8 @@ class ClassDiscoveryHelperTest {
   void findAnnotatedClassesReturnsEmptyListWhenPackageNameIsEmpty() {
     ClassLoader classLoader = ClassDiscoveryHelperTest.class.getClassLoader();
 
-    List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
-        "",
-        Deprecated.class,
-        Runnable.class,
-        classLoader
-    );
+    List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses("",
+        Deprecated.class, Runnable.class, classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -133,17 +115,12 @@ class ClassDiscoveryHelperTest {
   void findAnnotatedClassesFromJarReturnsEmptyListWhenNoAnnotatedClassesPresent() throws Exception {
     File temporaryJarFile = buildTemporaryJarContainingTestFixtures();
 
-    URLClassLoader jarClassLoader = new URLClassLoader(
-        new URL[]{temporaryJarFile.toURI().toURL()},
-        null
-    );
+    URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{temporaryJarFile.toURI().toURL()},
+        null);
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Runnable.class,
-        jarClassLoader
-    );
+        TestAnnotation.class, Runnable.class, jarClassLoader);
 
     jarClassLoader.close();
     assertTrue(temporaryJarFile.delete());
@@ -155,17 +132,12 @@ class ClassDiscoveryHelperTest {
   void findAnnotatedClassesFromJarExcludesClassesWithoutAnnotation() throws Exception {
     File temporaryJarFile = buildTemporaryJarContainingTestFixtures();
 
-    URLClassLoader jarClassLoader = new URLClassLoader(
-        new URL[]{temporaryJarFile.toURI().toURL()},
-        null
-    );
+    URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{temporaryJarFile.toURI().toURL()},
+        null);
 
     List<Class<? extends Annotation>> result = ClassDiscoveryHelper.findAnnotatedClasses(
-        "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        Deprecated.class,
-        Annotation.class,
-        jarClassLoader
-    );
+        "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures", Deprecated.class,
+        Annotation.class, jarClassLoader);
 
     jarClassLoader.close();
 
@@ -177,10 +149,8 @@ class ClassDiscoveryHelperTest {
   void findAnnotatedClassesFromJarReturnsAnnotatedClassesMatchingTargetType() throws Exception {
     File temporaryJarFile = buildTemporaryJarContainingTestFixtures();
 
-    URLClassLoader jarClassLoader = new URLClassLoader(
-        new URL[]{temporaryJarFile.toURI().toURL()},
-        ClassDiscoveryHelperTest.class.getClassLoader()
-    ) {
+    URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{temporaryJarFile.toURI().toURL()},
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         return findResource(name);
@@ -189,10 +159,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Annotation>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Annotation.class,
-        jarClassLoader
-    );
+        TestAnnotation.class, Annotation.class, jarClassLoader);
 
     jarClassLoader.close();
     assertTrue(temporaryJarFile.delete());
@@ -206,7 +173,8 @@ class ClassDiscoveryHelperTest {
     File nonDirectoryFile = Files.createTempFile("notadirectory", ".tmp").toFile();
     nonDirectoryFile.deleteOnExit();
 
-    ClassLoader classLoaderPointingToFile = new ClassLoader(ClassDiscoveryHelperTest.class.getClassLoader()) {
+    ClassLoader classLoaderPointingToFile = new ClassLoader(
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         try {
@@ -219,10 +187,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Runnable.class,
-        classLoaderPointingToFile
-    );
+        TestAnnotation.class, Runnable.class, classLoaderPointingToFile);
 
     assertTrue(result.isEmpty());
   }
@@ -232,11 +197,13 @@ class ClassDiscoveryHelperTest {
     File temporaryJarFile = buildTemporaryJarContainingTestFixtures();
     URL validJarUrl = temporaryJarFile.toURI().toURL();
 
-    ClassLoader classLoaderWithUnreadableJarUrl = new ClassLoader(ClassDiscoveryHelperTest.class.getClassLoader()) {
+    ClassLoader classLoaderWithUnreadableJarUrl = new ClassLoader(
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         try {
-          return URI.create("jar:" + validJarUrl + "!/de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures").toURL();
+          return URI.create("jar:" + validJarUrl
+              + "!/de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures").toURL();
         } catch (Exception e) {
           return null;
         }
@@ -247,10 +214,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Runnable.class,
-        classLoaderWithUnreadableJarUrl
-    );
+        TestAnnotation.class, Runnable.class, classLoaderWithUnreadableJarUrl);
 
     assertTrue(result.isEmpty());
   }
@@ -261,7 +225,8 @@ class ClassDiscoveryHelperTest {
     Mockito.when(mockedUrl.getProtocol()).thenReturn("file");
     Mockito.when(mockedUrl.toURI()).thenThrow(new URISyntaxException("invalid", "mocked"));
 
-    ClassLoader classLoaderWithMockedUrl = new ClassLoader(ClassDiscoveryHelperTest.class.getClassLoader()) {
+    ClassLoader classLoaderWithMockedUrl = new ClassLoader(
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         return mockedUrl;
@@ -270,22 +235,18 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Runnable>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Runnable.class,
-        classLoaderWithMockedUrl
-    );
+        TestAnnotation.class, Runnable.class, classLoaderWithMockedUrl);
 
     assertTrue(result.isEmpty());
   }
 
   @Test
-  void findAnnotatedClassesFromJarSkipsJarEntriesEndingWithClassSuffixThatAreDirectories() throws Exception {
+  void findAnnotatedClassesFromJarSkipsJarEntriesEndingWithClassSuffixThatAreDirectories()
+      throws Exception {
     File temporaryJarFile = buildTemporaryJarContainingTestFixturesWithDirectoryClassEntry();
 
-    URLClassLoader jarClassLoader = new URLClassLoader(
-        new URL[]{temporaryJarFile.toURI().toURL()},
-        ClassDiscoveryHelperTest.class.getClassLoader()
-    ) {
+    URLClassLoader jarClassLoader = new URLClassLoader(new URL[]{temporaryJarFile.toURI().toURL()},
+        ClassDiscoveryHelperTest.class.getClassLoader()) {
       @Override
       public URL getResource(String name) {
         return findResource(name);
@@ -294,10 +255,7 @@ class ClassDiscoveryHelperTest {
 
     List<Class<? extends Annotation>> result = ClassDiscoveryHelper.findAnnotatedClasses(
         "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
-        TestAnnotation.class,
-        Annotation.class,
-        jarClassLoader
-    );
+        TestAnnotation.class, Annotation.class, jarClassLoader);
 
     jarClassLoader.close();
     assertTrue(temporaryJarFile.delete());
@@ -308,11 +266,11 @@ class ClassDiscoveryHelperTest {
   private File buildTemporaryJarContainingTestFixturesWithDirectoryClassEntry() throws Exception {
     File temporaryJarFile = Files.createTempFile("testfixtures-dirclass", ".jar").toFile();
 
-    try (FileOutputStream fileOutputStream = new FileOutputStream(temporaryJarFile);
-        JarOutputStream jarOutputStream = new JarOutputStream(fileOutputStream)) {
+    try (FileOutputStream fileOutputStream = new FileOutputStream(
+        temporaryJarFile); JarOutputStream jarOutputStream = new JarOutputStream(
+        fileOutputStream)) {
 
-      String directoryEntryName =
-          "de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures/Fake.class/";
+      String directoryEntryName = "de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures/Fake.class/";
       jarOutputStream.putNextEntry(new JarEntry(directoryEntryName));
       jarOutputStream.closeEntry();
     }
@@ -323,8 +281,9 @@ class ClassDiscoveryHelperTest {
   private File buildTemporaryJarContainingTestFixtures() throws Exception {
     File temporaryJarFile = Files.createTempFile("testfixtures", ".jar").toFile();
 
-    try (FileOutputStream fileOutputStream = new FileOutputStream(temporaryJarFile);
-        JarOutputStream jarOutputStream = new JarOutputStream(fileOutputStream)) {
+    try (FileOutputStream fileOutputStream = new FileOutputStream(
+        temporaryJarFile); JarOutputStream jarOutputStream = new JarOutputStream(
+        fileOutputStream)) {
 
       writeDirectoryEntryToJar(jarOutputStream);
       writeClassToJar(jarOutputStream, AnnotatedTestFixture.class);
@@ -335,15 +294,16 @@ class ClassDiscoveryHelperTest {
   }
 
   private void writeDirectoryEntryToJar(JarOutputStream jarOutputStream) throws Exception {
-    jarOutputStream.putNextEntry(new JarEntry(
-        "de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures/"));
+    jarOutputStream.putNextEntry(
+        new JarEntry("de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures/"));
     jarOutputStream.closeEntry();
   }
 
   private void writeClassToJar(JarOutputStream jarOutputStream, Class<?> clazz) throws Exception {
     String classResourcePath = clazz.getName().replace('.', '/') + ".class";
 
-    try (InputStream classInputStream = clazz.getClassLoader().getResourceAsStream(classResourcePath)) {
+    try (InputStream classInputStream = clazz.getClassLoader()
+        .getResourceAsStream(classResourcePath)) {
       assert classInputStream != null;
       byte[] classBytes = readAllBytes(classInputStream);
       jarOutputStream.putNextEntry(new JarEntry(classResourcePath));

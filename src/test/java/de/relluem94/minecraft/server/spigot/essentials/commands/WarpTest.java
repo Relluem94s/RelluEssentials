@@ -77,7 +77,8 @@ class WarpTest {
 
   @Test
   void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        "not a player");
 
     boolean result = warpCommand.onCommand(nonPlayerSender, command, "warp", new String[]{});
 
@@ -88,7 +89,8 @@ class WarpTest {
   @Test
   void onCommandPlayerNotAuthorizedSendsPermissionMissingMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn("no permission");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        "no permission");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{});
 
@@ -100,7 +102,8 @@ class WarpTest {
   void onCommandNoArgsSendsWarpListInfo() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(warpService.findWarpsByWorld(world)).thenReturn(new ArrayList<>());
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO)).thenReturn("warp list:");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO)).thenReturn(
+        "warp list:");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{});
 
@@ -115,9 +118,12 @@ class WarpTest {
 
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(warpService.findWarpsByWorld(world)).thenReturn(List.of(warp1, warp2));
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO)).thenReturn("warp list:");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST, "spawn")).thenReturn("- spawn");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST, "market")).thenReturn("- market");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO)).thenReturn(
+        "warp list:");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST, "spawn")).thenReturn(
+        "- spawn");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST, "market")).thenReturn(
+        "- market");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{});
 
@@ -145,7 +151,8 @@ class WarpTest {
   void onCommandOneArgWarpNotFoundSendsNoWarpFoundMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(warpService.findWarpByNameAndWorld("ghost", world)).thenReturn(Optional.empty());
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND)).thenReturn("no warp found");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND)).thenReturn(
+        "no warp found");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"ghost"});
 
@@ -159,7 +166,8 @@ class WarpTest {
 
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(warpService.findWarpByNameAndWorld("spawn", world)).thenReturn(Optional.of(warpEntry));
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED)).thenReturn("world unloaded");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED)).thenReturn(
+        "world unloaded");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"spawn"});
 
@@ -174,7 +182,8 @@ class WarpTest {
 
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(warpService.findWarpByNameAndWorld("spawn", world)).thenReturn(Optional.of(warpEntry));
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED)).thenReturn("world unloaded");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED)).thenReturn(
+        "world unloaded");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"spawn"});
 
@@ -186,7 +195,8 @@ class WarpTest {
   void onCommandTwoArgsAddNotAdminSendsPermissionMissingMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn("no permission");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        "no permission");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"add", "spawn"});
 
@@ -201,7 +211,8 @@ class WarpTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(warpService.addWarp("spawn", player, playerEntry.getId())).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ADD, "spawn")).thenReturn("warp added");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ADD, "spawn")).thenReturn(
+        "warp added");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"add", "spawn"});
 
@@ -216,7 +227,8 @@ class WarpTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(warpService.addWarp("spawn", player, playerEntry.getId())).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_ALREADY_EXISTS, "spawn")).thenReturn("already exists");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_ALREADY_EXISTS,
+        "spawn")).thenReturn("already exists");
 
     boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"add", "spawn"});
 
@@ -229,9 +241,11 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(warpService.removeWarp("spawn")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, "spawn")).thenReturn("warp removed");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, "spawn")).thenReturn(
+        "warp removed");
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"remove", "spawn"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{"remove", "spawn"});
 
     verify(player).sendMessage("warp removed");
     assertTrue(result);
@@ -242,9 +256,11 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(warpService.removeWarp("ghost")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WARP_NOT_DELETED_NOT_FOUND, "ghost")).thenReturn("not deleted");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WARP_NOT_DELETED_NOT_FOUND,
+        "ghost")).thenReturn("not deleted");
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"remove", "ghost"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{"remove", "ghost"});
 
     verify(player).sendMessage("not deleted");
     assertTrue(result);
@@ -254,9 +270,11 @@ class WarpTest {
   void onCommandTwoArgsUnknownSubCommandSendsWrongSubCommandMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn("wrong sub command");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(
+        "wrong sub command");
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"unknown", "spawn"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{"unknown", "spawn"});
 
     verify(player).sendMessage("wrong sub command");
     assertTrue(result);
@@ -270,9 +288,11 @@ class WarpTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(warpService.addWarp("spawn", player, playerEntry.getId())).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ADD, "spawn")).thenReturn("warp added");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ADD, "spawn")).thenReturn(
+        "warp added");
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{subCommand, "spawn"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{subCommand, "spawn"});
 
     verify(warpService).addWarp("spawn", player, playerEntry.getId());
     assertTrue(result);
@@ -284,9 +304,11 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(warpService.removeWarp("spawn")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, "spawn")).thenReturn("warp removed");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, "spawn")).thenReturn(
+        "warp removed");
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{subCommand, "spawn"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{subCommand, "spawn"});
 
     verify(warpService).removeWarp("spawn");
     assertTrue(result);
@@ -296,7 +318,8 @@ class WarpTest {
   void onTabCompleteUnauthorizedReturnsEmptyList() {
     when(groupService.isSenderAuthorized(nonPlayerSender, "user")).thenReturn(false);
 
-    List<String> result = warpCommand.onTabComplete(nonPlayerSender, command, "warp", new String[]{"s"});
+    List<String> result = warpCommand.onTabComplete(nonPlayerSender, command, "warp",
+        new String[]{"s"});
 
     assertTrue(result.isEmpty());
   }
@@ -305,7 +328,8 @@ class WarpTest {
   void onTabCompleteNonPlayerReturnsEmptyList() {
     when(groupService.isSenderAuthorized(nonPlayerSender, "user")).thenReturn(true);
 
-    List<String> result = warpCommand.onTabComplete(nonPlayerSender, command, "warp", new String[]{"s"});
+    List<String> result = warpCommand.onTabComplete(nonPlayerSender, command, "warp",
+        new String[]{"s"});
 
     assertTrue(result.isEmpty());
   }
@@ -342,7 +366,8 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(warpService.getWarpNamesByWorld(world)).thenReturn(List.of("spawn", "market"));
 
-    List<String> result = warpCommand.onTabComplete(player, command, "warp", new String[]{"remove", ""});
+    List<String> result = warpCommand.onTabComplete(player, command, "warp",
+        new String[]{"remove", ""});
 
     assertTrue(result.contains("spawn"));
     assertTrue(result.contains("market"));
@@ -353,7 +378,8 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
 
-    List<String> result = warpCommand.onTabComplete(player, command, "warp", new String[]{"add", ""});
+    List<String> result = warpCommand.onTabComplete(player, command, "warp",
+        new String[]{"add", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -363,7 +389,8 @@ class WarpTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(false);
 
-    List<String> result = warpCommand.onTabComplete(player, command, "warp", new String[]{"remove", ""});
+    List<String> result = warpCommand.onTabComplete(player, command, "warp",
+        new String[]{"remove", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -372,7 +399,8 @@ class WarpTest {
   void onTabCompleteThirdArgReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    List<String> result = warpCommand.onTabComplete(player, command, "warp", new String[]{"remove", "spawn", ""});
+    List<String> result = warpCommand.onTabComplete(player, command, "warp",
+        new String[]{"remove", "spawn", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -390,7 +418,8 @@ class WarpTest {
   void onCommandMoreThanTwoArgsReturnsFalse() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
 
-    boolean result = warpCommand.onCommand(player, command, "warp", new String[]{"add", "spawn", "extra"});
+    boolean result = warpCommand.onCommand(player, command, "warp",
+        new String[]{"add", "spawn", "extra"});
 
     verify(player, never()).sendMessage(anyString());
     assertFalse(result);

@@ -110,7 +110,9 @@ class BetterLockTest {
     when(event.getClickedBlock()).thenReturn(clickedBlock);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(null);
 
       betterLock.onInteract(event);
@@ -125,7 +127,9 @@ class BetterLockTest {
     when(event.getPlayer()).thenReturn(player);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(null);
 
@@ -141,7 +145,9 @@ class BetterLockTest {
     when(event.getPlayer()).thenReturn(player);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
@@ -160,16 +166,21 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     String allowMessage = "allow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(allowMessage);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(
+        allowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
       when(protectionService.isProtectableMaterial(any())).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -185,15 +196,19 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     String modMessage = "mod overwrite";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE)).thenReturn(modMessage);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE)).thenReturn(modMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
       when(protectionService.isProtectableMaterial(any())).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -210,16 +225,22 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     String allowMessage = "allow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(allowMessage);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(
+        allowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
       when(protectionService.isProtectableMaterial(any())).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -236,16 +257,22 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     String disallowMessage = "disallow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn(disallowMessage);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn(disallowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
       when(protectionService.isProtectableMaterial(any())).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -255,18 +282,18 @@ class BetterLockTest {
   }
 
   @ParameterizedTest
-  @EnumSource(value = PlayerState.class, names = {
-      "PROTECTION_INFO", "PROTECTION_ADD", "PROTECTION_REMOVE",
-      "PROTECTION_FLAG_ADD", "PROTECTION_FLAG_REMOVE",
-      "PROTECTION_RIGHT_ADD", "PROTECTION_RIGHT_REMOVE"
-  })
+  @EnumSource(value = PlayerState.class, names = {"PROTECTION_INFO", "PROTECTION_ADD",
+      "PROTECTION_REMOVE", "PROTECTION_FLAG_ADD", "PROTECTION_FLAG_REMOVE", "PROTECTION_RIGHT_ADD",
+      "PROTECTION_RIGHT_REMOVE"})
   void onInteractOpenableWithProtectionPlayerStateSkipsAccessCheck(PlayerState protectionState) {
     when(event.getClickedBlock()).thenReturn(clickedBlock);
     when(event.getPlayer()).thenReturn(player);
     when(playerEntry.getPlayerState()).thenReturn(protectionState);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
@@ -286,14 +313,18 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     String modMessage = "mod overwrite";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE)).thenReturn(modMessage);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE)).thenReturn(modMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -310,15 +341,21 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     String allowMessage = "allow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(allowMessage);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(
+        allowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -334,15 +371,21 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     String disallowMessage = "disallow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn(disallowMessage);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn(disallowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(false);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(false);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.ALLOW_PUBLIC))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -359,19 +402,28 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(door);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(false);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(false);
     String allowMessage = "allow";
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(allowMessage);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW)).thenReturn(
+        allowMessage);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(null);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(null);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -387,17 +439,25 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(door);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(null);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(null);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -413,17 +473,25 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(door);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(null);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(null);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -443,16 +511,23 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(trapDoor);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -468,16 +543,23 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(gate);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -493,16 +575,23 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(trapDoor);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -518,16 +607,23 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(gate);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -550,17 +646,25 @@ class BetterLockTest {
     when(door.getHinge()).thenReturn(Door.Hinge.LEFT);
     when(door2.getHinge()).thenReturn(Door.Hinge.RIGHT);
     when(door2.isOpen()).thenReturn(false);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondDoorBlock);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(secondDoorBlock);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -590,16 +694,22 @@ class BetterLockTest {
     when(door.getHinge()).thenReturn(Door.Hinge.LEFT);
     when(door2.getHinge()).thenReturn(Door.Hinge.RIGHT);
     when(door2.isOpen()).thenReturn(true);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondDoorBlock);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(secondDoorBlock);
 
       betterLock.onInteract(event);
 
@@ -622,16 +732,22 @@ class BetterLockTest {
     when(secondDoorBlock.getBlockData()).thenReturn(door2);
     when(door.getHinge()).thenReturn(Door.Hinge.LEFT);
     when(door2.getHinge()).thenReturn(Door.Hinge.LEFT);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondDoorBlock);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(secondDoorBlock);
 
       betterLock.onInteract(event);
 
@@ -652,16 +768,22 @@ class BetterLockTest {
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(door);
     when(secondBlock.getBlockData()).thenReturn(nonDoorData);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondBlock);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(secondBlock);
 
       betterLock.onInteract(event);
 
@@ -676,7 +798,9 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.PROTECTION_ADD);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
@@ -704,17 +828,25 @@ class BetterLockTest {
     when(door.getHinge()).thenReturn(Door.Hinge.LEFT);
     when(door2.getHinge()).thenReturn(Door.Hinge.RIGHT);
     when(door2.isOpen()).thenReturn(false);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondDoorBlock);
-      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock))
+          .thenReturn(secondDoorBlock);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE))
+          .thenReturn(false);
 
       betterLock.onInteract(event);
 
@@ -732,15 +864,20 @@ class BetterLockTest {
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
     when(clickedBlock.getBlockData()).thenReturn(unknownOpenable);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 
@@ -754,16 +891,21 @@ class BetterLockTest {
     when(event.getPlayer()).thenReturn(player);
     when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
     when(playerEntry.getId()).thenReturn(1);
-    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+    when(settingPlayerService.isSettingActiveForPlayer(player,
+        PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
 
     try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
-      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      protectionHelperMock.when(
+              () -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock))
+          .thenReturn(location);
       when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
       protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
       when(protectionService.isProtectableMaterial(any())).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
-      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1))
+          .thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1))
+          .thenReturn(true);
 
       betterLock.onInteract(event);
 

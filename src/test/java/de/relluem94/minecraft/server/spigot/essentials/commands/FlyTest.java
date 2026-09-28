@@ -33,30 +33,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class FlyTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private PlayerService playerService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private Fly fly;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -73,36 +65,30 @@ class FlyTest {
   void getCommandsReturnsEmptyArray() {
     CommandsEnum[] result = fly.getCommands();
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(0, result.length)
-    );
+    assertAll(() -> assertNotNull(result), () -> assertEquals(0, result.length));
   }
 
   @Test
   void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(nonPlayerSender, command, "fly", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
   void onCommandSendsPermissionMissingWhenPlayerIsNotVip() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -116,18 +102,16 @@ class FlyTest {
     when(player.getAllowFlight()).thenReturn(true);
     when(player.getCustomName()).thenReturn("TestPlayer");
     when(translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)).thenReturn("activated");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TestPlayer", "activated")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TestPlayer",
+        "activated")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerEntry).setFlying(true),
+    assertAll(() -> assertTrue(result), () -> verify(playerEntry).setFlying(true),
         () -> verify(playerEntry).setUpdatedBy(1),
         () -> verify(playerEntry).setHasToBeUpdated(true),
         () -> verify(player).setAllowFlight(true),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -141,30 +125,26 @@ class FlyTest {
     when(player.getAllowFlight()).thenReturn(false);
     when(player.getCustomName()).thenReturn("TestPlayer");
     when(translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)).thenReturn("deactivated");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TestPlayer", "deactivated")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TestPlayer",
+        "deactivated")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(playerEntry).setFlying(false),
+    assertAll(() -> assertTrue(result), () -> verify(playerEntry).setFlying(false),
         () -> verify(player).setAllowFlight(false),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
   void onCommandSendsNotAPlayerMessageWhenTargetPlayerNotFound() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{"UnknownPlayer"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -174,15 +154,13 @@ class FlyTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer("TargetPlayer")).thenReturn(targetPlayer);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{"TargetPlayer"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(playerService, never()).getPlayerEntry(targetPlayer)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(playerService, never()).getPlayerEntry(targetPlayer));
   }
 
   @Test
@@ -199,19 +177,16 @@ class FlyTest {
     when(targetPlayer.getCustomName()).thenReturn("TargetPlayer");
     when(targetPlayer.getAllowFlight()).thenReturn(false).thenReturn(true);
     when(translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)).thenReturn("activated");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TargetPlayer", "activated")).thenReturn("activated-message");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TargetPlayer",
+        "activated")).thenReturn("activated-message");
 
     boolean result = fly.onCommand(player, command, "fly", new String[]{"TargetPlayer"});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("activated-message"),
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("activated-message"),
         () -> verify(targetPlayer).sendMessage("activated-message"),
-        () -> verify(targetEntry).setFlying(true),
-        () -> verify(targetEntry).setUpdatedBy(2),
+        () -> verify(targetEntry).setFlying(true), () -> verify(targetEntry).setUpdatedBy(2),
         () -> verify(targetEntry).setHasToBeUpdated(true),
-        () -> verify(targetPlayer).setAllowFlight(true)
-    );
+        () -> verify(targetPlayer).setAllowFlight(true));
   }
 
   @Test
@@ -229,15 +204,14 @@ class FlyTest {
     when(targetPlayer.getAllowFlight()).thenReturn(true);
     when(translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)).thenReturn("deactivated");
     when(translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)).thenReturn("activated");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TargetPlayer", "deactivated")).thenReturn("deactivated-message");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_FLYMODE, "TargetPlayer",
+        "deactivated")).thenReturn("deactivated-message");
 
     fly.onCommand(player, command, "fly", new String[]{"TargetPlayer"});
 
-    assertAll(
-        () -> verify(player).sendMessage("deactivated-message"),
+    assertAll(() -> verify(player).sendMessage("deactivated-message"),
         () -> verify(targetEntry).setFlying(false),
-        () -> verify(targetPlayer).setAllowFlight(false)
-    );
+        () -> verify(targetPlayer).setAllowFlight(false));
   }
 
   @Test
@@ -271,10 +245,8 @@ class FlyTest {
     List<String> result = fly.onTabComplete(player, command, "fly", new String[]{"partial"});
 
     assertNotNull(result);
-    assertAll(
-        () -> assertFalse(result.isEmpty()),
-        () -> assertTrue(result.contains("OnlinePlayer"))
-    );
+    assertAll(() -> assertFalse(result.isEmpty()),
+        () -> assertTrue(result.contains("OnlinePlayer")));
   }
 
   @Test
@@ -289,10 +261,8 @@ class FlyTest {
     List<String> result = fly.onTabComplete(player, command, "fly", new String[]{""});
 
     assertNotNull(result);
-    assertAll(
-        () -> assertEquals(2, result.size()),
+    assertAll(() -> assertEquals(2, result.size()),
         () -> assertTrue(result.contains("FirstPlayer")),
-        () -> assertTrue(result.contains("SecondPlayer"))
-    );
+        () -> assertTrue(result.contains("SecondPlayer")));
   }
 }

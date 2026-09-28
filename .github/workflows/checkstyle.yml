@@ -19,4 +19,4 @@ jobs:
         with:
           checkstyle_config: 'google_checks.xml'
           fail_level: 'error'
-          args: '--exclude-regexp .*src/test/.*'
+          args: '-e src/test'

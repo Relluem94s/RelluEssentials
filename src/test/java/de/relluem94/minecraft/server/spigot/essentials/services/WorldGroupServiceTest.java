@@ -73,7 +73,8 @@ class WorldGroupServiceTest {
 
   @BeforeEach
   void setUp() {
-    worldGroupService = new WorldGroupService(serviceContext, worldGroupRegistry, worldGroupRepository);
+    worldGroupService = new WorldGroupService(serviceContext, worldGroupRegistry,
+        worldGroupRepository);
     inventoryHelperMockedStatic = Mockito.mockStatic(InventoryHelper.class);
     experienceHelperMockedStatic = Mockito.mockStatic(ExperienceHelper.class);
   }
@@ -102,11 +103,9 @@ class WorldGroupServiceTest {
     worldGroupService.loadAll();
 
     Multimap<WorldGroupEntry, WorldEntry> worldsMap = worldGroupService.getWorldsMap();
-    assertAll(
-        () -> assertEquals(1, worldsMap.size()),
+    assertAll(() -> assertEquals(1, worldsMap.size()),
         () -> assertTrue(worldsMap.containsKey(worldGroupEntry)),
-        () -> assertTrue(worldsMap.containsValue(worldEntry))
-    );
+        () -> assertTrue(worldsMap.containsValue(worldEntry)));
   }
 
   @Test
@@ -133,18 +132,22 @@ class WorldGroupServiceTest {
 
   @Test
   void isSettingActiveForWorldDelegatesToRegistry() {
-    when(worldGroupRegistry.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, "testWorld")).thenReturn(true);
+    when(worldGroupRegistry.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN,
+        "testWorld")).thenReturn(true);
 
-    boolean result = worldGroupService.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, "testWorld");
+    boolean result = worldGroupService.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN,
+        "testWorld");
 
     assertTrue(result);
   }
 
   @Test
   void isSettingActiveForWorldReturnsFalseWhenNotActive() {
-    when(worldGroupRegistry.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, "testWorld")).thenReturn(false);
+    when(worldGroupRegistry.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN,
+        "testWorld")).thenReturn(false);
 
-    boolean result = worldGroupService.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, "testWorld");
+    boolean result = worldGroupService.isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN,
+        "testWorld");
 
     assertFalse(result);
   }
@@ -204,7 +207,8 @@ class WorldGroupServiceTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     worldGroupService.loadWorldGroupInventoryForPlayer(player);
 
-    inventoryHelperMockedStatic.verify(() -> InventoryHelper.createInventory(any(), any()), never());
+    inventoryHelperMockedStatic.verify(() -> InventoryHelper.createInventory(any(), any()),
+        never());
   }
 
   @Test
@@ -214,25 +218,29 @@ class WorldGroupServiceTest {
     WorldEntry worldEntry = buildWorldEntry(worldGroupEntry);
     populateWorldsMap(worldGroupEntry, worldEntry);
 
-    WorldGroupInventoryEntry inventoryEntry = buildInventoryEntryWithInventory(playerEntry, worldGroupEntry);
+    WorldGroupInventoryEntry inventoryEntry = buildInventoryEntryWithInventory(playerEntry,
+        worldGroupEntry);
 
     when(player.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
 
     worldGroupService.loadWorldGroupInventoryForPlayer(player);
 
-    assertAll(
-        () -> inventoryHelperMockedStatic.verify(() -> InventoryHelper.createInventory(any(), eq(player))),
+    assertAll(() -> inventoryHelperMockedStatic.verify(
+            () -> InventoryHelper.createInventory(any(), eq(player))),
         () -> verify(player).setFoodLevel(inventoryEntry.getFoodLevel()),
         () -> verify(player).setHealth(inventoryEntry.getHealth()),
-        () -> experienceHelperMockedStatic.verify(() -> ExperienceHelper.setTotalExperience(eq(player), eq(inventoryEntry.getTotalExperience())))
-    );
+        () -> experienceHelperMockedStatic.verify(
+            () -> ExperienceHelper.setTotalExperience(eq(player),
+                eq(inventoryEntry.getTotalExperience()))));
   }
 
-  private WorldGroupInventoryEntry buildInventoryEntryWithInventory(PlayerEntry playerEntry, WorldGroupEntry worldGroupEntry) {
+  private WorldGroupInventoryEntry buildInventoryEntryWithInventory(PlayerEntry playerEntry,
+      WorldGroupEntry worldGroupEntry) {
     WorldGroupInventoryEntry entry = buildInventoryEntry(playerEntry, worldGroupEntry);
     entry.setInventory(new JSONObject());
     return entry;
@@ -249,8 +257,10 @@ class WorldGroupServiceTest {
     when(player.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player))
+        .thenReturn(null);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
 
     worldGroupService.loadWorldGroupInventoryForPlayer(player);
@@ -281,15 +291,15 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player))
+        .thenReturn(null);
 
     boolean result = worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 
-    assertAll(
-        () -> assertFalse(result),
-        () -> verify(worldGroupRepository).saveInventory(any(WorldGroupInventoryEntry.class))
-    );
+    assertAll(() -> assertFalse(result),
+        () -> verify(worldGroupRepository).saveInventory(any(WorldGroupInventoryEntry.class)));
   }
 
   @Test
@@ -305,15 +315,15 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player))
+        .thenReturn(null);
 
     boolean result = worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(worldGroupRepository).updateInventory(inventoryEntry)
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(worldGroupRepository).updateInventory(inventoryEntry));
   }
 
   @Test
@@ -329,18 +339,16 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
     when(player.getInventory()).thenReturn(playerInventory);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player))
+        .thenReturn(null);
 
     worldGroupService.saveWorldGroupInventoryForPlayer(player, true);
 
-    assertAll(
-        () -> verify(player).setTotalExperience(0),
-        () -> verify(player).setLevel(0),
-        () -> verify(player).setExp(0f),
-        () -> verify(playerInventory).clear()
-    );
+    assertAll(() -> verify(player).setTotalExperience(0), () -> verify(player).setLevel(0),
+        () -> verify(player).setExp(0f), () -> verify(playerInventory).clear());
   }
 
   @Test
@@ -356,8 +364,10 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player))
+        .thenReturn(null);
 
     worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 
@@ -371,7 +381,8 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("unknownWorld");
     when(serviceContext.getPlayerService()).thenReturn(playerService);
 
-    boolean result = worldGroupService.saveWorldGroupInventoryForPlayerInWorld(player, world, false);
+    boolean result = worldGroupService.saveWorldGroupInventoryForPlayerInWorld(player, world,
+        false);
 
     assertFalse(result);
   }
@@ -400,7 +411,8 @@ class WorldGroupServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(world.getName()).thenReturn("testWorld");
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
 
     boolean result = worldGroupService.hasWorldGroupInventory(player, world);
 
@@ -417,7 +429,8 @@ class WorldGroupServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(world.getName()).thenReturn("testWorld");
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(null);
 
     boolean result = worldGroupService.hasWorldGroupInventory(player, world);
 
@@ -467,10 +480,8 @@ class WorldGroupServiceTest {
 
     WorldGroupEntry result = worldGroupService.createWorldGroup(player, "newGroup");
 
-    assertAll(
-        () -> verify(worldGroupRepository).saveWorldGroup(any(WorldGroupEntry.class)),
-        () -> assertEquals(worldGroupEntry, result)
-    );
+    assertAll(() -> verify(worldGroupRepository).saveWorldGroup(any(WorldGroupEntry.class)),
+        () -> assertEquals(worldGroupEntry, result));
   }
 
   @Test
@@ -482,10 +493,8 @@ class WorldGroupServiceTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     worldGroupService.addWorldToGroup(player, worldGroupEntry, "newWorld");
 
-    assertAll(
-        () -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class)),
-        () -> assertTrue(worldGroupService.getWorldsMap().containsKey(worldGroupEntry))
-    );
+    assertAll(() -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class)),
+        () -> assertTrue(worldGroupService.getWorldsMap().containsKey(worldGroupEntry)));
   }
 
   @Test
@@ -496,10 +505,8 @@ class WorldGroupServiceTest {
 
     worldGroupService.removeWorldFromGroup(worldGroupEntry, "testWorld");
 
-    assertAll(
-        () -> assertFalse(worldGroupService.getWorldsMap().containsValue(worldEntry)),
-        () -> verify(worldGroupRegistry).removeWorldFromAllSettings("testWorld")
-    );
+    assertAll(() -> assertFalse(worldGroupService.getWorldsMap().containsValue(worldEntry)),
+        () -> verify(worldGroupRegistry).removeWorldFromAllSettings("testWorld"));
   }
 
   @Test
@@ -520,10 +527,8 @@ class WorldGroupServiceTest {
 
     worldGroupService.createAndRegisterWorld("newWorld", "testGroup", groupEntry, 1);
 
-    assertAll(
-        () -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class)),
-        () -> assertTrue(worldGroupService.getWorldsMap().containsKey(worldGroupEntry))
-    );
+    assertAll(() -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class)),
+        () -> assertTrue(worldGroupService.getWorldsMap().containsKey(worldGroupEntry)));
   }
 
   @Test
@@ -539,7 +544,8 @@ class WorldGroupServiceTest {
     WorldEntry worldEntry = buildWorldEntry(worldGroupEntry);
     populateWorldsMap(worldGroupEntry, worldEntry);
 
-    worldGroupService.initializeWorldGroupWithWorld("existingGroup", "newWorld", new GroupEntry(), 1);
+    worldGroupService.initializeWorldGroupWithWorld("existingGroup", "newWorld", new GroupEntry(),
+        1);
 
     verify(worldGroupRepository, never()).saveWorldGroup(any());
   }
@@ -554,10 +560,8 @@ class WorldGroupServiceTest {
 
     worldGroupService.initializeWorldGroupWithWorld("newGroup", "newWorld", new GroupEntry(), 1);
 
-    assertAll(
-        () -> verify(worldGroupRepository).saveWorldGroup(any(WorldGroupEntry.class)),
-        () -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class))
-    );
+    assertAll(() -> verify(worldGroupRepository).saveWorldGroup(any(WorldGroupEntry.class)),
+        () -> verify(worldGroupRepository).saveWorld(any(WorldEntry.class)));
   }
 
   @Test
@@ -573,16 +577,18 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
+    when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry,
+        worldGroupEntry)).thenReturn(inventoryEntry);
 
     worldGroupService.loadWorldGroupInventoryForPlayer(player);
 
-    assertAll(
-        () -> inventoryHelperMockedStatic.verify(() -> InventoryHelper.createInventory(any(), any()), never()),
+    assertAll(() -> inventoryHelperMockedStatic.verify(
+            () -> InventoryHelper.createInventory(any(), any()), never()),
         () -> verify(player).setFoodLevel(inventoryEntry.getFoodLevel()),
         () -> verify(player).setHealth(inventoryEntry.getHealth()),
-        () -> experienceHelperMockedStatic.verify(() -> ExperienceHelper.setTotalExperience(eq(player), eq(inventoryEntry.getTotalExperience())))
-    );
+        () -> experienceHelperMockedStatic.verify(
+            () -> ExperienceHelper.setTotalExperience(eq(player),
+                eq(inventoryEntry.getTotalExperience()))));
   }
 
   @Test
@@ -643,7 +649,8 @@ class WorldGroupServiceTest {
     return entry;
   }
 
-  private WorldGroupInventoryEntry buildInventoryEntry(PlayerEntry playerEntry, WorldGroupEntry worldGroupEntry) {
+  private WorldGroupInventoryEntry buildInventoryEntry(PlayerEntry playerEntry,
+      WorldGroupEntry worldGroupEntry) {
     WorldGroupInventoryEntry entry = new WorldGroupInventoryEntry();
     entry.setPlayerId(playerEntry.getId());
     entry.setWorldGroupEntry(worldGroupEntry);

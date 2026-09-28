@@ -32,28 +32,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class HealTest {
 
-  @Mock
-  private ServiceContext serviceContext;
-
-  @Mock
-  private TranslationService translationService;
-
-  @Mock
-  private GroupService groupService;
-
-  @Mock
-  private ServerService serverService;
-
-  @Mock
-  private Command command;
-
-  @Mock
-  private Player player;
-
-  private Heal heal;
-
   private static final String TRANSLATED_MESSAGE = "translated-message";
   private static final double DEFAULT_MAX_HEALTH = 20.0;
+  @Mock
+  private ServiceContext serviceContext;
+  @Mock
+  private TranslationService translationService;
+  @Mock
+  private GroupService groupService;
+  @Mock
+  private ServerService serverService;
+  @Mock
+  private Command command;
+  @Mock
+  private Player player;
+  private Heal heal;
 
   @BeforeEach
   void setUp() {
@@ -81,7 +74,8 @@ class HealTest {
   @Test
   void onCommandSendsTooFewArgumentsWhenConsoleProvideNoArgs() {
     ConsoleCommandSender console = mock(ConsoleCommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(console, command, "heal", new String[]{});
 
@@ -106,10 +100,11 @@ class HealTest {
 
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenConsoleProvideUnknownPlayerName() {
+  void onCommandSendsTargetNotAnPlayerWhenConsoleProvideUnknownPlayerName() {
     ConsoleCommandSender console = mock(ConsoleCommandSender.class);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+        "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(console, command, "heal", new String[]{"UnknownPlayer"});
 
@@ -118,9 +113,10 @@ class HealTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNeitherPlayerNorConsoleNorCmdBlock() {
+  void onCommandSendsNotAnPlayerMessageWhenSenderIsNeitherPlayerNorConsoleNorCmdBlock() {
     CommandSender unknownSender = mock(CommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(unknownSender, command, "heal", new String[]{});
 
@@ -131,7 +127,8 @@ class HealTest {
   @Test
   void onCommandSendsPermissionMissingWhenPlayerIsNotMod() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(player, command, "heal", new String[]{});
 
@@ -142,7 +139,8 @@ class HealTest {
   @Test
   void onCommandSendsTooManyArgumentsWhenPlayerProvidesArgs() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(player, command, "heal", new String[]{"extraArg"});
 
@@ -168,7 +166,8 @@ class HealTest {
     CommandSender unauthorizedSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(unauthorizedSender, "mod")).thenReturn(false);
 
-    List<String> result = heal.onTabComplete(unauthorizedSender, command, "heal", new String[]{"a"});
+    List<String> result = heal.onTabComplete(unauthorizedSender, command, "heal",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -189,7 +188,8 @@ class HealTest {
     ConsoleCommandSender console = mock(ConsoleCommandSender.class);
     when(groupService.isSenderAuthorized(console, "mod")).thenReturn(true);
 
-    List<String> result = heal.onTabComplete(console, command, "heal", new String[]{"arg1", "arg2"});
+    List<String> result = heal.onTabComplete(console, command, "heal",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -233,7 +233,8 @@ class HealTest {
   @Test
   void onCommandSendsTooFewArgumentsWhenConsoleProvideNoArgsAndHasNoTarget() {
     ConsoleCommandSender console = mock(ConsoleCommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = heal.onCommand(console, command, "heal", new String[]{});
 

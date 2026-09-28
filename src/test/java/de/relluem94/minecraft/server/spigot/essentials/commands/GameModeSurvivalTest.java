@@ -31,30 +31,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameModeSurvivalTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private PlayerService playerService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private GameModeSurvival gameModeSurvival;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -71,24 +63,19 @@ class GameModeSurvivalTest {
   void getCommandsReturnsEmptyArray() {
     CommandsEnum[] result = gameModeSurvival.getCommands();
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(0, result.length)
-    );
+    assertAll(() -> assertNotNull(result), () -> assertEquals(0, result.length));
   }
 
   @Test
   void onCommandSendsPermissionMissingWhenSenderIsNotMod() {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeSurvival.onCommand(nonModSender, command, "gms", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonModSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(nonModSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -99,17 +86,16 @@ class GameModeSurvivalTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(player);
     when(player.getCustomName()).thenReturn(targetCustomName);
-    when(translationService.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)).thenReturn(survivalTranslation);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, targetCustomName, survivalTranslation)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)).thenReturn(
+        survivalTranslation);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, targetCustomName,
+        survivalTranslation)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = gameModeSurvival.onCommand(player, command, "gms", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).setGameMode(GameMode.SURVIVAL),
+    assertAll(() -> assertTrue(result), () -> verify(player).setGameMode(GameMode.SURVIVAL),
         () -> verify(playerService).setFlying(player),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -117,29 +103,26 @@ class GameModeSurvivalTest {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
-    when(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeSurvival.onCommand(player, command, "gms", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).setGameMode(GameMode.SURVIVAL)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).setGameMode(GameMode.SURVIVAL));
   }
 
   @Test
   void onCommandSendsNotAPlayerWhenNoArgsAndSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonPlayerSender, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeSurvival.onCommand(nonPlayerSender, command, "gms", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -148,17 +131,16 @@ class GameModeSurvivalTest {
     String survivalTranslation = "Survival";
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getCustomName()).thenReturn(customName);
-    when(translationService.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)).thenReturn(survivalTranslation);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, customName, survivalTranslation)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)).thenReturn(
+        survivalTranslation);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, customName,
+        survivalTranslation)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = gameModeSurvival.onCommand(player, command, "gms", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).setGameMode(GameMode.SURVIVAL),
+    assertAll(() -> assertTrue(result), () -> verify(player).setGameMode(GameMode.SURVIVAL),
         () -> verify(playerService).setFlying(player),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -166,7 +148,8 @@ class GameModeSurvivalTest {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
 
-    List<String> result = gameModeSurvival.onTabComplete(nonModSender, command, "gms", new String[]{"a"});
+    List<String> result = gameModeSurvival.onTabComplete(nonModSender, command, "gms",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -176,7 +159,8 @@ class GameModeSurvivalTest {
   void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = gameModeSurvival.onTabComplete(player, command, "gms", new String[]{"arg1", "arg2"});
+    List<String> result = gameModeSurvival.onTabComplete(player, command, "gms",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -186,7 +170,8 @@ class GameModeSurvivalTest {
   void onTabCompleteReturnsOnlinePlayersWhenSenderIsModAndOneArg() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = gameModeSurvival.onTabComplete(player, command, "gms", new String[]{"partial"});
+    List<String> result = gameModeSurvival.onTabComplete(player, command, "gms",
+        new String[]{"partial"});
 
     assertNotNull(result);
   }

@@ -257,8 +257,10 @@ class InteractNpcTest {
     when(serviceContext.getNpcService()).thenReturn(npcService);
     when(npcService.getNpcs()).thenReturn(List.of(npc));
     when(serviceContext.getNpcDialogueProgressService()).thenReturn(npcDialogueProgressService);
-    when(npcDialogueProgressService.getNextLineIndexAndAdvance(any(), eq(firstPlayerUuid), eq(1))).thenReturn(0);
-    when(npcDialogueProgressService.getNextLineIndexAndAdvance(any(), eq(secondPlayerUuid), eq(1))).thenReturn(0);
+    when(npcDialogueProgressService.getNextLineIndexAndAdvance(any(), eq(firstPlayerUuid),
+        eq(1))).thenReturn(0);
+    when(npcDialogueProgressService.getNextLineIndexAndAdvance(any(), eq(secondPlayerUuid),
+        eq(1))).thenReturn(0);
 
     interactNpc.onPlayerInteractEntity(event);
     interactNpc.onPlayerInteractEntity(secondEvent);

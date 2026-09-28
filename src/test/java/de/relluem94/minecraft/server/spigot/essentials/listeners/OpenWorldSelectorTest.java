@@ -74,8 +74,9 @@ class OpenWorldSelectorTest {
     when(event.getAction()).thenReturn(Action.RIGHT_CLICK_BLOCK);
     when(event.getItem()).thenReturn(heldItemStack);
     when(event.getPlayer()).thenReturn(player);
-    when(itemService.find(org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class)))
-        .thenReturn(Optional.of(customItem));
+    when(itemService.find(
+        org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class))).thenReturn(
+        Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(worldSelectorItemStack);
     when(worldSelectorItemStack.isSimilar(heldItemStack)).thenReturn(true);
 
@@ -91,8 +92,9 @@ class OpenWorldSelectorTest {
     when(event.getAction()).thenReturn(Action.RIGHT_CLICK_AIR);
     when(event.getItem()).thenReturn(heldItemStack);
     when(event.getPlayer()).thenReturn(player);
-    when(itemService.find(org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class)))
-        .thenReturn(Optional.of(customItem));
+    when(itemService.find(
+        org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class))).thenReturn(
+        Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(worldSelectorItemStack);
     when(worldSelectorItemStack.isSimilar(heldItemStack)).thenReturn(true);
 
@@ -113,7 +115,8 @@ class OpenWorldSelectorTest {
   }
 
   @ParameterizedTest
-  @EnumSource(value = EquipmentSlot.class, names = {"OFF_HAND", "HEAD", "CHEST", "LEGS", "FEET", "BODY"})
+  @EnumSource(value = EquipmentSlot.class, names = {"OFF_HAND", "HEAD", "CHEST", "LEGS", "FEET",
+      "BODY"})
   void onWorldSelectorUseDoesNotOpenMenuWhenHandIsNotMainHand(EquipmentSlot slot) {
     when(event.getHand()).thenReturn(slot);
 
@@ -152,8 +155,9 @@ class OpenWorldSelectorTest {
     when(event.getHand()).thenReturn(EquipmentSlot.HAND);
     when(event.getAction()).thenReturn(Action.RIGHT_CLICK_BLOCK);
     when(event.getItem()).thenReturn(heldItemStack);
-    when(itemService.find(org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class)))
-        .thenReturn(Optional.empty());
+    when(itemService.find(
+        org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class))).thenReturn(
+        Optional.empty());
 
     listener.onWorldSelectorUse(event);
 
@@ -166,8 +170,9 @@ class OpenWorldSelectorTest {
     when(event.getHand()).thenReturn(EquipmentSlot.HAND);
     when(event.getAction()).thenReturn(Action.RIGHT_CLICK_BLOCK);
     when(event.getItem()).thenReturn(heldItemStack);
-    when(itemService.find(org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class)))
-        .thenReturn(Optional.of(customItem));
+    when(itemService.find(
+        org.mockito.ArgumentMatchers.any(RelluEssentialsNamespacedKey.class))).thenReturn(
+        Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(worldSelectorItemStack);
     when(worldSelectorItemStack.isSimilar(heldItemStack)).thenReturn(false);
 

@@ -87,8 +87,8 @@ class BlockBreakBagsTest {
   }
 
   private void injectWithBothEnchantments() {
-    when(enchantmentService.find(any(RelluEssentialsNamespacedKey.class)))
-        .thenAnswer(invocation -> {
+    when(enchantmentService.find(any(RelluEssentialsNamespacedKey.class))).thenAnswer(
+        invocation -> {
           RelluEssentialsNamespacedKey key = invocation.getArgument(0);
           if (key.getKey().equals(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE)) {
             return Optional.of(delicateHelper);
@@ -119,10 +119,7 @@ class BlockBreakBagsTest {
   void injectContextStoresServiceContextAndResolvesEnchantments() {
     injectWithBothEnchantments();
 
-    assertAll(
-        () -> assertNotNull(listener),
-        () -> assertNotNull(serviceContext)
-    );
+    assertAll(() -> assertNotNull(listener), () -> assertNotNull(serviceContext));
   }
 
   @Test
@@ -384,11 +381,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -421,11 +415,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -477,10 +468,8 @@ class BlockBreakBagsTest {
 
     listener.onBlockBreak(event);
 
-    assertAll(
-        () -> verify(event, never()).setCancelled(true),
-        () -> verify(event, never()).setCancelled(false)
-    );
+    assertAll(() -> verify(event, never()).setCancelled(true),
+        () -> verify(event, never()).setCancelled(false));
   }
 
   @Test
@@ -578,12 +567,9 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(block).setType(Material.AIR),
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(block).setType(Material.AIR),
           () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -621,11 +607,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -663,11 +646,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -738,7 +718,8 @@ class BlockBreakBagsTest {
       when(childFacing.getFaces()).thenReturn(Set.of(BlockFace.UP, BlockFace.DOWN));
       when(connectedBlocks[i].getBlockData()).thenReturn(childFacing);
       when(connectedBlocks[i].getRelative(BlockFace.UP)).thenReturn(connectedBlocks[i + 1]);
-      when(connectedBlocks[i].getRelative(BlockFace.DOWN)).thenReturn(i == 0 ? block : connectedBlocks[i - 1]);
+      when(connectedBlocks[i].getRelative(BlockFace.DOWN)).thenReturn(
+          i == 0 ? block : connectedBlocks[i - 1]);
     }
 
     MultipleFacing lastFacing = mock(MultipleFacing.class);
@@ -800,13 +781,10 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(block).setType(Material.AIR),
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(block).setType(Material.AIR),
           () -> verify(childBlock).setType(Material.AIR),
           () -> verify(world).dropItem(any(), any()),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 
@@ -878,10 +856,7 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(world).dropItem(any(), any())
-      );
+      assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()));
     }
   }
 
@@ -934,12 +909,10 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
+      assertAll(() -> verify(event).setCancelled(true),
           () -> verify(childBlock).setType(Material.AIR),
           () -> verify(grandchildBlock).setType(Material.AIR),
-          () -> verify(block, org.mockito.Mockito.times(1)).setType(Material.AIR)
-      );
+          () -> verify(block, org.mockito.Mockito.times(1)).setType(Material.AIR));
     }
   }
 
@@ -958,7 +931,8 @@ class BlockBreakBagsTest {
     when(sharedBlock.getBlockData()).thenReturn(sharedFacing);
 
     MultipleFacing rootFacing = mock(MultipleFacing.class);
-    when(rootFacing.getFaces()).thenReturn(Set.of(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST));
+    when(rootFacing.getFaces()).thenReturn(
+        Set.of(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST));
     when(block.getBlockData()).thenReturn(rootFacing);
     when(block.getRelative(BlockFace.NORTH)).thenReturn(sharedBlock);
     when(block.getRelative(BlockFace.SOUTH)).thenReturn(sharedBlock);
@@ -984,10 +958,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(sharedBlock, org.mockito.Mockito.times(1)).setType(Material.AIR)
-      );
+      assertAll(() -> verify(event).setCancelled(true),
+          () -> verify(sharedBlock, org.mockito.Mockito.times(1)).setType(Material.AIR));
     }
   }
 
@@ -1001,9 +973,7 @@ class BlockBreakBagsTest {
 
     Block blockAbove = mock(Block.class);
     when(block.getRelative(BlockFace.UP)).thenReturn(blockAbove);
-    when(blockAbove.getType())
-        .thenReturn(Material.SUGAR_CANE)
-        .thenReturn(Material.STONE);
+    when(blockAbove.getType()).thenReturn(Material.SUGAR_CANE).thenReturn(Material.STONE);
 
     Block aboveAbove = mock(Block.class);
     when(blockAbove.getRelative(BlockFace.UP)).thenReturn(aboveAbove);
@@ -1026,10 +996,8 @@ class BlockBreakBagsTest {
 
       listener.onBlockBreak(event);
 
-      assertAll(
-          () -> verify(event).setCancelled(true),
-          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
-      );
+      assertAll(() -> verify(event).setCancelled(true),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class)));
     }
   }
 }

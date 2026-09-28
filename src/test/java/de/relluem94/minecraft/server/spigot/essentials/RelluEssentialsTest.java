@@ -67,8 +67,7 @@ class RelluEssentialsTest {
     try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
       bukkit.when(Bukkit::getServer).thenReturn(server);
 
-      @SuppressWarnings("deprecation")
-      JavaPluginLoader loader = new JavaPluginLoader(server);
+      @SuppressWarnings("deprecation") JavaPluginLoader loader = new JavaPluginLoader(server);
       PluginDescriptionFile description = Mockito.mock(PluginDescriptionFile.class);
 
       plugin = new RelluEssentials(loader, description, new File("target/test-data"),
@@ -283,8 +282,7 @@ class RelluEssentialsTest {
 
       assertEquals(spyPlugin, RelluEssentials.getInstance());
 
-      registry.verify(() -> RelluEssentialsRegistry.initialize(
-          spyPlugin.getServiceContext()));
+      registry.verify(() -> RelluEssentialsRegistry.initialize(spyPlugin.getServiceContext()));
     }
   }
 
@@ -305,11 +303,11 @@ class RelluEssentialsTest {
         org.bukkit.scoreboard.ScoreboardManager.class);
     Mockito.when(server.getScoreboardManager()).thenReturn(scoreboardManager);
 
-    de.relluem94.minecraft.server.spigot.essentials.services.NpcService npcService =
-        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class);
+    de.relluem94.minecraft.server.spigot.essentials.services.NpcService npcService = Mockito.mock(
+        de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class);
 
-    de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService schedulerService =
-        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class);
+    de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService schedulerService = Mockito.mock(
+        de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class);
 
     Mockito.doAnswer(invocation -> {
       Runnable task = invocation.getArgument(0);
@@ -355,9 +353,9 @@ class RelluEssentialsTest {
   @Test
   void onDisableShouldSkipNpcDespawnWhenNpcServiceIsNull() {
     ServiceContext serviceContext = Mockito.mock(ServiceContext.class);
-    Mockito.when(serviceContext.getTranslationService()).thenReturn(
-        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
-            Mockito.RETURNS_DEEP_STUBS));
+    Mockito.when(serviceContext.getTranslationService()).thenReturn(Mockito.mock(
+        de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+        Mockito.RETURNS_DEEP_STUBS));
     Mockito.when(serviceContext.getNpcService()).thenReturn(null);
 
     PersistenceContext persistenceContext = Mockito.mock(PersistenceContext.class);
@@ -380,7 +378,8 @@ class RelluEssentialsTest {
       WorldManager world = Mockito.mock(WorldManager.class);
       ConfigManager config = Mockito.mock(ConfigManager.class);
 
-      java.lang.reflect.Field autoSaveField = RelluEssentials.class.getDeclaredField("autoSaveManager");
+      java.lang.reflect.Field autoSaveField = RelluEssentials.class.getDeclaredField(
+          "autoSaveManager");
       autoSaveField.setAccessible(true);
       autoSaveField.set(spyPlugin, autoSave);
 

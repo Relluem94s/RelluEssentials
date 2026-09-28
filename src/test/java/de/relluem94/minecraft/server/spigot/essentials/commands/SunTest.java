@@ -30,30 +30,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class SunTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   @Mock
   private World world;
-
   private Sun sun;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -76,7 +68,8 @@ class SunTest {
   @Test
   void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = sun.onCommand(nonPlayerSender, command, "sun", new String[]{});
 
@@ -87,7 +80,8 @@ class SunTest {
   @Test
   void onCommandSendsPermissionMissingWhenPlayerIsNotMod() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = sun.onCommand(player, command, "sun", new String[]{});
 
@@ -100,7 +94,8 @@ class SunTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("world");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "world")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "world")).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = sun.onCommand(player, command, "sun", new String[]{});
 
@@ -115,7 +110,8 @@ class SunTest {
   void onCommandSendsWorldNotLoadedMessageWhenWorldNotFound() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getWorld("unknownWorld")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, "unknownWorld")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED,
+        "unknownWorld")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = sun.onCommand(player, command, "sun", new String[]{"unknownWorld"});
 
@@ -129,7 +125,8 @@ class SunTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getWorld("nether")).thenReturn(world);
     when(world.getName()).thenReturn("nether");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = sun.onCommand(player, command, "sun", new String[]{"nether"});
 
@@ -145,7 +142,8 @@ class SunTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getWorld("nether")).thenReturn(world);
     when(world.getName()).thenReturn("nether");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(
+        TRANSLATED_MESSAGE);
 
     sun.onCommand(player, command, "sun", new String[]{"nether"});
 

@@ -31,30 +31,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GameModeCreativeTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private PlayerService playerService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private GameModeCreative gameModeCreative;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -71,24 +63,19 @@ class GameModeCreativeTest {
   void getCommandsReturnsEmptyArray() {
     CommandsEnum[] result = gameModeCreative.getCommands();
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(0, result.length)
-    );
+    assertAll(() -> assertNotNull(result), () -> assertEquals(0, result.length));
   }
 
   @Test
   void onCommandSendsPermissionMissingWhenSenderIsNotMod() {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeCreative.onCommand(nonModSender, command, "gmc", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonModSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(nonModSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -99,16 +86,15 @@ class GameModeCreativeTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(player);
     when(player.getCustomName()).thenReturn(targetCustomName);
-    when(translationService.get(MessageKey.COMMAND_GAMEMODE_CREATIVE)).thenReturn(creativeTranslation);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, targetCustomName, creativeTranslation)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_GAMEMODE_CREATIVE)).thenReturn(
+        creativeTranslation);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, targetCustomName,
+        creativeTranslation)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = gameModeCreative.onCommand(player, command, "gmc", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).setGameMode(GameMode.CREATIVE),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).setGameMode(GameMode.CREATIVE),
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -116,29 +102,26 @@ class GameModeCreativeTest {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
-    when(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeCreative.onCommand(player, command, "gmc", new String[]{targetName});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
-        () -> verify(player, never()).setGameMode(GameMode.CREATIVE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage(TRANSLATED_MESSAGE),
+        () -> verify(player, never()).setGameMode(GameMode.CREATIVE));
   }
 
   @Test
   void onCommandSendsNotAPlayerWhenNoArgsAndSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonPlayerSender, "mod")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = gameModeCreative.onCommand(nonPlayerSender, command, "gmc", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -147,16 +130,15 @@ class GameModeCreativeTest {
     String creativeTranslation = "Creative";
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getCustomName()).thenReturn(customName);
-    when(translationService.get(MessageKey.COMMAND_GAMEMODE_CREATIVE)).thenReturn(creativeTranslation);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, customName, creativeTranslation)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_GAMEMODE_CREATIVE)).thenReturn(
+        creativeTranslation);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, customName,
+        creativeTranslation)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = gameModeCreative.onCommand(player, command, "gmc", new String[]{});
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).setGameMode(GameMode.CREATIVE),
-        () -> verify(player).sendMessage(TRANSLATED_MESSAGE)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).setGameMode(GameMode.CREATIVE),
+        () -> verify(player).sendMessage(TRANSLATED_MESSAGE));
   }
 
   @Test
@@ -164,7 +146,8 @@ class GameModeCreativeTest {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
 
-    List<String> result = gameModeCreative.onTabComplete(nonModSender, command, "gmc", new String[]{"a"});
+    List<String> result = gameModeCreative.onTabComplete(nonModSender, command, "gmc",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -174,7 +157,8 @@ class GameModeCreativeTest {
   void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = gameModeCreative.onTabComplete(player, command, "gmc", new String[]{"arg1", "arg2"});
+    List<String> result = gameModeCreative.onTabComplete(player, command, "gmc",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -184,7 +168,8 @@ class GameModeCreativeTest {
   void onTabCompleteReturnsOnlinePlayersWhenSenderIsModAndOneArg() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = gameModeCreative.onTabComplete(player, command, "gmc", new String[]{"partial"});
+    List<String> result = gameModeCreative.onTabComplete(player, command, "gmc",
+        new String[]{"partial"});
 
     assertNotNull(result);
   }

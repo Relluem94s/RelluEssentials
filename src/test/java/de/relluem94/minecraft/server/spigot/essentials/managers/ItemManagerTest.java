@@ -93,20 +93,24 @@ class ItemManagerTest {
     lenient().when(inventoryService.getAllByNamespace(anyString())).thenReturn(List.of());
 
     CustomItem mockItem = mock(CustomItem.class);
-    lenient().when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.of(mockItem));
+    lenient().when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(mockItem));
 
-    lenient().when(inventoryService.create(any(Plugin.class), anyString(), anyString(), anyInt(), any(CustomItem.Type.class)))
+    lenient().when(inventoryService.create(any(Plugin.class), anyString(), anyString(), anyInt(),
+        any(CustomItem.Type.class))).thenReturn(registeredInventory);
+    lenient().when(registeredInventory.withFixedItem(any(CustomItem.class)))
         .thenReturn(registeredInventory);
-    lenient().when(registeredInventory.withFixedItem(any(CustomItem.class))).thenReturn(registeredInventory);
 
-    lenient().when(enchantmentService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
+    lenient().when(enchantmentService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.empty());
     lenient().when(translationService.getWithPrefix(any(MessageKey.class), any())).thenReturn("");
   }
 
   @Test
   void enableRegistersAllCustomItems() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -117,7 +121,8 @@ class ItemManagerTest {
   @Test
   void enableRegistersPositionAxeItem() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -128,7 +133,8 @@ class ItemManagerTest {
   @Test
   void enableRegistersAllBankItems() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -139,40 +145,47 @@ class ItemManagerTest {
   @Test
   void enableCreatesAdminToolsInventory() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
-      verify(inventoryService).create(eq(plugin), anyString(), anyString(), eq(9), eq(CustomItem.Type.NONE));
+      verify(inventoryService).create(eq(plugin), anyString(), anyString(), eq(9),
+          eq(CustomItem.Type.NONE));
     }
   }
 
   @Test
   void enableLogsItemRegistrationCount() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
-      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED), any());
+      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED),
+          any());
     }
   }
 
   @Test
   void enableLogsInventoryRegistrationCount() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
-      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED), any());
+      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED),
+          any());
     }
   }
 
   @Test
   void enableThrowsWhenPositionAxeItemNotFound() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
 
@@ -183,7 +196,8 @@ class ItemManagerTest {
   @Test
   void enableRegistersRelluPickaxeAndSwordWithEnchantmentMetaModifiers() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -194,7 +208,8 @@ class ItemManagerTest {
   @Test
   void enableCallsGetAllOnItemServiceForLogging() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -205,7 +220,8 @@ class ItemManagerTest {
   @Test
   void enableCallsGetAllByNamespaceOnInventoryServiceForLogging() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -216,7 +232,8 @@ class ItemManagerTest {
   @Test
   void enableSendsRegistrationMessageToConsoleSender() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any())).thenReturn(mock(Consumer.class));
+      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+          .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
@@ -232,10 +249,7 @@ class ItemManagerTest {
   }
 
   private CustomItem argThatHasNamespace() {
-    return argThat(item ->
-        item != null &&
-            item.relluEssentialsNamespacedKey() != null &&
-            "RelluEssentials".equals(item.relluEssentialsNamespacedKey().getNamespace())
-    );
+    return argThat(item -> item != null && item.relluEssentialsNamespacedKey() != null
+        && "RelluEssentials".equals(item.relluEssentialsNamespacedKey().getNamespace()));
   }
 }

@@ -55,7 +55,8 @@ class LocationServiceTest {
     return typeEntry;
   }
 
-  private LocationEntry buildLocationEntry(Location location, String name, LocationTypeEntry typeEntry, int playerId) {
+  private LocationEntry buildLocationEntry(Location location, String name,
+      LocationTypeEntry typeEntry, int playerId) {
     LocationEntry entry = new LocationEntry();
     entry.setLocation(location);
     entry.setLocationName(name);
@@ -103,13 +104,11 @@ class LocationServiceTest {
 
     LocationEntry result = locationService.findByLocationAndType(location, LocationType.HOME);
 
-    assertAll(
-        () -> assertNotNull(result),
+    assertAll(() -> assertNotNull(result),
         () -> assertEquals(expectedEntry.getLocationName(), result.getLocationName()),
         () -> assertEquals(expectedEntry.getPlayerId(), result.getPlayerId()),
         () -> assertEquals(expectedEntry.getLocationType(), result.getLocationType()),
-        () -> verify(locationRepository).findByLocationAndType(location, 5)
-    );
+        () -> verify(locationRepository).findByLocationAndType(location, 5));
   }
 
   @Test
@@ -134,12 +133,10 @@ class LocationServiceTest {
 
     LocationEntry result = locationService.findById(42);
 
-    assertAll(
-        () -> assertNotNull(result),
+    assertAll(() -> assertNotNull(result),
         () -> assertEquals(expectedEntry.getLocationName(), result.getLocationName()),
         () -> assertEquals(expectedEntry.getPlayerId(), result.getPlayerId()),
-        () -> verify(locationRepository).findById(42)
-    );
+        () -> verify(locationRepository).findById(42));
   }
 
   @Test
@@ -174,14 +171,12 @@ class LocationServiceTest {
 
     LocationEntry result = locationService.saveAndFetch(entryToSave);
 
-    assertAll(
-        () -> verify(locationRepository).save(entryToSave),
+    assertAll(() -> verify(locationRepository).save(entryToSave),
         () -> verify(locationRepository).findByLocationAndType(location, 2),
         () -> assertEquals(10, result.getId()),
         () -> assertEquals(persistedEntry.getLocationName(), result.getLocationName()),
         () -> assertEquals(persistedEntry.getPlayerId(), result.getPlayerId()),
-        () -> assertEquals(persistedEntry.getLocationType(), result.getLocationType())
-    );
+        () -> assertEquals(persistedEntry.getLocationType(), result.getLocationType()));
   }
 
   @Test
@@ -194,10 +189,8 @@ class LocationServiceTest {
 
     LocationEntry result = locationService.saveAndFetch(entryToSave);
 
-    assertAll(
-        () -> verify(locationRepository).save(entryToSave),
-        () -> assertEquals(entryToSave, result)
-    );
+    assertAll(() -> verify(locationRepository).save(entryToSave),
+        () -> assertEquals(entryToSave, result));
   }
 
   @Test
@@ -229,12 +222,10 @@ class LocationServiceTest {
 
     List<LocationEntry> result = locationService.findByPlayerAndType(7, LocationType.WARP);
 
-    assertAll(
-        () -> assertEquals(1, result.size()),
+    assertAll(() -> assertEquals(1, result.size()),
         () -> assertEquals(entry.getLocationName(), result.getFirst().getLocationName()),
         () -> assertEquals(entry.getPlayerId(), result.getFirst().getPlayerId()),
-        () -> verify(locationRepository).findByPlayerAndType(7, 3)
-    );
+        () -> verify(locationRepository).findByPlayerAndType(7, 3));
   }
 
   @Test
@@ -251,15 +242,13 @@ class LocationServiceTest {
   void resolveTypeReturnsTypeEntryWhenFound() {
     LocationTypeEntry typeEntry = buildLocationTypeEntry(4, LocationType.PROTECTION);
 
-    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(typeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(
+        Optional.of(typeEntry));
 
     LocationTypeEntry result = locationService.resolveType(LocationType.PROTECTION);
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(4, result.getId()),
-        () -> assertEquals(LocationType.PROTECTION.name(), result.getType())
-    );
+    assertAll(() -> assertNotNull(result), () -> assertEquals(4, result.getId()),
+        () -> assertEquals(LocationType.PROTECTION.name(), result.getType()));
   }
 
   @Test
@@ -279,20 +268,15 @@ class LocationServiceTest {
 
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(typeEntry));
 
-    LocationEntry result = locationService.buildLocationEntry(location, "myHome", LocationType.HOME, 5);
+    LocationEntry result = locationService.buildLocationEntry(location, "myHome", LocationType.HOME,
+        5);
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals("myHome", result.getLocationName()),
+    assertAll(() -> assertNotNull(result), () -> assertEquals("myHome", result.getLocationName()),
         () -> assertEquals(5, result.getPlayerId()),
         () -> assertEquals(typeEntry, result.getLocationType()),
-        () -> assertEquals(10, result.getX()),
-        () -> assertEquals(20, result.getY()),
-        () -> assertEquals(30, result.getZ()),
-        () -> assertEquals(45f, result.getYaw()),
-        () -> assertEquals(10f, result.getPitch()),
-        () -> assertEquals("world", result.getWorld())
-    );
+        () -> assertEquals(10, result.getX()), () -> assertEquals(20, result.getY()),
+        () -> assertEquals(30, result.getZ()), () -> assertEquals(45f, result.getYaw()),
+        () -> assertEquals(10f, result.getPitch()), () -> assertEquals("world", result.getWorld()));
   }
 
   @Test
@@ -314,20 +298,16 @@ class LocationServiceTest {
     when(player.getLocation()).thenReturn(location);
     when(locationTypeService.findByName(LocationType.HOME)).thenReturn(Optional.of(typeEntry));
 
-    LocationEntry result = locationService.buildLocationEntry(player, "playerHome", LocationType.HOME, 8);
+    LocationEntry result = locationService.buildLocationEntry(player, "playerHome",
+        LocationType.HOME, 8);
 
-    assertAll(
-        () -> assertNotNull(result),
+    assertAll(() -> assertNotNull(result),
         () -> assertEquals("playerHome", result.getLocationName()),
         () -> assertEquals(8, result.getPlayerId()),
         () -> assertEquals(typeEntry, result.getLocationType()),
-        () -> assertEquals(5, result.getX()),
-        () -> assertEquals(10, result.getY()),
-        () -> assertEquals(15, result.getZ()),
-        () -> assertEquals(90f, result.getYaw()),
-        () -> assertEquals(5f, result.getPitch()),
-        () -> assertEquals("world", result.getWorld())
-    );
+        () -> assertEquals(5, result.getX()), () -> assertEquals(10, result.getY()),
+        () -> assertEquals(15, result.getZ()), () -> assertEquals(90f, result.getYaw()),
+        () -> assertEquals(5f, result.getPitch()), () -> assertEquals("world", result.getWorld()));
   }
 
   @Test
@@ -348,17 +328,16 @@ class LocationServiceTest {
     Location location = new Location(world, 1, 2, 3);
     LocationEntry entry = buildLocationEntry(location, "block", typeEntry, 4);
 
-    when(locationTypeService.findByName(LocationType.BLOCK_HISTORY)).thenReturn(Optional.of(typeEntry));
+    when(locationTypeService.findByName(LocationType.BLOCK_HISTORY)).thenReturn(
+        Optional.of(typeEntry));
     when(locationRepository.findByType(6)).thenReturn(List.of(entry));
 
     List<LocationEntry> result = locationService.findByType(LocationType.BLOCK_HISTORY);
 
-    assertAll(
-        () -> assertEquals(1, result.size()),
+    assertAll(() -> assertEquals(1, result.size()),
         () -> assertEquals(entry.getLocationName(), result.getFirst().getLocationName()),
         () -> assertEquals(entry.getPlayerId(), result.getFirst().getPlayerId()),
-        () -> verify(locationRepository).findByType(6)
-    );
+        () -> verify(locationRepository).findByType(6));
   }
 
   @Test

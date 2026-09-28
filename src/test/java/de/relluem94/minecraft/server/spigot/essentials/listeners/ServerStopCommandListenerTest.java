@@ -34,39 +34,28 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ServerStopCommandListenerTest {
 
+  private static final String SHUTDOWN_MESSAGE = "Server is shutting down";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private PluginMetadataService pluginMetadataService;
-
   @Mock
   private SchedulerService schedulerService;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private TeleportService teleportService;
-
   @Mock
   private Plugin plugin;
-
   @Mock
   private Server server;
-
   @Mock
   private ServerCommandEvent serverCommandEvent;
-
   @Mock
   private PlayerCommandPreprocessEvent playerCommandPreprocessEvent;
-
   @Mock
   private Player player;
-
   private ServerStopCommandListener listener;
-
-  private static final String SHUTDOWN_MESSAGE = "Server is shutting down";
 
   @BeforeEach
   void setUp() {
@@ -79,21 +68,20 @@ class ServerStopCommandListenerTest {
     ServerStopCommandListener freshListener = new ServerStopCommandListener();
     freshListener.injectContext(serviceContext);
 
-    assertAll(
-        () -> {
-          when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-          when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-          when(plugin.getServer()).thenReturn(server);
-          when(serviceContext.getTranslationService()).thenReturn(translationService);
-          when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
-          when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
-          when(serverCommandEvent.getCommand()).thenReturn("stop");
+    assertAll(() -> {
+      when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+      when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+      when(plugin.getServer()).thenReturn(server);
+      when(serviceContext.getTranslationService()).thenReturn(translationService);
+      when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+          SHUTDOWN_MESSAGE);
+      when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+      when(serverCommandEvent.getCommand()).thenReturn("stop");
 
-          freshListener.onServerStopCommand(serverCommandEvent);
+      freshListener.onServerStopCommand(serverCommandEvent);
 
-          verify(server).broadcastMessage(SHUTDOWN_MESSAGE);
-        }
-    );
+      verify(server).broadcastMessage(SHUTDOWN_MESSAGE);
+    });
   }
 
   @Test
@@ -121,15 +109,14 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onServerStopCommand(serverCommandEvent);
 
-    assertAll(
-        () -> verify(server).broadcastMessage(SHUTDOWN_MESSAGE),
-        () -> verify(schedulerService, times(2)).runTaskLater(any(), anyLong())
-    );
+    assertAll(() -> verify(server).broadcastMessage(SHUTDOWN_MESSAGE),
+        () -> verify(schedulerService, times(2)).runTaskLater(any(), anyLong()));
   }
 
   @Test
@@ -139,7 +126,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onServerStopCommand(serverCommandEvent);
@@ -154,7 +142,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onServerStopCommand(serverCommandEvent);
@@ -162,10 +151,10 @@ class ServerStopCommandListenerTest {
     ArgumentCaptor<Long> delayCaptor = ArgumentCaptor.forClass(Long.class);
     verify(schedulerService, times(2)).runTaskLater(any(), delayCaptor.capture());
 
-    assertAll(
-        () -> org.junit.jupiter.api.Assertions.assertEquals(10L, delayCaptor.getAllValues().getFirst()),
-        () -> org.junit.jupiter.api.Assertions.assertEquals(20L, delayCaptor.getAllValues().get(1))
-    );
+    assertAll(() -> org.junit.jupiter.api.Assertions.assertEquals(10L,
+            delayCaptor.getAllValues().getFirst()),
+        () -> org.junit.jupiter.api.Assertions.assertEquals(20L,
+            delayCaptor.getAllValues().get(1)));
   }
 
   @Test
@@ -175,7 +164,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onServerStopCommand(serverCommandEvent);
@@ -193,7 +183,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
 
@@ -207,10 +198,8 @@ class ServerStopCommandListenerTest {
     verify(schedulerService, times(2)).runTaskLater(runnableCaptor.capture(), anyLong());
     runnableCaptor.getAllValues().getFirst().run();
 
-    assertAll(
-        () -> verify(teleportService).teleportWorld(eq(player), any(), eq(true)),
-        () -> verify(player).kickPlayer(SHUTDOWN_MESSAGE)
-    );
+    assertAll(() -> verify(teleportService).teleportWorld(eq(player), any(), eq(true)),
+        () -> verify(player).kickPlayer(SHUTDOWN_MESSAGE));
   }
 
   @Test
@@ -220,7 +209,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
@@ -258,7 +248,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onPlayerStopCommand(playerCommandPreprocessEvent);
@@ -273,16 +264,15 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onPlayerStopCommand(playerCommandPreprocessEvent);
 
-    assertAll(
-        () -> verify(playerCommandPreprocessEvent).setCancelled(true),
+    assertAll(() -> verify(playerCommandPreprocessEvent).setCancelled(true),
         () -> verify(server).broadcastMessage(SHUTDOWN_MESSAGE),
-        () -> verify(schedulerService, times(2)).runTaskLater(any(), anyLong())
-    );
+        () -> verify(schedulerService, times(2)).runTaskLater(any(), anyLong()));
   }
 
   @Test
@@ -292,7 +282,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onPlayerStopCommand(playerCommandPreprocessEvent);
@@ -307,7 +298,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     listener.onPlayerStopCommand(playerCommandPreprocessEvent);
@@ -315,10 +307,10 @@ class ServerStopCommandListenerTest {
     ArgumentCaptor<Long> delayCaptor = ArgumentCaptor.forClass(Long.class);
     verify(schedulerService, times(2)).runTaskLater(any(), delayCaptor.capture());
 
-    assertAll(
-        () -> org.junit.jupiter.api.Assertions.assertEquals(10L, delayCaptor.getAllValues().getFirst()),
-        () -> org.junit.jupiter.api.Assertions.assertEquals(20L, delayCaptor.getAllValues().get(1))
-    );
+    assertAll(() -> org.junit.jupiter.api.Assertions.assertEquals(10L,
+            delayCaptor.getAllValues().getFirst()),
+        () -> org.junit.jupiter.api.Assertions.assertEquals(20L,
+            delayCaptor.getAllValues().get(1)));
   }
 
   @Test
@@ -328,7 +320,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
 
@@ -342,10 +335,8 @@ class ServerStopCommandListenerTest {
     verify(schedulerService, times(2)).runTaskLater(runnableCaptor.capture(), anyLong());
     runnableCaptor.getAllValues().getFirst().run();
 
-    assertAll(
-        () -> verify(teleportService).teleportWorld(eq(player), any(), eq(true)),
-        () -> verify(player).kickPlayer(SHUTDOWN_MESSAGE)
-    );
+    assertAll(() -> verify(teleportService).teleportWorld(eq(player), any(), eq(true)),
+        () -> verify(player).kickPlayer(SHUTDOWN_MESSAGE));
   }
 
   @Test
@@ -355,7 +346,8 @@ class ServerStopCommandListenerTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(SHUTDOWN_MESSAGE);
+    when(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)).thenReturn(
+        SHUTDOWN_MESSAGE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);

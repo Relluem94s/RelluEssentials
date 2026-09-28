@@ -32,30 +32,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WhereTest {
 
+  private static final String TRANSLATED_MESSAGE = "translated-message";
   @Mock
   private ServiceContext serviceContext;
-
   @Mock
   private TranslationService translationService;
-
   @Mock
   private GroupService groupService;
-
   @Mock
   private ServerService serverService;
-
   @Mock
   private MessageService messageService;
-
   @Mock
   private Command command;
-
   @Mock
   private Player player;
-
   private Where where;
-
-  private static final String TRANSLATED_MESSAGE = "translated-message";
 
   @BeforeEach
   void setUp() {
@@ -79,7 +71,8 @@ class WhereTest {
   @Test
   void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayerAndNoArgsProvided() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(nonPlayerSender, command, "where", new String[]{});
 
@@ -90,7 +83,8 @@ class WhereTest {
   @Test
   void onCommandSendsPermissionMissingWhenPlayerLacksUserPermissionAndNoArgsProvided() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(player, command, "where", new String[]{});
 
@@ -105,7 +99,8 @@ class WhereTest {
     when(player.getCustomName()).thenReturn("TestPlayer");
     when(player.getLocation()).thenReturn(location);
     when(messageService.locationToString(location)).thenReturn("world, 10, 64, 20");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WHERE, "TestPlayer", "world, 10, 64, 20")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WHERE, "TestPlayer",
+        "world, 10, 64, 20")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(player, command, "where", new String[]{});
 
@@ -117,7 +112,8 @@ class WhereTest {
   void onCommandSendsPermissionMissingWhenSenderLacksModPermissionAndArgProvided() {
     CommandSender nonModSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonModSender, "mod")).thenReturn(false);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
+        TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(nonModSender, command, "where", new String[]{"TargetPlayer"});
 
@@ -130,7 +126,8 @@ class WhereTest {
   void onCommandSendsTargetNotAPlayerMessageWhenTargetNotFoundAndArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+        "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(player, command, "where", new String[]{"UnknownPlayer"});
 
@@ -148,7 +145,8 @@ class WhereTest {
     when(targetPlayer.getCustomName()).thenReturn("TargetPlayer");
     when(targetPlayer.getLocation()).thenReturn(location);
     when(messageService.locationToString(location)).thenReturn("world, 5, 70, 15");
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WHERE, "TargetPlayer", "world, 5, 70, 15")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WHERE, "TargetPlayer",
+        "world, 5, 70, 15")).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = where.onCommand(player, command, "where", new String[]{"TargetPlayer"});
 
@@ -161,7 +159,8 @@ class WhereTest {
     CommandSender unauthorizedSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(unauthorizedSender, "mod")).thenReturn(false);
 
-    List<String> result = where.onTabComplete(unauthorizedSender, command, "where", new String[]{"a"});
+    List<String> result = where.onTabComplete(unauthorizedSender, command, "where",
+        new String[]{"a"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());
@@ -171,7 +170,8 @@ class WhereTest {
   void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = where.onTabComplete(player, command, "where", new String[]{"arg1", "arg2"});
+    List<String> result = where.onTabComplete(player, command, "where",
+        new String[]{"arg1", "arg2"});
 
     assertNotNull(result);
     assertTrue(result.isEmpty());

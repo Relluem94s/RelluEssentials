@@ -21,12 +21,10 @@ class AnnotatedClassLoaderTest {
 
   private static final String LISTENER_FIXTURES_PACKAGE =
       "de.relluem94.minecraft.server.spigot.essentials.discovery.listenerfixtures";
-
   private static final String COMMAND_FIXTURES_PACKAGE =
       "de.relluem94.minecraft.server.spigot.essentials.discovery.commandfixtures";
-
-  private static final String NONEXISTENT_PACKAGE = "de.nonexistent.package";
-
+  private static final String NONEXISTENT_PACKAGE =
+      "de.nonexistent.package";
   private static final String EMPTY_FIXTURES_PACKAGE =
       "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures";
 
@@ -41,7 +39,8 @@ class AnnotatedClassLoaderTest {
   void privateConstructorCauseIsIllegalStateException() throws Exception {
     Constructor<AnnotatedClassLoader> constructor = AnnotatedClassLoader.class.getDeclaredConstructor();
     constructor.setAccessible(true);
-    InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
+    InvocationTargetException thrown = assertThrows(InvocationTargetException.class,
+        constructor::newInstance);
     assertInstanceOf(IllegalStateException.class, thrown.getCause());
   }
 
@@ -49,7 +48,8 @@ class AnnotatedClassLoaderTest {
   void loadListenersReturnsEmptyListWhenPackageDoesNotExist() {
     ClassLoader classLoader = new URLClassLoader(new URL[0], null);
 
-    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(NONEXISTENT_PACKAGE, classLoader);
+    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(NONEXISTENT_PACKAGE,
+        classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -58,7 +58,8 @@ class AnnotatedClassLoaderTest {
   void loadCommandsReturnsEmptyListWhenPackageDoesNotExist() {
     ClassLoader classLoader = new URLClassLoader(new URL[0], null);
 
-    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(NONEXISTENT_PACKAGE, classLoader);
+    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(NONEXISTENT_PACKAGE,
+        classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -67,7 +68,8 @@ class AnnotatedClassLoaderTest {
   void loadListenersReturnsEmptyListWhenNoAnnotatedClassesPresent() {
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(EMPTY_FIXTURES_PACKAGE, classLoader);
+    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(EMPTY_FIXTURES_PACKAGE,
+        classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -76,7 +78,8 @@ class AnnotatedClassLoaderTest {
   void loadCommandsReturnsEmptyListWhenNoAnnotatedClassesPresent() {
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(EMPTY_FIXTURES_PACKAGE, classLoader);
+    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(EMPTY_FIXTURES_PACKAGE,
+        classLoader);
 
     assertTrue(result.isEmpty());
   }
@@ -88,7 +91,8 @@ class AnnotatedClassLoaderTest {
 
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(LISTENER_FIXTURES_PACKAGE, classLoader);
+    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(LISTENER_FIXTURES_PACKAGE,
+        classLoader);
 
     assertFalse(result.isEmpty());
     assertTrue(result.stream().allMatch(Objects::nonNull));
@@ -101,7 +105,8 @@ class AnnotatedClassLoaderTest {
 
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(COMMAND_FIXTURES_PACKAGE, classLoader);
+    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(COMMAND_FIXTURES_PACKAGE,
+        classLoader);
 
     assertFalse(result.isEmpty());
     assertTrue(result.stream().allMatch(Objects::nonNull));
@@ -114,10 +119,11 @@ class AnnotatedClassLoaderTest {
 
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(LISTENER_FIXTURES_PACKAGE, classLoader);
+    List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(LISTENER_FIXTURES_PACKAGE,
+        classLoader);
 
-    assertTrue(result.stream().noneMatch(
-        l -> l.getClass().getSimpleName().equals("UninstantiableListenerFixture")));
+    assertTrue(result.stream()
+        .noneMatch(l -> l.getClass().getSimpleName().equals("UninstantiableListenerFixture")));
   }
 
   @Test
@@ -127,9 +133,10 @@ class AnnotatedClassLoaderTest {
 
     ClassLoader classLoader = AnnotatedClassLoaderTest.class.getClassLoader();
 
-    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(COMMAND_FIXTURES_PACKAGE, classLoader);
+    List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(COMMAND_FIXTURES_PACKAGE,
+        classLoader);
 
-    assertTrue(result.stream().noneMatch(
-        c -> c.getClass().getSimpleName().equals("UninstantiableCommandFixture")));
+    assertTrue(result.stream()
+        .noneMatch(c -> c.getClass().getSimpleName().equals("UninstantiableCommandFixture")));
   }
 }

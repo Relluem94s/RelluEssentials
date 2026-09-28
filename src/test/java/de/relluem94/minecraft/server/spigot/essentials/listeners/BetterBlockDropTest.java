@@ -88,7 +88,8 @@ class BetterBlockDropTest {
     when(location.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("world");
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
-    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(false);
+    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(
+        false);
 
     betterBlockDrop.onBreak(blockBreakEvent);
 
@@ -102,7 +103,8 @@ class BetterBlockDropTest {
     when(location.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("world");
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
-    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(true);
+    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(
+        true);
     when(block.getBlockData()).thenReturn(blockData);
     when(blockData.getMaterial()).thenReturn(Material.DIAMOND_ORE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
@@ -123,7 +125,8 @@ class BetterBlockDropTest {
     when(location.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("world");
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
-    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(true);
+    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(
+        true);
     when(block.getBlockData()).thenReturn(blockData);
     when(blockData.getMaterial()).thenReturn(Material.DIRT);
 
@@ -134,13 +137,10 @@ class BetterBlockDropTest {
 
   @Test
   void onBreakSchedulesBlockRestoreForAllOreTypes() {
-    Material[] ores = {
-        Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE,
-        Material.COAL_ORE, Material.IRON_ORE, Material.COPPER_ORE,
-        Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_COPPER_ORE,
-        Material.GOLD_ORE, Material.EMERALD_ORE,
-        Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE
-    };
+    Material[] ores = {Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE,
+        Material.COAL_ORE, Material.IRON_ORE, Material.COPPER_ORE, Material.DEEPSLATE_COAL_ORE,
+        Material.DEEPSLATE_COPPER_ORE, Material.GOLD_ORE, Material.EMERALD_ORE,
+        Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE};
 
     for (Material ore : ores) {
       BetterBlockDrop listener = new BetterBlockDrop();
@@ -151,7 +151,8 @@ class BetterBlockDropTest {
       when(location.getWorld()).thenReturn(world);
       when(world.getName()).thenReturn("world");
       when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
-      when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(true);
+      when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(
+          true);
       when(block.getBlockData()).thenReturn(blockData);
       when(blockData.getMaterial()).thenReturn(ore);
       when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
@@ -170,7 +171,8 @@ class BetterBlockDropTest {
     when(location.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("world");
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
-    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(true);
+    when(worldGroupService.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "world")).thenReturn(
+        true);
     when(block.getBlockData()).thenReturn(blockData);
     when(blockData.getMaterial()).thenReturn(Material.EMERALD_ORE);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
@@ -182,8 +184,6 @@ class BetterBlockDropTest {
 
     runnableCaptor.getValue().run();
 
-    assertAll(
-        () -> verify(block).setType(Material.EMERALD_ORE)
-    );
+    assertAll(() -> verify(block).setType(Material.EMERALD_ORE));
   }
 }
