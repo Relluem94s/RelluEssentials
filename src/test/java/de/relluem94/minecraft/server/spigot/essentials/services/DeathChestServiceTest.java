@@ -117,9 +117,9 @@ class DeathChestServiceTest {
   @Test
   void spawnDeathChestForPlayerReturnsFalseWhenAllItemsAreNull() {
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{null, null});
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{null});
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{null});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {null, null});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {null});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {null});
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
@@ -132,9 +132,9 @@ class DeathChestServiceTest {
     when(airItem.getType()).thenReturn(Material.AIR);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{airItem});
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{airItem});
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{airItem});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {airItem});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {airItem});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {airItem});
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
@@ -147,7 +147,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -174,7 +174,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -217,29 +217,20 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(originBlock).setType(Material.CHEST),
-        () -> verify(neighborBlock).setType(Material.CHEST),
-        () -> verify(originChestData).setFacing(BlockFace.EAST),
-        () -> verify(neighborChestData).setFacing(BlockFace.EAST),
-        () -> verify(neighborChestData).setType(Type.LEFT),
-        () -> verify(originChestData).setType(Type.RIGHT),
-        () -> verify(doubleChestInventory).addItem(item),
-        () -> verify(playerInventory).clear(),
-        () -> verify(playerInventory).setArmorContents(null),
+    assertAll(() -> assertTrue(result), () -> verify(originBlock).setType(Material.CHEST),
+        () -> verify(neighborBlock).setType(Material.CHEST), () -> verify(originChestData).setFacing(BlockFace.EAST),
+        () -> verify(neighborChestData).setFacing(BlockFace.EAST), () -> verify(neighborChestData).setType(Type.LEFT),
+        () -> verify(originChestData).setType(Type.RIGHT), () -> verify(doubleChestInventory).addItem(item),
+        () -> verify(playerInventory).clear(), () -> verify(playerInventory).setArmorContents(null),
         () -> verify(playerInventory).setExtraContents(null),
-        () -> verify(protectionService, times(2))
-            .saveProtectionAndAddToRegistry(any(Location.class), any(ProtectionEntry.class))
-    );
+        () -> verify(protectionService, times(2)).saveProtectionAndAddToRegistry(any(Location.class),
+            any(ProtectionEntry.class)));
   }
-
 
   @Test
   void spawnDeathChestForPlayerSetsCorrectRightsJsonWithPlayerId() {
@@ -247,7 +238,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.STONE);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -283,27 +274,27 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(42);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     ArgumentCaptor<ProtectionEntry> protectionCaptor = ArgumentCaptor.forClass(ProtectionEntry.class);
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    verify(protectionService, times(2))
-        .saveProtectionAndAddToRegistry(any(Location.class), protectionCaptor.capture());
+    verify(protectionService, times(2)).saveProtectionAndAddToRegistry(any(Location.class), protectionCaptor.capture());
 
-    ProtectionEntry capturedProtection = protectionCaptor.getAllValues().getFirst();
+    ProtectionEntry capturedProtection = protectionCaptor
+        .getAllValues()
+        .getFirst();
 
-    assertAll(
-        () -> assertNotNull(capturedProtection.getRights()),
-        () -> assertTrue(capturedProtection.getRights().has("IDs")),
-        () -> assertEquals(42, capturedProtection.getRights().getJSONArray("IDs").get(0)),
-        () -> assertNotNull(capturedProtection.getFlags()),
+    assertAll(() -> assertNotNull(capturedProtection.getRights()), () -> assertTrue(capturedProtection
+            .getRights()
+            .has("IDs")), () -> assertEquals(42, capturedProtection
+            .getRights()
+            .getJSONArray("IDs")
+            .get(0)), () -> assertNotNull(capturedProtection.getFlags()),
         () -> assertNotNull(capturedProtection.getLocationEntry()),
-        () -> assertNotNull(capturedProtection.getMaterialName())
-    );
+        () -> assertNotNull(capturedProtection.getMaterialName()));
   }
 
   @Test
@@ -312,7 +303,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -346,11 +337,8 @@ class DeathChestServiceTest {
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(protectionService, never())
-            .saveProtectionAndAddToRegistry(any(), any())
-    );
+    assertAll(() -> assertTrue(result),
+        () -> verify(protectionService, never()).saveProtectionAndAddToRegistry(any(), any()));
   }
 
   @Test
@@ -365,9 +353,9 @@ class DeathChestServiceTest {
     when(offHandItem.getType()).thenReturn(Material.SHIELD);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{mainItem});
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{armorItem});
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{offHandItem});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {mainItem});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {armorItem});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {offHandItem});
 
     Location location = new Location(world, 0, 64, 0);
     when(player.getLocation()).thenReturn(location);
@@ -401,17 +389,13 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(doubleChestInventory).addItem(mainItem),
-        () -> verify(doubleChestInventory).addItem(armorItem),
-        () -> verify(doubleChestInventory).addItem(offHandItem)
-    );
+    assertAll(() -> verify(doubleChestInventory).addItem(mainItem),
+        () -> verify(doubleChestInventory).addItem(armorItem), () -> verify(doubleChestInventory).addItem(offHandItem));
   }
 
   @Test
@@ -421,7 +405,7 @@ class DeathChestServiceTest {
 
     when(player.getInventory()).thenReturn(playerInventory);
     when(playerInventory.getContents()).thenReturn(new ItemStack[0]);
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{armorItem});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {armorItem});
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
     Location location = new Location(world, 0, 64, 0);
@@ -456,8 +440,7 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
@@ -471,7 +454,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -508,8 +491,7 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     deathChestService.spawnDeathChestForPlayer(player);
@@ -524,7 +506,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -561,23 +543,21 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(99);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
 
     ArgumentCaptor<LocationEntry> locationEntryCaptor = ArgumentCaptor.forClass(LocationEntry.class);
     when(locationService.saveAndFetch(locationEntryCaptor.capture())).thenReturn(persistedLocationEntry);
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    LocationEntry capturedEntry = locationEntryCaptor.getAllValues().getFirst();
+    LocationEntry capturedEntry = locationEntryCaptor
+        .getAllValues()
+        .getFirst();
 
-    assertAll(
-        () -> assertEquals(99, capturedEntry.getPlayerId()),
+    assertAll(() -> assertEquals(99, capturedEntry.getPlayerId()),
         () -> assertEquals(locationTypeEntry, capturedEntry.getLocationType()),
-        () -> verify(locationService, times(2)).saveAndFetch(any(LocationEntry.class))
-    );
+        () -> verify(locationService, times(2)).saveAndFetch(any(LocationEntry.class)));
   }
-
 
   @Test
   void spawnDeathChestForPlayerSkipsNullItemsInArmorAndOffHandSlots() {
@@ -588,19 +568,17 @@ class DeathChestServiceTest {
     when(offHandItem.getType()).thenReturn(Material.SHIELD);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{mainItem, null});
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{null, null});
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{offHandItem, null});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {mainItem, null});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {null, null});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {offHandItem, null});
 
     setupSuccessfulChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(doubleChestInventory).addItem(mainItem),
+    assertAll(() -> verify(doubleChestInventory).addItem(mainItem),
         () -> verify(doubleChestInventory).addItem(offHandItem),
-        () -> verify(doubleChestInventory, times(2)).addItem(any(ItemStack.class))
-    );
+        () -> verify(doubleChestInventory, times(2)).addItem(any(ItemStack.class)));
   }
 
   @Test
@@ -612,18 +590,16 @@ class DeathChestServiceTest {
     when(mainItem.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{mainItem, airItem});
-    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{airItem, airItem});
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{airItem});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {mainItem, airItem});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[] {airItem, airItem});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {airItem});
 
     setupSuccessfulChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(doubleChestInventory).addItem(mainItem),
-        () -> verify(doubleChestInventory, times(1)).addItem(any(ItemStack.class))
-    );
+    assertAll(() -> verify(doubleChestInventory).addItem(mainItem),
+        () -> verify(doubleChestInventory, times(1)).addItem(any(ItemStack.class)));
   }
 
   private void setupSuccessfulChestPlacement() {
@@ -659,19 +635,17 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
   }
 
-
   @Test
-  void spawnDeathChestForPlayerPlacesDoubleChestAlongXAxisWhenFirstBlockHasSmallerX() {
+  void spawnDeathChestForPlayerPlacesDoubleChestAlongxAxisWhenFirstBlockHasSmallerX() {
     ItemStack item = mock(ItemStack.class);
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -688,25 +662,22 @@ class DeathChestServiceTest {
 
     when(originBlock.getFace(neighborBlock)).thenReturn(BlockFace.EAST);
 
-    setupInventoryAndServicesForChestPlacement(item);
+    setupInventoryAndServicesForChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(originChestData).setType(Type.LEFT),
-        () -> verify(neighborChestData).setType(Type.RIGHT),
+    assertAll(() -> verify(originChestData).setType(Type.LEFT), () -> verify(neighborChestData).setType(Type.RIGHT),
         () -> verify(originChestData).setFacing(BlockFace.NORTH),
-        () -> verify(neighborChestData).setFacing(BlockFace.NORTH)
-    );
+        () -> verify(neighborChestData).setFacing(BlockFace.NORTH));
   }
 
   @Test
-  void spawnDeathChestForPlayerPlacesDoubleChestAlongZAxisWhenFirstBlockHasSmallerZ() {
+  void spawnDeathChestForPlayerPlacesDoubleChestAlongzAxisWhenFirstBlockHasSmallerZ() {
     ItemStack item = mock(ItemStack.class);
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -725,19 +696,16 @@ class DeathChestServiceTest {
 
     when(originBlock.getFace(neighborBlock)).thenReturn(BlockFace.SOUTH);
 
-    setupInventoryAndServicesForChestPlacement(item);
+    setupInventoryAndServicesForChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(originChestData).setType(Type.LEFT),
-        () -> verify(neighborChestData).setType(Type.RIGHT),
+    assertAll(() -> verify(originChestData).setType(Type.LEFT), () -> verify(neighborChestData).setType(Type.RIGHT),
         () -> verify(originChestData).setFacing(BlockFace.EAST),
-        () -> verify(neighborChestData).setFacing(BlockFace.EAST)
-    );
+        () -> verify(neighborChestData).setFacing(BlockFace.EAST));
   }
 
-  private void setupInventoryAndServicesForChestPlacement(ItemStack item) {
+  private void setupInventoryAndServicesForChestPlacement() {
     Location location = new Location(world, 0, 64, 0);
     when(player.getLocation()).thenReturn(location);
     when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
@@ -757,11 +725,9 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
   }
-
 
   @Test
   void spawnDeathChestForPlayerReturnsTrueWhenOnlyOffHandContainsItems() {
@@ -771,7 +737,7 @@ class DeathChestServiceTest {
     when(player.getInventory()).thenReturn(playerInventory);
     when(playerInventory.getContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
-    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{offHandItem});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[] {offHandItem});
 
     setupSuccessfulChestPlacement();
 
@@ -781,12 +747,12 @@ class DeathChestServiceTest {
   }
 
   @Test
-  void spawnDeathChestForPlayerFindsAirBlocksAtHigherYOffsetWhenOriginIsNotAir() {
+  void spawnDeathChestForPlayerFindsAirBlocksAtHigheryOffsetWhenOriginIsNotAir() {
     ItemStack item = mock(ItemStack.class);
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -832,17 +798,13 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(airBlockAtOffset2).setType(Material.CHEST),
-        () -> verify(neighborBlock).setType(Material.CHEST)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(airBlockAtOffset2).setType(Material.CHEST),
+        () -> verify(neighborBlock).setType(Material.CHEST));
   }
 
   @Test
@@ -851,7 +813,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -892,17 +854,13 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     boolean result = deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(originBlock).setType(Material.CHEST),
-        () -> verify(neighborBlock).setType(Material.CHEST)
-    );
+    assertAll(() -> assertTrue(result), () -> verify(originBlock).setType(Material.CHEST),
+        () -> verify(neighborBlock).setType(Material.CHEST));
   }
 
   @Test
@@ -911,7 +869,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -948,16 +906,13 @@ class DeathChestServiceTest {
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
-    when(locationTypeService.findByName(LocationType.PROTECTION))
-        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationTypeService.findByName(LocationType.PROTECTION)).thenReturn(Optional.of(locationTypeEntry));
     when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(singleChestInventory).addItem(item),
-        () -> verify(doubleChestInventory, never()).addItem(any(ItemStack.class))
-    );
+    assertAll(() -> verify(singleChestInventory).addItem(item),
+        () -> verify(doubleChestInventory, never()).addItem(any(ItemStack.class)));
   }
 
   @Test
@@ -966,7 +921,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -985,14 +940,12 @@ class DeathChestServiceTest {
 
     when(neighborBlock.getFace(originBlock)).thenReturn(BlockFace.WEST);
 
-    setupInventoryAndServicesForChestPlacement(item);
+    setupInventoryAndServicesForChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(neighborChestData).setFacing(BlockFace.NORTH),
-        () -> verify(originChestData).setFacing(BlockFace.NORTH)
-    );
+    assertAll(() -> verify(neighborChestData).setFacing(BlockFace.NORTH),
+        () -> verify(originChestData).setFacing(BlockFace.NORTH));
   }
 
   @Test
@@ -1001,7 +954,7 @@ class DeathChestServiceTest {
     when(item.getType()).thenReturn(Material.DIRT);
 
     when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getContents()).thenReturn(new ItemStack[] {item});
     when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
     when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
 
@@ -1020,13 +973,11 @@ class DeathChestServiceTest {
     when(originBlock.getBlockData()).thenReturn(originChestData);
     when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
 
-    setupInventoryAndServicesForChestPlacement(item);
+    setupInventoryAndServicesForChestPlacement();
 
     deathChestService.spawnDeathChestForPlayer(player);
 
-    assertAll(
-        () -> verify(neighborChestData).setFacing(BlockFace.EAST),
-        () -> verify(originChestData).setFacing(BlockFace.EAST)
-    );
+    assertAll(() -> verify(neighborChestData).setFacing(BlockFace.EAST),
+        () -> verify(originChestData).setFacing(BlockFace.EAST));
   }
 }

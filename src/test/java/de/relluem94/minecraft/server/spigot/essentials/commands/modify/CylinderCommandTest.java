@@ -172,7 +172,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void executeWithRadiusXEqualToOneSkipsInnerEllipseCheck() {
+  void executeWithRadiusxEqualToOneSkipsInnerEllipseCheck() {
     Selection selection = buildSelection(2, 10);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -196,7 +196,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void executeWithRadiusZEqualToOneSkipsInnerEllipseCheck() {
+  void executeWithRadiuszEqualToOneSkipsInnerEllipseCheck() {
     Selection selection = buildSelection(10, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 

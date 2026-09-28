@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.Collections;
 import java.util.List;
@@ -45,9 +44,6 @@ class NpcSpawnerTest {
 
   @Mock
   private Server server;
-
-  @Mock
-  private ServiceContext serviceContext;
 
   @Mock
   private NpcMannequinAttributeApplier npcMannequinAttributeApplier;

@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("unused")
 @CommandName("UninstantiableCommandFixture")
-public class UninstantiableCommandFixture implements CommandConstruct {
+class UninstantiableCommandFixture implements CommandConstruct {
 
   private UninstantiableCommandFixture() {
     throw new UnsupportedOperationException();

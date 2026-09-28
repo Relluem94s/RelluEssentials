@@ -84,8 +84,7 @@ class WorldMenuServiceTest {
 
   @Test
   void openWorldMenuPlacesWorldHeadsForEachLoadedWorld() {
-    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(
-        Optional.of(customItem));
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(disabledItemStack);
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
@@ -94,16 +93,17 @@ class WorldMenuServiceTest {
     when(world.getName()).thenReturn("world");
     when(globeHead.getItemMeta()).thenReturn(globeHeadMeta);
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
-      inventoryHelperMock.when(
-              () -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
           .thenReturn(inventory);
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
+      playerHeadHelperMock
+          .when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
           .thenReturn(globeHead);
 
       worldMenuService.openWorldMenu(player);
@@ -111,8 +111,7 @@ class WorldMenuServiceTest {
       inventoryHelperMock.verify(() -> InventoryHelper.createInventory(eq(18),
           eq(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds")));
       inventoryHelperMock.verify(() -> InventoryHelper.fillInventory(inventory, disabledItemStack));
-      playerHeadHelperMock.verify(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE),
-          times(1));
+      playerHeadHelperMock.verify(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE), times(1));
       verify(globeHeadMeta).setDisplayName("world");
       verify(globeHead).setItemMeta(globeHeadMeta);
       verify(inventory).setItem(0, globeHead);
@@ -126,8 +125,7 @@ class WorldMenuServiceTest {
     ItemStack secondGlobeHead = org.mockito.Mockito.mock(ItemStack.class);
     ItemMeta secondGlobeHeadMeta = org.mockito.Mockito.mock(ItemMeta.class);
 
-    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(
-        Optional.of(customItem));
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(disabledItemStack);
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
@@ -138,17 +136,19 @@ class WorldMenuServiceTest {
     when(globeHead.getItemMeta()).thenReturn(globeHeadMeta);
     when(secondGlobeHead.getItemMeta()).thenReturn(secondGlobeHeadMeta);
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
-      inventoryHelperMock.when(
-              () -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
           .thenReturn(inventory);
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
-          .thenReturn(globeHead).thenReturn(secondGlobeHead);
+      playerHeadHelperMock
+          .when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
+          .thenReturn(globeHead)
+          .thenReturn(secondGlobeHead);
 
       worldMenuService.openWorldMenu(player);
 
@@ -160,8 +160,7 @@ class WorldMenuServiceTest {
 
   @Test
   void openWorldMenuSkipsInventoryPopulationWhenGlobeHeadMetaIsNull() {
-    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(
-        Optional.of(customItem));
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(disabledItemStack);
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
@@ -169,16 +168,17 @@ class WorldMenuServiceTest {
     when(server.getWorlds()).thenReturn(List.of(world));
     when(globeHead.getItemMeta()).thenReturn(null);
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
-      inventoryHelperMock.when(
-              () -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
           .thenReturn(inventory);
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
+      playerHeadHelperMock
+          .when(() -> PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE))
           .thenReturn(globeHead);
 
       worldMenuService.openWorldMenu(player);
@@ -193,11 +193,11 @@ class WorldMenuServiceTest {
     when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> ignored = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> ignored = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
 
       assertThrows(NoSuchElementException.class, () -> worldMenuService.openWorldMenu(player));
@@ -206,22 +206,21 @@ class WorldMenuServiceTest {
 
   @Test
   void openWorldMenuOpensInventoryWithNoWorldsWhenServerHasNoWorlds() {
-    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(
-        Optional.of(customItem));
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.of(customItem));
     when(customItem.toItemStack()).thenReturn(disabledItemStack);
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(server.getWorlds()).thenReturn(List.of());
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
-      inventoryHelperMock.when(
-              () -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.fillInventory(any(Inventory.class), any(ItemStack.class)))
           .thenReturn(inventory);
 
       worldMenuService.openWorldMenu(player);
@@ -237,11 +236,11 @@ class WorldMenuServiceTest {
     when(pluginMetadataService.getName()).thenReturn("TestPlugin");
     when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
 
-    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(
-        InventoryHelper.class); MockedStatic<PlayerHeadHelper> ignored = mockStatic(
-        PlayerHeadHelper.class)) {
+    try (MockedStatic<InventoryHelper> inventoryHelperMock = mockStatic(InventoryHelper.class);
+        MockedStatic<PlayerHeadHelper> ignored = mockStatic(PlayerHeadHelper.class)) {
 
-      inventoryHelperMock.when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
+      inventoryHelperMock
+          .when(() -> InventoryHelper.createInventory(anyInt(), anyString()))
           .thenReturn(inventory);
 
       assertThrows(NoSuchElementException.class, () -> worldMenuService.openWorldMenu(player));

@@ -71,7 +71,7 @@ class SuicideTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayerAndNotConsoleAndNotCmdBlock() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayerAndNotConsoleAndNotCmdBlock() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -106,7 +106,7 @@ class SuicideTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTargetNotFoundAndSenderIsPlayer() {
+  void onCommandSendsTargetNotaPlayerWhenTargetNotFoundAndSenderIsPlayer() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
@@ -202,7 +202,6 @@ class SuicideTest {
     assertTrue(result.contains("SecondPlayer"));
   }
 
-
   @Test
   void onCommandSendsToLessArgumentsWhenConsoleProvideNoArgs() {
     CommandSender consoleSender = mock(org.bukkit.command.ConsoleCommandSender.class);
@@ -215,7 +214,7 @@ class SuicideTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenConsoleProvideUnknownPlayerName() {
+  void onCommandSendsTargetNotaPlayerWhenConsoleProvideUnknownPlayerName() {
     CommandSender consoleSender = mock(org.bukkit.command.ConsoleCommandSender.class);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);

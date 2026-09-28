@@ -35,125 +35,129 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WorldMapperTest {
 
-    @Mock
-    private ResultSet resultSet;
+  @Mock
+  private ResultSet resultSet;
 
-    private void stubAuditFields() throws SQLException {
-        when(resultSet.getInt(FIELD_ID)).thenReturn(1);
-        when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01 00:00:00");
-        when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(10);
-        when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01 00:00:00");
-        when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(20);
-        when(resultSet.getString(FIELD_DELETED)).thenReturn(null);
-        when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(0);
-    }
+  private void stubAuditFields() throws SQLException {
+    when(resultSet.getInt(FIELD_ID)).thenReturn(1);
+    when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01 00:00:00");
+    when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(10);
+    when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01 00:00:00");
+    when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(20);
+    when(resultSet.getString(FIELD_DELETED)).thenReturn(null);
+    when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(0);
+  }
 
-    @Test
-    void mapWorldShouldMapAllFieldsCorrectly() throws SQLException {
-        stubAuditFields();
-        when(resultSet.getString(FIELD_NAME)).thenReturn("world");
+  @Test
+  void mapWorldShouldMapAllFieldsCorrectly() throws SQLException {
+    stubAuditFields();
+    when(resultSet.getString(FIELD_NAME)).thenReturn("world");
 
-        WorldEntry result = WorldMapper.mapWorld(resultSet);
+    WorldEntry result = WorldMapper.mapWorld(resultSet);
 
-        assertEquals(1, result.getId());
-        assertEquals("2024-01-01 00:00:00", result.getCreated());
-        assertEquals(10, result.getCreatedBy());
-        assertEquals("2024-06-01 00:00:00", result.getUpdated());
-        assertEquals(20, result.getUpdatedBy());
-        assertNull(result.getDeleted());
-        assertEquals(0, result.getDeletedBy());
-        assertEquals("world", result.getName());
-    }
+    assertEquals(1, result.getId());
+    assertEquals("2024-01-01 00:00:00", result.getCreated());
+    assertEquals(10, result.getCreatedBy());
+    assertEquals("2024-06-01 00:00:00", result.getUpdated());
+    assertEquals(20, result.getUpdatedBy());
+    assertNull(result.getDeleted());
+    assertEquals(0, result.getDeletedBy());
+    assertEquals("world", result.getName());
+  }
 
-    @Test
-    void mapWorldShouldThrowSQLExceptionWhenResultSetFails() throws SQLException {
-        when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
+  @Test
+  void mapWorldShouldThrowSqlExceptionWhenResultSetFails() throws SQLException {
+    when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
 
-        SQLException exception = assertThrows(SQLException.class, () -> WorldMapper.mapWorld(resultSet));
-        assertEquals("db error", exception.getMessage());
-    }
+    SQLException exception = assertThrows(SQLException.class, () -> WorldMapper.mapWorld(resultSet));
+    assertEquals("db error", exception.getMessage());
+  }
 
-    @Test
-    void mapWorldGroupShouldMapAllFieldsAndFilterMatchingSettings() throws SQLException {
-        stubAuditFields();
-        when(resultSet.getString(FIELD_NAME)).thenReturn("overworld-group");
+  @Test
+  void mapWorldGroupShouldMapAllFieldsAndFilterMatchingSettings() throws SQLException {
+    stubAuditFields();
+    when(resultSet.getString(FIELD_NAME)).thenReturn("overworld-group");
 
-        WorldGroupSettingEntry matchingSetting = new WorldGroupSettingEntry();
-        matchingSetting.setWorldGroupEntryFk(1);
+    WorldGroupSettingEntry matchingSetting = new WorldGroupSettingEntry();
+    matchingSetting.setWorldGroupEntryFk(1);
 
-        WorldGroupSettingEntry nonMatchingSetting = new WorldGroupSettingEntry();
-        nonMatchingSetting.setWorldGroupEntryFk(99);
+    WorldGroupSettingEntry nonMatchingSetting = new WorldGroupSettingEntry();
+    nonMatchingSetting.setWorldGroupEntryFk(99);
 
-        WorldGroupEntry result = WorldMapper.mapWorldGroup(resultSet, List.of(matchingSetting, nonMatchingSetting));
+    WorldGroupEntry result = WorldMapper.mapWorldGroup(resultSet, List.of(matchingSetting, nonMatchingSetting));
 
-        assertEquals(1, result.getId());
-        assertEquals("2024-01-01 00:00:00", result.getCreated());
-        assertEquals(10, result.getCreatedBy());
-        assertEquals("2024-06-01 00:00:00", result.getUpdated());
-        assertEquals(20, result.getUpdatedBy());
-        assertNull(result.getDeleted());
-        assertEquals(0, result.getDeletedBy());
-        assertEquals("overworld-group", result.getName());
-        assertEquals(List.of(matchingSetting), result.getSettings());
-    }
+    assertEquals(1, result.getId());
+    assertEquals("2024-01-01 00:00:00", result.getCreated());
+    assertEquals(10, result.getCreatedBy());
+    assertEquals("2024-06-01 00:00:00", result.getUpdated());
+    assertEquals(20, result.getUpdatedBy());
+    assertNull(result.getDeleted());
+    assertEquals(0, result.getDeletedBy());
+    assertEquals("overworld-group", result.getName());
+    assertEquals(List.of(matchingSetting), result.getSettings());
+  }
 
-    @Test
-    void mapWorldGroupShouldReturnEmptySettingsWhenNoSettingsMatch() throws SQLException {
-        stubAuditFields();
-        when(resultSet.getString(FIELD_NAME)).thenReturn("nether-group");
+  @Test
+  void mapWorldGroupShouldReturnEmptySettingsWhenNoSettingsMatch() throws SQLException {
+    stubAuditFields();
+    when(resultSet.getString(FIELD_NAME)).thenReturn("nether-group");
 
-        WorldGroupSettingEntry nonMatchingSetting = new WorldGroupSettingEntry();
-        nonMatchingSetting.setWorldGroupEntryFk(99);
+    WorldGroupSettingEntry nonMatchingSetting = new WorldGroupSettingEntry();
+    nonMatchingSetting.setWorldGroupEntryFk(99);
 
-        WorldGroupEntry result = WorldMapper.mapWorldGroup(resultSet, List.of(nonMatchingSetting));
+    WorldGroupEntry result = WorldMapper.mapWorldGroup(resultSet, List.of(nonMatchingSetting));
 
-        assertTrue(result.getSettings().isEmpty());
-    }
+    assertTrue(result
+        .getSettings()
+        .isEmpty());
+  }
 
-    @Test
-    void mapWorldGroupInventoryShouldMapAllFieldsCorrectly() throws SQLException {
-        stubAuditFields();
-        String inventoryJson = "{\"slot_0\":\"diamondSword\"}";
+  @Test
+  void mapWorldGroupInventoryShouldMapAllFieldsCorrectly() throws SQLException {
+    stubAuditFields();
+    String inventoryJson = "{\"slot_0\":\"diamondSword\"}";
 
-        when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
-        when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
-        when(resultSet.getInt(FIELD_TOTAL_EXPERIENCE)).thenReturn(500);
-        when(resultSet.getInt(FIELD_FOOD)).thenReturn(18);
-        when(resultSet.getString(FIELD_INVENTORY)).thenReturn(inventoryJson);
+    when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
+    when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
+    when(resultSet.getInt(FIELD_TOTAL_EXPERIENCE)).thenReturn(500);
+    when(resultSet.getInt(FIELD_FOOD)).thenReturn(18);
+    when(resultSet.getString(FIELD_INVENTORY)).thenReturn(inventoryJson);
 
-        WorldGroupInventoryEntry result = WorldMapper.mapWorldGroupInventory(resultSet);
+    WorldGroupInventoryEntry result = WorldMapper.mapWorldGroupInventory(resultSet);
 
-        assertEquals(1, result.getId());
-        assertEquals("2024-01-01 00:00:00", result.getCreated());
-        assertEquals(10, result.getCreatedBy());
-        assertEquals("2024-06-01 00:00:00", result.getUpdated());
-        assertEquals(20, result.getUpdatedBy());
-        assertNull(result.getDeleted());
-        assertEquals(0, result.getDeletedBy());
-        assertEquals(42, result.getPlayerId());
-        assertEquals(20, result.getHealth());
-        assertEquals(500, result.getTotalExperience());
-        assertEquals(18, result.getFoodLevel());
-        assertEquals("diamondSword", result.getInventory().getString("slot_0"));
-    }
+    assertEquals(1, result.getId());
+    assertEquals("2024-01-01 00:00:00", result.getCreated());
+    assertEquals(10, result.getCreatedBy());
+    assertEquals("2024-06-01 00:00:00", result.getUpdated());
+    assertEquals(20, result.getUpdatedBy());
+    assertNull(result.getDeleted());
+    assertEquals(0, result.getDeletedBy());
+    assertEquals(42, result.getPlayerId());
+    assertEquals(20, result.getHealth());
+    assertEquals(500, result.getTotalExperience());
+    assertEquals(18, result.getFoodLevel());
+    assertEquals("diamondSword", result
+        .getInventory()
+        .getString("slot_0"));
+  }
 
-    @Test
-    void mapWorldGroupInventoryShouldThrowExceptionWhenInventoryJsonIsInvalid() throws SQLException {
-        stubAuditFields();
-        when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
-        when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
-        when(resultSet.getInt(FIELD_TOTAL_EXPERIENCE)).thenReturn(500);
-        when(resultSet.getInt(FIELD_FOOD)).thenReturn(18);
-        when(resultSet.getString(FIELD_INVENTORY)).thenReturn("not-valid-json");
+  @Test
+  void mapWorldGroupInventoryShouldThrowExceptionWhenInventoryJsonIsInvalid() throws SQLException {
+    stubAuditFields();
+    when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
+    when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
+    when(resultSet.getInt(FIELD_TOTAL_EXPERIENCE)).thenReturn(500);
+    when(resultSet.getInt(FIELD_FOOD)).thenReturn(18);
+    when(resultSet.getString(FIELD_INVENTORY)).thenReturn("not-valid-json");
 
-        assertThrows(Exception.class, () -> WorldMapper.mapWorldGroupInventory(resultSet));
-    }
+    assertThrows(Exception.class, () -> WorldMapper.mapWorldGroupInventory(resultSet));
+  }
 
-    @Test
-    void constructorShouldThrowIllegalStateException() throws Exception {
-        var constructor = WorldMapper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        Exception wrapper = assertThrows(Exception.class, constructor::newInstance);
-        assertInstanceOf(IllegalStateException.class, wrapper.getCause());
-    }
+  @Test
+  void constructorShouldThrowIllegalStateException() throws Exception {
+    var constructor = WorldMapper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    Exception wrapper = assertThrows(Exception.class, constructor::newInstance);
+    assertInstanceOf(IllegalStateException.class, wrapper.getCause());
+  }
 }

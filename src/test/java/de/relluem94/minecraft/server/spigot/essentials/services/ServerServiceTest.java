@@ -351,7 +351,6 @@ class ServerServiceTest {
     verify(server).unloadWorld(world, false);
   }
 
-
   @Test
   void getWorldsReturnsAllWorlds() {
     World world = mock(World.class);

@@ -122,17 +122,17 @@ class BankRepositoryTest {
 
   @Test
   void addTransactionToBankInsertsTransactionAndUpdatesBalance() {
-    int playerFK = 1;
-    int bankAccountFK = 2;
+    int playerFk = 1;
+    int bankAccountFk = 2;
     double transactionValue = 100.0;
     double currentBalance = 500.0;
     int tierId = 3;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+    bankRepository.addTransactionToBank(playerFk, bankAccountFk, transactionValue, currentBalance,
         tierId);
 
-    verify(bankDao).insertBankTransaction(playerFK, bankAccountFK, transactionValue);
-    verify(bankDao).updateBankAccount(playerFK, currentBalance + transactionValue, tierId);
+    verify(bankDao).insertBankTransaction(playerFk, bankAccountFk, transactionValue);
+    verify(bankDao).updateBankAccount(playerFk, currentBalance + transactionValue, tierId);
   }
 
   @Test
@@ -155,43 +155,43 @@ class BankRepositoryTest {
 
   @Test
   void addTransactionToBankCalculatesNewBalanceCorrectly() {
-    int playerFK = 1;
-    int bankAccountFK = 2;
+    int playerFk = 1;
+    int bankAccountFk = 2;
     double transactionValue = 250.0;
     double currentBalance = 750.0;
     int tierId = 1;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+    bankRepository.addTransactionToBank(playerFk, bankAccountFk, transactionValue, currentBalance,
         tierId);
 
-    verify(bankDao).updateBankAccount(playerFK, 1000.0, tierId);
+    verify(bankDao).updateBankAccount(playerFk, 1000.0, tierId);
   }
 
   @Test
   void addTransactionToBankWithNegativeTransactionDeductsBalance() {
-    int playerFK = 1;
-    int bankAccountFK = 2;
+    int playerFk = 1;
+    int bankAccountFk = 2;
     double transactionValue = -200.0;
     double currentBalance = 500.0;
     int tierId = 1;
 
-    bankRepository.addTransactionToBank(playerFK, bankAccountFK, transactionValue, currentBalance,
+    bankRepository.addTransactionToBank(playerFk, bankAccountFk, transactionValue, currentBalance,
         tierId);
 
-    verify(bankDao).insertBankTransaction(playerFK, bankAccountFK, transactionValue);
-    verify(bankDao).updateBankAccount(playerFK, 300.0, tierId);
+    verify(bankDao).insertBankTransaction(playerFk, bankAccountFk, transactionValue);
+    verify(bankDao).updateBankAccount(playerFk, 300.0, tierId);
   }
 
   @Test
   void updateBankAccountUpdatesWithCalculatedBalance() {
-    int playerFK = 1;
+    int playerFk = 1;
     double transactionValue = 100.0;
     double currentBalance = 400.0;
     int tierId = 2;
 
-    bankRepository.updateBankAccount(playerFK, transactionValue, currentBalance, tierId);
+    bankRepository.updateBankAccount(playerFk, transactionValue, currentBalance, tierId);
 
-    verify(bankDao).updateBankAccount(playerFK, currentBalance + transactionValue, tierId);
+    verify(bankDao).updateBankAccount(playerFk, currentBalance + transactionValue, tierId);
     verify(bankDao, never()).insertBankTransaction(anyInt(), anyInt(), anyDouble());
   }
 
@@ -213,14 +213,14 @@ class BankRepositoryTest {
 
   @Test
   void updateBankAccountWithNegativeTransactionDeductsBalance() {
-    int playerFK = 5;
+    int playerFk = 5;
     double transactionValue = -150.0;
     double currentBalance = 600.0;
     int tierId = 3;
 
-    bankRepository.updateBankAccount(playerFK, transactionValue, currentBalance, tierId);
+    bankRepository.updateBankAccount(playerFk, transactionValue, currentBalance, tierId);
 
-    verify(bankDao).updateBankAccount(playerFK, 450.0, tierId);
+    verify(bankDao).updateBankAccount(playerFk, 450.0, tierId);
   }
 
   @Test

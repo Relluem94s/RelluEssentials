@@ -378,7 +378,6 @@ class PositionServiceTest {
     verify(player, times(24)).spawnParticle(eq(Particle.COMPOSTER), any(Location.class), eq(1));
   }
 
-
   @Test
   void expandOrDecreasePositionsExpandsFirstLocationWhenBothLocationsHaveEqualProjection() {
     Location firstLocation = new Location(world, 5, 0, 0);

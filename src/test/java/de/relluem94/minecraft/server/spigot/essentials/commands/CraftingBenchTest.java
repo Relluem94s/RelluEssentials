@@ -73,7 +73,7 @@ class CraftingBenchTest {
   }
 
   @Test
-  void onCommandNonPlayerSenderSendsNotAPlayerMessage() {
+  void onCommandNonPlayerSenderSendsNotaPlayerMessage() {
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
 
     boolean result = craftingBench.onCommand(commandSender, command, "craft", new String[]{});
@@ -114,7 +114,6 @@ class CraftingBenchTest {
         () -> verify(player).sendMessage("opened")
     );
   }
-
 
   @Test
   void onTabCompleteReturnsEmptyList() {

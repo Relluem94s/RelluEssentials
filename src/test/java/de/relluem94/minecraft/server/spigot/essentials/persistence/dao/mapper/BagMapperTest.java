@@ -84,7 +84,7 @@ class BagMapperTest {
   }
 
   @Test
-  void mapBagPropagatesSQLException() throws SQLException {
+  void mapBagPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> BagMapper.mapBag(resultSet));
   }
@@ -116,7 +116,7 @@ class BagMapperTest {
   }
 
   @Test
-  void mapBagTypePropagatesSQLException() throws SQLException {
+  void mapBagTypePropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> BagMapper.mapBagType(resultSet));
   }

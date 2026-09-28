@@ -98,7 +98,6 @@ class HealTest {
     verify(player).sendMessage(TRANSLATED_MESSAGE);
   }
 
-
   @Test
   void onCommandSendsTargetNotAnPlayerWhenConsoleProvideUnknownPlayerName() {
     ConsoleCommandSender console = mock(ConsoleCommandSender.class);

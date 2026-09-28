@@ -79,7 +79,7 @@ class RepairTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -163,7 +163,7 @@ class RepairTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerMessageWhenTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerMessageWhenTargetNotFound() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer"))

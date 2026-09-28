@@ -259,10 +259,8 @@ class BagServiceTest {
     assertFalse(result);
   }
 
-
   @Test
   void getSlotByItemStackReturnsNegativeOneWhenItemNotInBagType() {
-    ItemStack queriedItem = new ItemStack(Material.STONE, 5);
     BagTypeEntry emptyBagType = mock(BagTypeEntry.class);
     when(bagEntry.getBagType()).thenReturn(emptyBagType);
 
@@ -280,6 +278,7 @@ class BagServiceTest {
     when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
         .thenReturn(Optional.of(disabledItemEntry));
 
+    ItemStack queriedItem = new ItemStack(Material.STONE, 5);
     int result = bagService.getSlotByItemStack(bagEntry, queriedItem);
 
     assertEquals(-1, result);
@@ -939,7 +938,6 @@ class BagServiceTest {
 
     assertFalse(result);
   }
-
 
   @Test
   void collectItemsSkipsItemWhenItIsInBagBlocksButHasNoMatchingSlotInPlayerBag() {

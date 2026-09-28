@@ -106,7 +106,6 @@ class TabCompleterHelperTest {
     assertTrue(result.contains("home"));
   }
 
-
   @Test
   void getGroupsReturnsEmptyListWhenNoGroupsExist() {
     List<String> result = TabCompleterHelper.getGroups(List.of());
@@ -128,7 +127,6 @@ class TabCompleterHelperTest {
     assertTrue(result.contains("admin"));
     assertTrue(result.contains("user"));
   }
-
 
   @Test
   void getWorldTypesReturnsAllWorldTypes() {

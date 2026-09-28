@@ -65,7 +65,6 @@ class PlayerRegistryTest {
     assertNull(retrieved);
   }
 
-
   @Test
   void testGetPlayerEntryByIdNotFound() {
     PlayerEntry retrieved = playerRegistry.getPlayerEntry(999);

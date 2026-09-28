@@ -137,7 +137,7 @@ class AdminTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender consoleSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -317,7 +317,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsXCoordinateWhenFourArgsAndNpcCreate() {
+  void onTabCompleteReturnsxCoordinateWhenFourArgsAndNpcCreate() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);
@@ -373,7 +373,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsYCoordinateWhenFiveArgsAndNpcCreate() {
+  void onTabCompleteReturnsyCoordinateWhenFiveArgsAndNpcCreate() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);
@@ -395,7 +395,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsXCoordinateWhenFiveArgsAndNpcUpdatePosition() {
+  void onTabCompleteReturnsxCoordinateWhenFiveArgsAndNpcUpdatePosition() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);
@@ -515,7 +515,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsZCoordinateWhenSixArgsAndNpcCreate() {
+  void onTabCompleteReturnszCoordinateWhenSixArgsAndNpcCreate() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);
@@ -527,7 +527,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsYCoordinateWhenSixArgsAndNpcUpdatePosition() {
+  void onTabCompleteReturnsyCoordinateWhenSixArgsAndNpcUpdatePosition() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);
@@ -640,7 +640,7 @@ class AdminTest {
   }
 
   @Test
-  void onTabCompleteReturnsZCoordinateWhenSevenArgsAndNpcUpdatePosition() {
+  void onTabCompleteReturnszCoordinateWhenSevenArgsAndNpcUpdatePosition() {
     Location location = new Location(world, 10, 64, 20);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(player.getLocation()).thenReturn(location);

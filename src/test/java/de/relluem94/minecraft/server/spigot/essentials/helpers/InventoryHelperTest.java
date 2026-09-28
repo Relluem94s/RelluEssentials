@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-public class InventoryHelperTest {
+class InventoryHelperTest {
 
   @BeforeEach
   protected void setUp() throws NoSuchFieldException, IllegalAccessException {

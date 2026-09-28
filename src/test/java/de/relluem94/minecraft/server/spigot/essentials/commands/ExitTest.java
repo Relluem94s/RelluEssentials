@@ -116,7 +116,7 @@ class ExitTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayerAndNotConsole() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayerAndNotConsole() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 

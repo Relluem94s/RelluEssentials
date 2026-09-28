@@ -116,7 +116,6 @@ class RegisteredInventoryTest {
     assertTrue(registeredInventory.getFixedItems().isEmpty());
   }
 
-
   @Test
   void testOpenForWithoutExtraItems() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
@@ -153,7 +152,6 @@ class RegisteredInventoryTest {
           () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
-
 
   @Test
   void testOpenForWithTypeAndNamespaceFilterWithExtraItems() {

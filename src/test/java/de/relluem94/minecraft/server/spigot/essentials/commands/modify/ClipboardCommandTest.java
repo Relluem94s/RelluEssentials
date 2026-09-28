@@ -26,7 +26,6 @@ class ClipboardCommandTest {
   private ClipboardCommand clipboardCommand;
   private ClipboardService clipboardService;
 
-
   @BeforeEach
   void setUp() {
     player = mock(Player.class);

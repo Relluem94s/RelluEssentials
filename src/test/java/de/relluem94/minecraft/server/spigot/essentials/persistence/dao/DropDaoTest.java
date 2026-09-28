@@ -55,6 +55,7 @@ class DropDaoTest {
 
     assertEquals(1, result.size());
   }
+
   @Test
   void findAllReturnsEmptyListWhenQueryExecutorReturnsEmpty() {
     when(queryExecutor.queryList(eq("getDrops.sql"), any(StatementConfigurer.class),

@@ -72,7 +72,7 @@ class DayTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 

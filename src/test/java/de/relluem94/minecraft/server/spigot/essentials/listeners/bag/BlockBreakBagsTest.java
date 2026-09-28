@@ -225,7 +225,6 @@ class BlockBreakBagsTest {
   void onBlockBreakDelicateCancelsImmatureCropBreak() {
     injectWithBothEnchantments();
 
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.WHEAT);
 
     Ageable ageable = mock(Ageable.class);
@@ -239,6 +238,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(false);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event).setCancelled(true);
@@ -248,8 +248,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakDelicateDoesNotCancelMatureCropBreak() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.WHEAT);
 
     Ageable ageable = mock(Ageable.class);
@@ -263,6 +261,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(false);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
@@ -312,8 +311,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakDelicateDoesNotCancelSugarCaneEvenIfImmature() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.SUGAR_CANE);
 
     Ageable ageable = mock(Ageable.class);
@@ -327,6 +324,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(false);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
@@ -355,8 +353,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakTelekinesisWithSugarCaneAndNoBlockAboveDropsAndCancels() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.SUGAR_CANE);
 
     Block blockAbove = mock(Block.class);
@@ -379,6 +375,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
@@ -389,8 +386,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakTelekinesisWithBambooAndNoBlockAboveDropsAndCancels() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.BAMBOO);
 
     Block blockAbove = mock(Block.class);
@@ -413,6 +408,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
@@ -513,8 +509,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantNotOnEndStoneDoesNotTriggerTelekinesis() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block blockBelow = mock(Block.class);
@@ -527,6 +521,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
@@ -576,8 +571,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakSugarCaneWithOneBlockAboveDropsAndCancels() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.SUGAR_CANE);
 
     Block secondBlock = mock(Block.class);
@@ -605,6 +598,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
@@ -615,8 +609,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakBambooWithOneBlockAboveDropsAndCancels() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.BAMBOO);
 
     Block secondBlock = mock(Block.class);
@@ -644,6 +636,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()),
@@ -654,8 +647,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakDelicateImmatureCropWithSugarCaneTypeIsNotCanceled() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.SUGAR_CANE);
 
     Ageable ageable = mock(Ageable.class);
@@ -669,6 +660,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(false);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
@@ -698,8 +690,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantWith51BlocksDoesNotCancel() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block[] connectedBlocks = new Block[52];
@@ -736,6 +726,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
@@ -745,8 +736,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantRecursionIsGuardedByDeduplication() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block childBlock = mock(Block.class);
@@ -779,6 +768,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(block).setType(Material.AIR),
@@ -791,8 +781,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantNeighborIsNotChorusPlantSkipsRecursion() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block nonChorusNeighbor = mock(Block.class);
@@ -821,6 +809,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       verify(event).setCancelled(true);
@@ -830,8 +819,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantBlockDataNotMultipleFacingSkipsChildren() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     when(block.getBlockData()).thenReturn(mock(BlockData.class));
@@ -854,6 +841,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true), () -> verify(world).dropItem(any(), any()));
@@ -863,8 +851,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantSkipsPreviousFaceDirectionToPreventBacktracking() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block childBlock = mock(Block.class);
@@ -907,6 +893,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true),
@@ -919,8 +906,6 @@ class BlockBreakBagsTest {
   @Test
   void onBlockBreakChorusPlantDeduplicationPreventsProcessingSameBlockTwice() {
     injectWithBothEnchantments();
-
-    BlockBreakEvent event = buildEvent();
     when(block.getType()).thenReturn(Material.CHORUS_PLANT);
 
     Block sharedBlock = mock(Block.class);
@@ -956,6 +941,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
+      BlockBreakEvent event = buildEvent();
       listener.onBlockBreak(event);
 
       assertAll(() -> verify(event).setCancelled(true),

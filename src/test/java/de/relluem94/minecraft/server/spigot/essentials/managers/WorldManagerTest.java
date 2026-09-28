@@ -436,7 +436,6 @@ class WorldManagerTest {
     }
   }
 
-
   @Test
   void enableDoesNotSetSpawnLocationWhenLobbyWorldIsNull() {
     when(worldEntry.getName()).thenReturn("lobby");

@@ -307,7 +307,6 @@ class LocationDaoTest {
     verify(preparedStatement).setInt(10, locationEntry.getPlayerId());
   }
 
-
   @Test
   void insertLocationPropagatesException() {
     LocationEntry locationEntry = buildLocationEntry();

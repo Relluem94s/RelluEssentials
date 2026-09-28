@@ -94,7 +94,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -140,7 +140,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenPlayerNotFoundWithOneArg() {
+  void onCommandSendsTargetNotaPlayerWhenPlayerNotFoundWithOneArg() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer("Unknown")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "Unknown")).thenReturn(TRANSLATED_MESSAGE);
@@ -186,7 +186,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTwoArgsAndTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerWhenTwoArgsAndTargetNotFound() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer("Unknown")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "Unknown")).thenReturn(TRANSLATED_MESSAGE);

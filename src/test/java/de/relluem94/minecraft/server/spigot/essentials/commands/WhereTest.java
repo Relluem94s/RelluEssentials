@@ -69,7 +69,7 @@ class WhereTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayerAndNoArgsProvided() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayerAndNoArgsProvided() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         TRANSLATED_MESSAGE);
@@ -123,7 +123,7 @@ class WhereTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerMessageWhenTargetNotFoundAndArgProvided() {
+  void onCommandSendsTargetNotaPlayerMessageWhenTargetNotFoundAndArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,

@@ -6,7 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 
 @SuppressWarnings("unused")
 @ListenerName("UninstantiableListenerFixture")
-public class UninstantiableListenerFixture implements ListenerConstruct {
+class UninstantiableListenerFixture implements ListenerConstruct {
 
   private UninstantiableListenerFixture() {
     throw new UnsupportedOperationException();

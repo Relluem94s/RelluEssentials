@@ -65,7 +65,6 @@ class CropDaoTest {
     assertThrows(RuntimeException.class, () -> cropDao.findAll());
   }
 
-
   @Test
   void findAllDoesNotConfigurePreparedStatement() throws Exception {
     ArgumentCaptor<StatementConfigurer> configurerCaptor =

@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class StringHelperTest {
+class StringHelperTest {
 
   @Test
   public void constructorThrowsIllegalStateException() throws Exception {

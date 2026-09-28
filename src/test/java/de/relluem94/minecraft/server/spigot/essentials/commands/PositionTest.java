@@ -83,7 +83,7 @@ class PositionTest {
   }
 
   @Test
-  void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
+  void onCommandSenderIsNotPlayerSendsNotaPlayerMessage() {
     when(groupService.isSenderAuthorized(nonPlayerSender, "mod")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         "not a player");

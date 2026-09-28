@@ -57,6 +57,7 @@ class QueryExecutorTest {
     silentLogger.setLevel(Level.OFF);
     queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader, silentLogger);
   }
+
   @Test
   void queryForEachConsumesAllRows() throws Exception {
     when(dataSource.getConnection()).thenReturn(connection);

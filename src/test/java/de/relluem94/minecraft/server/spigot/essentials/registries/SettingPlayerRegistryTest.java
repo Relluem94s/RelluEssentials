@@ -54,7 +54,6 @@ class SettingPlayerRegistryTest {
     assertEquals(2, result.get().getId());
   }
 
-
   @Test
   void findByPlayerIdAndSettingIdShouldReturnEmptyWhenCriteriaNotMet() {
     SettingPlayerEntry entry = createEntry(1, 100, 10);
@@ -64,7 +63,6 @@ class SettingPlayerRegistryTest {
     assertFalse(registry.findByPlayerIdAndSettingId(99, 10).isPresent());
     assertFalse(registry.findByPlayerIdAndSettingId(99, 99).isPresent());
   }
-
 
   @Test
   void findAllByPlayerIdShouldReturnAllEntriesForPlayer() {

@@ -76,7 +76,7 @@ class WarpTest {
   }
 
   @Test
-  void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
+  void onCommandSenderIsNotPlayerSendsNotaPlayerMessage() {
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         "not a player");
 

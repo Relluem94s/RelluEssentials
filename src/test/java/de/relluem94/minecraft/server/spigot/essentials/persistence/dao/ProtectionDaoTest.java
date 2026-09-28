@@ -66,7 +66,8 @@ class ProtectionDaoTest {
 
   @Test
   void deleteOutdatedProtectionsReturnsCountFromQueryExecutor() {
-    when(queryExecutor.executeUpdateWithCount(eq("cleanupProtections.sql"), any(StatementConfigurer.class))).thenReturn(5);
+    when(queryExecutor.executeUpdateWithCount(eq("cleanupProtections.sql"), any(StatementConfigurer.class))).thenReturn(
+        5);
 
     int result = protectionDao.deleteOutdatedProtections();
 
@@ -75,8 +76,8 @@ class ProtectionDaoTest {
 
   @Test
   void deleteOutdatedProtectionsPropagatesException() {
-    when(queryExecutor.executeUpdateWithCount(eq("cleanupProtections.sql"), any(StatementConfigurer.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.executeUpdateWithCount(eq("cleanupProtections.sql"), any(StatementConfigurer.class))).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> protectionDao.deleteOutdatedProtections());
   }
@@ -107,11 +108,11 @@ class ProtectionDaoTest {
 
       when(queryExecutor.queryList(eq("findOutdatedProtectionIds.sql"), any(StatementConfigurer.class),
           any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<Long> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<Long> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<Long> result = protectionDao.findOutdatedProtectionIds();
 
@@ -151,13 +152,13 @@ class ProtectionDaoTest {
       when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(0);
       when(resultSet.getString(FIELD_VALUE)).thenReturn("CHEST");
 
-      when(queryExecutor.queryList(eq("getProtectionLocks.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<ProtectionLockEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+      when(queryExecutor.queryList(eq("getProtectionLocks.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<ProtectionLockEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<ProtectionLockEntry> result = protectionDao.findAllLocks();
 
@@ -176,18 +177,23 @@ class ProtectionDaoTest {
   @Test
   void deleteByIdSetsPlayerIdAndIdOnPreparedStatement() throws SQLException {
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("deleteProtection.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("deleteProtection.sql"), captor.capture());
 
     protectionDao.deleteById(10, 99);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, 99);
     verify(preparedStatement).setInt(2, 10);
   }
 
   @Test
   void deleteByIdPropagatesException() {
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("deleteProtection.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> protectionDao.deleteById(10, 99));
@@ -227,13 +233,13 @@ class ProtectionDaoTest {
       when(resultSet.getString(FIELD_RIGHTS)).thenReturn("{\"admin\":true}");
       when(resultSet.getString(FIELD_MATERIAL_NAME)).thenReturn("CHEST");
 
-      when(queryExecutor.queryList(eq("getProtections.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+      when(queryExecutor.queryList(eq("getProtections.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<ProtectionEntry> result = protectionDao.findAll();
 
@@ -267,21 +273,25 @@ class ProtectionDaoTest {
       when(resultSet.getString(FIELD_RIGHTS)).thenReturn(null);
       when(resultSet.getString(FIELD_MATERIAL_NAME)).thenReturn(null);
 
-      when(queryExecutor.queryList(eq("getProtections.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+      when(queryExecutor.queryList(eq("getProtections.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<ProtectionEntry> result = protectionDao.findAll();
 
       ProtectionEntry entry = result.getFirst();
       assertNotNull(entry.getFlags());
       assertNotNull(entry.getRights());
-      assertEquals(0, entry.getFlags().length());
-      assertEquals(0, entry.getRights().length());
+      assertEquals(0, entry
+          .getFlags()
+          .length());
+      assertEquals(0, entry
+          .getRights()
+          .length());
     }
   }
 
@@ -289,22 +299,33 @@ class ProtectionDaoTest {
   void insertProtectionSetsAllFieldsOnPreparedStatement() throws SQLException {
     ProtectionEntry protectionEntry = buildProtectionEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("insertProtection.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("insertProtection.sql"), captor.capture());
 
     protectionDao.insertProtection(protectionEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, protectionEntry.getCreatedBy());
-    verify(preparedStatement).setInt(2, protectionEntry.getLocationEntry().getId());
+    verify(preparedStatement).setInt(2, protectionEntry
+        .getLocationEntry()
+        .getId());
     verify(preparedStatement).setString(3, protectionEntry.getMaterialName());
-    verify(preparedStatement).setString(4, protectionEntry.getFlags().toString());
-    verify(preparedStatement).setString(5, protectionEntry.getRights().toString());
+    verify(preparedStatement).setString(4, protectionEntry
+        .getFlags()
+        .toString());
+    verify(preparedStatement).setString(5, protectionEntry
+        .getRights()
+        .toString());
   }
 
   @Test
   void insertProtectionPropagatesException() {
     ProtectionEntry protectionEntry = buildProtectionEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("insertProtection.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> protectionDao.insertProtection(protectionEntry));
@@ -314,20 +335,29 @@ class ProtectionDaoTest {
   void updateProtectionFlagSetsAllFieldsOnPreparedStatement() throws SQLException {
     ProtectionEntry protectionEntry = buildProtectionEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateProtectionFlags.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateProtectionFlags.sql"), captor.capture());
 
     protectionDao.updateProtectionFlag(protectionEntry);
 
-    captor.getValue().configure(preparedStatement);
-    verify(preparedStatement).setInt(1, protectionEntry.getLocationEntry().getPlayerId());
-    verify(preparedStatement).setString(2, protectionEntry.getFlags().toString());
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    verify(preparedStatement).setInt(1, protectionEntry
+        .getLocationEntry()
+        .getPlayerId());
+    verify(preparedStatement).setString(2, protectionEntry
+        .getFlags()
+        .toString());
     verify(preparedStatement).setInt(3, protectionEntry.getId());
   }
 
   @Test
   void updateProtectionFlagPropagatesException() {
     ProtectionEntry protectionEntry = buildProtectionEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("updateProtectionFlags.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> protectionDao.updateProtectionFlag(protectionEntry));
@@ -337,20 +367,29 @@ class ProtectionDaoTest {
   void updateProtectionRightSetsAllFieldsOnPreparedStatement() throws SQLException {
     ProtectionEntry protectionEntry = buildProtectionEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateProtectionRights.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateProtectionRights.sql"), captor.capture());
 
     protectionDao.updateProtectionRight(protectionEntry);
 
-    captor.getValue().configure(preparedStatement);
-    verify(preparedStatement).setInt(1, protectionEntry.getLocationEntry().getPlayerId());
-    verify(preparedStatement).setString(2, protectionEntry.getRights().toString());
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    verify(preparedStatement).setInt(1, protectionEntry
+        .getLocationEntry()
+        .getPlayerId());
+    verify(preparedStatement).setString(2, protectionEntry
+        .getRights()
+        .toString());
     verify(preparedStatement).setInt(3, protectionEntry.getId());
   }
 
   @Test
   void updateProtectionRightPropagatesException() {
     ProtectionEntry protectionEntry = buildProtectionEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("updateProtectionRights.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> protectionDao.updateProtectionRight(protectionEntry));
@@ -359,11 +398,14 @@ class ProtectionDaoTest {
   @Test
   void getProtectionByLocationReturnsSingleEntry() {
     World world = mock(World.class);
-    lenient().when(world.getName()).thenReturn("world");
+    lenient()
+        .when(world.getName())
+        .thenReturn("world");
     Location location = new Location(world, 1.0, 64.0, -1.0);
     ProtectionEntry expected = buildProtectionEntry();
-    when(queryExecutor.querySingle(eq("getProtectionByLocation.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(expected);
+    when(
+        queryExecutor.querySingle(eq("getProtectionByLocation.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        expected);
 
     ProtectionEntry result = protectionDao.getProtectionByLocation(location);
 
@@ -380,7 +422,9 @@ class ProtectionDaoTest {
 
     protectionDao.getProtectionByLocation(location);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setFloat(1, (float) location.getX());
     verify(preparedStatement).setFloat(2, (float) location.getY());
     verify(preparedStatement).setFloat(3, (float) location.getZ());
@@ -408,11 +452,11 @@ class ProtectionDaoTest {
 
       when(queryExecutor.querySingle(eq("getProtectionByLocation.sql"), any(StatementConfigurer.class),
           any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
-        return mapper.map(resultSet);
-      });
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<ProtectionEntry> mapper = invocation.getArgument(2);
+            return mapper.map(resultSet);
+          });
 
       ProtectionEntry result = protectionDao.getProtectionByLocation(location);
 
@@ -433,10 +477,12 @@ class ProtectionDaoTest {
   @Test
   void getProtectionByLocationPropagatesException() {
     World world = mock(World.class);
-    lenient().when(world.getName()).thenReturn("world");
+    lenient()
+        .when(world.getName())
+        .thenReturn("world");
     Location location = new Location(world, 1.0, 64.0, -1.0);
-    when(queryExecutor.querySingle(eq("getProtectionByLocation.sql"), any(StatementConfigurer.class),
-        any())).thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.querySingle(eq("getProtectionByLocation.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> protectionDao.getProtectionByLocation(location));
   }
@@ -448,7 +494,9 @@ class ProtectionDaoTest {
 
     protectionDao.deleteOutdatedProtections();
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement, org.mockito.Mockito.never()).setInt(any(Integer.class), any(Integer.class));
     verify(preparedStatement, org.mockito.Mockito.never()).setString(any(Integer.class), any(String.class));
   }

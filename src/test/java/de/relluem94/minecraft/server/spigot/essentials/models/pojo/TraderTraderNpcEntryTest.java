@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;

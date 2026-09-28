@@ -35,7 +35,7 @@ class CustomHeadsTest {
 
   @ParameterizedTest
   @EnumSource(CustomHeads.class)
-  void uuidIsValidUUID(CustomHeads head) {
+  void uuidIsValidUuid(CustomHeads head) {
     assertDoesNotThrow(() -> {
       UUID uuid = head.getUuid();
       assertNotNull(uuid);
@@ -107,13 +107,13 @@ class CustomHeadsTest {
   }
 
   @Test
-  void globeHasCorrectUUID() {
+  void globeHasCorrectUuid() {
     assertEquals(UUID.fromString("bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"),
         CustomHeads.GLOBE.getUuid());
   }
 
   @Test
-  void woodenHouseUUIDChangesOnRestart() {
+  void woodenHouseUuidChangesOnRestart() {
     assertNotNull(CustomHeads.WOODEN_HOUSE.getUuid());
   }
 }

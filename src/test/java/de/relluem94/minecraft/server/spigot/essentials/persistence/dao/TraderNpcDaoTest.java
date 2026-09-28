@@ -58,7 +58,6 @@ class TraderNpcDaoTest {
     traderNpcDao = new TraderNpcDao(queryExecutor, registryAdapter);
   }
 
-
   @Test
   void findAllReturnsListFromQueryExecutor() {
     TraderNpcEntry entry = new TraderNpcEntry();

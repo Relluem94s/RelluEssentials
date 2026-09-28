@@ -357,7 +357,6 @@ class PlayerDaoTest {
     return resultSet;
   }
 
-
   private PlayerEntry buildPlayerEntry() {
     GroupEntry group = new GroupEntry();
     group.setId(1);

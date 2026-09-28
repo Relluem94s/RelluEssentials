@@ -246,7 +246,6 @@ class WorldGroupServiceTest {
     return entry;
   }
 
-
   @Test
   void loadWorldGroupInventoryForPlayerCreatesAndSavesNewInventoryWhenNoneExists() {
     PlayerEntry playerEntry = buildPlayerEntry();

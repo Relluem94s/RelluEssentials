@@ -114,7 +114,6 @@ class ChatServiceTest {
 
   @Test
   void sendMessageInChannelWithPlayerSenderSendsToAuthorizedPlayers() {
-    GroupEntry group = new GroupEntry(1, "admin", "[A] ");
     Player authorizedPlayer = mock(Player.class);
     Player unauthorizedPlayer = mock(Player.class);
 
@@ -124,6 +123,7 @@ class ChatServiceTest {
     when(groupService.isSenderAuthorized(unauthorizedPlayer, "admin")).thenReturn(false);
     doReturn(List.of(authorizedPlayer, unauthorizedPlayer)).when(server).getOnlinePlayers();
 
+    GroupEntry group = new GroupEntry(1, "admin", "[A] ");
     chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
 
     verify(authorizedPlayer).sendMessage(anyString());
@@ -132,13 +132,12 @@ class ChatServiceTest {
 
   @Test
   void sendMessageInChannelWithPlayerSenderStripsChannelFromMessage() {
-    GroupEntry group = new GroupEntry(1, "admin", "[A] ");
-
     when(senderPlayer.getCustomName()).thenReturn("SenderName");
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(senderPlayer, "admin")).thenReturn(true);
     doReturn(List.of(senderPlayer)).when(server).getOnlinePlayers();
 
+    GroupEntry group = new GroupEntry(1, "admin", "[A] ");
     chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -152,13 +151,13 @@ class ChatServiceTest {
 
   @Test
   void sendMessageInChannelWithSenderNameSendsToAuthorizedPlayers() {
-    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "mod")).thenReturn(true);
     doReturn(List.of(authorizedPlayer)).when(server).getOnlinePlayers();
 
+    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
     verify(authorizedPlayer).sendMessage(anyString());
@@ -166,13 +165,13 @@ class ChatServiceTest {
 
   @Test
   void sendMessageInChannelWithSenderNameStripsChannelFromMessage() {
-    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "mod")).thenReturn(true);
     doReturn(List.of(authorizedPlayer)).when(server).getOnlinePlayers();
 
+    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -326,7 +325,6 @@ class ChatServiceTest {
 
   @Test
   void sendMessageInChannelWithSenderNameDoesNotSendToUnauthorizedPlayers() {
-    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
     Player unauthorizedPlayer = mock(Player.class);
 
@@ -335,6 +333,7 @@ class ChatServiceTest {
     when(groupService.isSenderAuthorized(unauthorizedPlayer, "mod")).thenReturn(false);
     doReturn(List.of(authorizedPlayer, unauthorizedPlayer)).when(server).getOnlinePlayers();
 
+    GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
     verify(authorizedPlayer).sendMessage(anyString());

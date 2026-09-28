@@ -115,7 +115,7 @@ class SudoTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender consoleSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(consoleSender, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);

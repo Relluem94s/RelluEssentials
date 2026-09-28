@@ -61,7 +61,6 @@ class ConfigMigrationServiceTest {
     configMigrationService = new ConfigMigrationService(testResourceFolder, serviceContext);
   }
 
-
   @Test
   void getPlayersReturnsCorrectPlayerEntry() {
     GroupEntry adminGroup = new GroupEntry();

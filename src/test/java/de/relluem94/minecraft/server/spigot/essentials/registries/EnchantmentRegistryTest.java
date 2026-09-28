@@ -144,7 +144,7 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStackNotABook() {
+  void testFindByBookItemStackNotaBook() {
     when(mockItemStack.getItemMeta()).thenReturn(mock(org.bukkit.inventory.meta.ItemMeta.class));
     Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
     assertFalse(result.isPresent());

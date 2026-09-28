@@ -69,7 +69,7 @@ class FlyTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         TRANSLATED_MESSAGE);
@@ -136,7 +136,7 @@ class FlyTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenTargetPlayerNotFound() {
+  void onCommandSendsNotaPlayerMessageWhenTargetPlayerNotFound() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(

@@ -146,7 +146,9 @@ class BankServiceTest {
 
     bankService.addLoreLine(itemStack, "Second line");
 
-    verify(itemMeta).setLore(argThat(lore -> lore.size() == 2 && lore.get(1).equals("Second line")));
+    verify(itemMeta).setLore(argThat(lore -> lore.size() == 2 && lore
+        .get(1)
+        .equals("Second line")));
     verify(itemStack).setItemMeta(itemMeta);
   }
 
@@ -163,7 +165,9 @@ class BankServiceTest {
 
     bankService.addLoreLine(itemStack, "New second line");
 
-    verify(itemMeta).setLore(argThat(lore -> lore.get(1).equals("New second line")));
+    verify(itemMeta).setLore(argThat(lore -> lore
+        .get(1)
+        .equals("New second line")));
     verify(itemStack).setItemMeta(itemMeta);
   }
 
@@ -188,7 +192,9 @@ class BankServiceTest {
 
     bankService.addLoreLine(itemStack, "First added line");
 
-    verify(itemMeta).setLore(argThat(lore -> lore.size() == 1 && lore.getFirst().equals("First added line")));
+    verify(itemMeta).setLore(argThat(lore -> lore.size() == 1 && lore
+        .getFirst()
+        .equals("First added line")));
   }
 
   @Test
@@ -201,76 +207,70 @@ class BankServiceTest {
     when(bankTierRegistry.getBankTiers()).thenReturn(tiers);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE), any())).thenReturn("Cost lore");
-    when(translationService.get(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE), any())).thenReturn("Interest lore");
+    when(translationService.get(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE), any())).thenReturn(
+        "Interest lore");
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE), any())).thenReturn("Limit lore");
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("essentials");
 
     List<CustomItem> result = bankService.getBankTiers();
 
-    assertAll(
-        () -> assertEquals(2, result.size()),
-        () -> assertNotNull(result.getFirst()),
-        () -> assertNotNull(result.get(1))
-    );
+    assertAll(() -> assertEquals(2, result.size()), () -> assertNotNull(result.getFirst()),
+        () -> assertNotNull(result.get(1)));
   }
 
   @Test
   void depositDepositsFullPurseWhenPercentageIs100AndWithinLimit() {
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(),
+        any())).thenReturn("deposited");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn(
+        "total");
+
     BankTierEntry tier = createBankTierEntry(1, 0L, 2.0, 100000);
     BankAccountEntry bae = createBankAccountEntry(1, 500.0, tier);
     PlayerEntry pe = createPlayerEntry(1000.0);
-
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(), any())).thenReturn("deposited");
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn("total");
-
     bankService.deposit(pe, player, bae, 100f);
 
-    assertAll(
-        () -> assertEquals(0.0, pe.getPurse()),
-        () -> assertTrue(pe.isHasToBeUpdated()),
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(1000.0), eq(500.0), eq(1))
-    );
+    assertAll(() -> assertEquals(0.0, pe.getPurse()), () -> assertTrue(pe.isHasToBeUpdated()),
+        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(1000.0), eq(500.0), eq(1)));
   }
 
   @Test
   void depositDepositsPartialPurseWhenPercentageIsNot100AndWithinLimit() {
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(),
+        any())).thenReturn("deposited");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn(
+        "total");
+
     BankTierEntry tier = createBankTierEntry(1, 0L, 2.0, 100000);
     BankAccountEntry bae = createBankAccountEntry(1, 500.0, tier);
     PlayerEntry pe = createPlayerEntry(1000.0);
-
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(), any())).thenReturn("deposited");
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn("total");
-
     bankService.deposit(pe, player, bae, 50f);
 
-    assertAll(
-        () -> assertEquals(500.0, pe.getPurse()),
-        () -> assertTrue(pe.isHasToBeUpdated()),
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(500.0), eq(500.0), eq(1))
-    );
+    assertAll(() -> assertEquals(500.0, pe.getPurse()), () -> assertTrue(pe.isHasToBeUpdated()),
+        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(500.0), eq(500.0), eq(1)));
   }
 
   @Test
   void depositDepositsUpToLimitAndSendsLimitMessageWhenLimitExceeded() {
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(),
+        any())).thenReturn("deposited");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn(
+        "total");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE)).thenReturn(
+        "limit reached");
+
     BankTierEntry tier = createBankTierEntry(1, 0L, 2.0, 600);
     BankAccountEntry bae = createBankAccountEntry(1, 500.0, tier);
     PlayerEntry pe = createPlayerEntry(1000.0);
-
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE), any(), any())).thenReturn("deposited");
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn("total");
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE)).thenReturn("limit reached");
-
     bankService.deposit(pe, player, bae, 100f);
 
-    assertAll(
-        () -> assertEquals(900.0, pe.getPurse()),
+    assertAll(() -> assertEquals(900.0, pe.getPurse()),
         () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(500.0), eq(1)),
-        () -> verify(player).sendMessage("limit reached")
-    );
+        () -> verify(player).sendMessage("limit reached"));
   }
 
   @Test
@@ -280,15 +280,14 @@ class BankServiceTest {
     PlayerEntry pe = createPlayerEntry(1000.0);
 
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE)).thenReturn("limit reached");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE)).thenReturn(
+        "limit reached");
 
     bankService.deposit(pe, player, bae, 100f);
 
-    assertAll(
-        () -> assertEquals(1000.0, pe.getPurse()),
-        () -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt()),
-        () -> verify(player).sendMessage("limit reached")
-    );
+    assertAll(() -> assertEquals(1000.0, pe.getPurse()),
+        () -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(),
+            anyInt()), () -> verify(player).sendMessage("limit reached"));
   }
 
   @Test
@@ -298,51 +297,47 @@ class BankServiceTest {
     PlayerEntry pe = createPlayerEntry(0.5);
 
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE), any())).thenReturn("no coins");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE),
+        any())).thenReturn("no coins");
 
     bankService.deposit(pe, player, bae, 100f);
 
-    assertAll(
-        () -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt()),
-        () -> verify(player).sendMessage("no coins")
-    );
+    assertAll(() -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(),
+        anyInt()), () -> verify(player).sendMessage("no coins"));
   }
 
   @Test
   void withdrawWithdrawsFullBankBalanceWhenPercentageIs100() {
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE), any(),
+        any())).thenReturn("withdrawn");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn(
+        "total");
+
     BankTierEntry tier = createBankTierEntry(1, 0L, 2.0, 100000);
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
     PlayerEntry pe = createPlayerEntry(200.0);
-
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE), any(), any())).thenReturn("withdrawn");
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn("total");
-
     bankService.withdraw(pe, player, bae, 100f);
 
-    assertAll(
-        () -> assertEquals(1200.0, pe.getPurse()),
-        () -> assertTrue(pe.isHasToBeUpdated()),
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-1000.0), eq(1000.0), eq(1))
-    );
+    assertAll(() -> assertEquals(1200.0, pe.getPurse()), () -> assertTrue(pe.isHasToBeUpdated()),
+        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-1000.0), eq(1000.0), eq(1)));
   }
 
   @Test
   void withdrawWithdrawsPartialBankBalanceWhenPercentageIsNot100() {
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE), any(),
+        any())).thenReturn("withdrawn");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn(
+        "total");
+
     BankTierEntry tier = createBankTierEntry(1, 0L, 2.0, 100000);
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
     PlayerEntry pe = createPlayerEntry(200.0);
-
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE), any(), any())).thenReturn("withdrawn");
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL), any(), any())).thenReturn("total");
-
     bankService.withdraw(pe, player, bae, 50f);
 
-    assertAll(
-        () -> assertEquals(700.0, pe.getPurse()),
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500.0), eq(1000.0), eq(1))
-    );
+    assertAll(() -> assertEquals(700.0, pe.getPurse()),
+        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500.0), eq(1000.0), eq(1)));
   }
 
   @Test
@@ -352,125 +347,125 @@ class BankServiceTest {
     PlayerEntry pe = createPlayerEntry(200.0);
 
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS), any())).thenReturn("not enough");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS), any())).thenReturn(
+        "not enough");
 
     bankService.withdraw(pe, player, bae, 100f);
 
-    assertAll(
-        () -> assertEquals(200.0, pe.getPurse()),
-        () -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt()),
-        () -> verify(player).sendMessage("not enough")
-    );
+    assertAll(() -> assertEquals(200.0, pe.getPurse()),
+        () -> verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(),
+            anyInt()), () -> verify(player).sendMessage("not enough"));
   }
 
   @Test
   void upgradeAccountUpgradesUsingPurseWhenPurseIsSufficient() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
+
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
 
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE)).thenReturn("bought with purse");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE)).thenReturn(
+        "bought with purse");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
-    assertAll(
-        () -> assertEquals(500.0, pe.getPurse()),
-        () -> assertTrue(pe.isHasToBeUpdated()),
+    assertAll(() -> assertEquals(500.0, pe.getPurse()), () -> assertTrue(pe.isHasToBeUpdated()),
         () -> verify(bankRepository).updateBankAccount(eq(1), eq(0.0), eq(1000.0), eq(2)),
-        () -> verify(player).sendMessage("bought with purse")
-    );
+        () -> verify(player).sendMessage("bought with purse"));
   }
 
   @Test
   void upgradeAccountUpgradesUsingBankWhenBankIsSufficientAndPurseIsNot() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(200.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK)).thenReturn("bought with bank");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK)).thenReturn(
+        "bought with bank");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(200.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
-    assertAll(
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500.0), eq(1000.0), eq(2)),
-        () -> verify(player).sendMessage("bought with bank")
-    );
+    assertAll(() -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500.0), eq(1000.0), eq(2)),
+        () -> verify(player).sendMessage("bought with bank"));
   }
 
   @Test
   void upgradeAccountUpgradesUsingBothWhenNeitherAloneIsSufficient() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 300.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(300.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH)).thenReturn("bought with both");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH)).thenReturn(
+        "bought with both");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 300.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(300.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
-    assertAll(
-        () -> assertEquals(0.0, pe.getPurse()),
-        () -> assertTrue(pe.isHasToBeUpdated()),
+    assertAll(() -> assertEquals(0.0, pe.getPurse()), () -> assertTrue(pe.isHasToBeUpdated()),
         () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-200.0), eq(300.0), eq(2)),
-        () -> verify(player).sendMessage("bought with both")
-    );
+        () -> verify(player).sendMessage("bought with both"));
   }
 
   @Test
   void upgradeAccountSendsNotEnoughCoinsMessageWhenTotalIsInsufficient() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 100.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(100.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS), any())).thenReturn("not enough");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS), any())).thenReturn(
+        "not enough");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 100.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(100.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(player).sendMessage("not enough");
@@ -478,24 +473,26 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountSendsAlreadyBoughtMessageWhenSameCost() {
-    BankTierEntry currentTier = createBankTierEntry(1, 500L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(1, 500L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn("already bought");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn(
+        "already bought");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(player).sendMessage("already bought");
@@ -503,24 +500,26 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountSendsAlreadyBoughtMessageWhenSameTierId() {
-    BankTierEntry currentTier = createBankTierEntry(2, 100L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(2, 100L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn("already bought");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn(
+        "already bought");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(player).sendMessage("already bought");
@@ -528,24 +527,26 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountSendsLowerAccountMessageWhenCurrentTierCostIsHigher() {
-    BankTierEntry currentTier = createBankTierEntry(3, 1000L, 2.0, 10000);
-    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(2000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+    BankTierEntry currentTier = createBankTierEntry(3, 1000L, 2.0, 10000);
+    BankTierEntry targetTier = createBankTierEntry(2, 500L, 5.0, 50000);
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT)).thenReturn("lower account");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT)).thenReturn(
+        "lower account");
 
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(2000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(player).sendMessage("lower account");
@@ -553,21 +554,22 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountDoesNothingWhenTierEntryNotFound() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
     CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
     when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of());
 
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
@@ -674,7 +676,8 @@ class BankServiceTest {
 
     when(player.getUniqueId()).thenReturn(uuid);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn(
+        "interest paid");
     when(serviceContext.getPlayerService()).thenReturn(playerService);
 
     PlayerEntry pe = createPlayerEntry(0.0);
@@ -682,7 +685,9 @@ class BankServiceTest {
     when(bankRepository.findBankAccountByPlayerId(1)).thenReturn(bae);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, true);
     spyService.payInterestToPlayer(player);
@@ -693,9 +698,6 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountSkipsItemWhenItemStackIsNotSimilar() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
 
     ItemStack upgradeItemStack = mock(ItemStack.class);
     ItemStack differentItemStack = mock(ItemStack.class);
@@ -705,8 +707,14 @@ class BankServiceTest {
     when(upgradeCustomItem.toItemStack()).thenReturn(upgradeItemStack);
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(differentItemStack, player, pe, bae);
 
     verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
@@ -715,10 +723,6 @@ class BankServiceTest {
 
   @Test
   void upgradeAccountSkipsItemWhenCostPersistentDataIsNull() {
-    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
-    PlayerEntry pe = createPlayerEntry(1000.0);
-
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
@@ -729,8 +733,14 @@ class BankServiceTest {
     when(plugin.getName()).thenReturn("essentials");
 
     BankService spyService = spy(bankService);
-    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+    doReturn(List.of(upgradeCustomItem))
+        .when(spyService)
+        .getBankTiers();
 
+
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
@@ -742,7 +752,9 @@ class BankServiceTest {
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
-    doReturn(new ArrayList<>()).when(server).getOnlinePlayers();
+    doReturn(new ArrayList<>())
+        .when(server)
+        .getOnlinePlayers();
 
     bankService.triggerInterestForAllOnlinePlayers();
 
@@ -763,15 +775,20 @@ class BankServiceTest {
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
-    doReturn(List.of(player)).when(server).getOnlinePlayers();
+    doReturn(List.of(player))
+        .when(server)
+        .getOnlinePlayers();
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
     when(bankRepository.findBankAccountByPlayerId(1)).thenReturn(bae);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn(
+        "interest paid");
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.triggerInterestForAllOnlinePlayers();
 
@@ -781,14 +798,6 @@ class BankServiceTest {
 
   @Test
   void triggerInterestForAllOnlinePlayersCallsCheckInterestAndPayInterestForMultipleOnlinePlayers() {
-    UUID uuid1 = UUID.randomUUID();
-    UUID uuid2 = UUID.randomUUID();
-
-    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
-
-    BankAccountEntry bae1 = createBankAccountEntry(1, 1000.0, tier);
-    BankAccountEntry bae2 = createBankAccountEntry(2, 2000.0, tier);
-
     PlayerEntry pe1 = createPlayerEntry(0.0);
     pe1.setId(1);
     PlayerEntry pe2 = createPlayerEntry(0.0);
@@ -801,13 +810,23 @@ class BankServiceTest {
     when(offlinePlayer1.hasPlayedBefore()).thenReturn(true);
     when(offlinePlayer2.hasPlayedBefore()).thenReturn(true);
 
+    UUID uuid1 = UUID.randomUUID();
+    UUID uuid2 = UUID.randomUUID();
+
+    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
+
+    BankAccountEntry bae1 = createBankAccountEntry(1, 1000.0, tier);
+    BankAccountEntry bae2 = createBankAccountEntry(2, 2000.0, tier);
+
     when(player.getUniqueId()).thenReturn(uuid1);
     when(player2.getUniqueId()).thenReturn(uuid2);
 
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
-    doReturn(List.of(player, player2)).when(server).getOnlinePlayers();
+    doReturn(List.of(player, player2))
+        .when(server)
+        .getOnlinePlayers();
 
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(uuid1)).thenReturn(pe1);
@@ -817,11 +836,16 @@ class BankServiceTest {
     when(bankRepository.findBankAccountByPlayerId(2)).thenReturn(bae2);
 
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn(
+        "interest paid");
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer1).when(spyService).resolveOfflinePlayer(uuid1);
-    doReturn(offlinePlayer2).when(spyService).resolveOfflinePlayer(uuid2);
+    doReturn(offlinePlayer1)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid1);
+    doReturn(offlinePlayer2)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid2);
 
     spyService.triggerInterestForAllOnlinePlayers();
 
@@ -838,7 +862,9 @@ class BankServiceTest {
     when(offlinePlayer.hasPlayedBefore()).thenReturn(false);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, false);
 
@@ -855,7 +881,9 @@ class BankServiceTest {
     when(playerService.getPlayerEntry(uuid)).thenReturn(null);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, false);
 
@@ -874,7 +902,9 @@ class BankServiceTest {
     when(bankRepository.findBankAccountByPlayerId(pe.getId())).thenReturn(null);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, false);
 
@@ -896,11 +926,14 @@ class BankServiceTest {
     when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
     when(bankRepository.findBankAccountByPlayerId(pe.getId())).thenReturn(bae);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn(
+        "interest paid");
     when(player.getUniqueId()).thenReturn(uuid);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, false);
     spyService.payInterestToPlayer(player);
@@ -925,7 +958,9 @@ class BankServiceTest {
     when(player.getUniqueId()).thenReturn(uuid);
 
     BankService spyService = spy(bankService);
-    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+    doReturn(offlinePlayer)
+        .when(spyService)
+        .resolveOfflinePlayer(uuid);
 
     spyService.checkInterest(uuid, false);
     spyService.payInterestToPlayer(player);

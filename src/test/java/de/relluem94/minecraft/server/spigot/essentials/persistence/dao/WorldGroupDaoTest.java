@@ -84,7 +84,9 @@ class WorldGroupDaoTest {
     when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
         ArgumentMatchers.<RowMapper<WorldGroupSettingEntry>>any())).thenReturn(expected);
 
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
 
     List<WorldGroupSettingEntry> result = worldGroupDao.findAllWorldGroupSettings();
 
@@ -108,11 +110,11 @@ class WorldGroupDaoTest {
 
       when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
           any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<WorldGroupSettingEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<WorldGroupSettingEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<WorldGroupSettingEntry> result = worldGroupDao.findAllWorldGroupSettings();
 
@@ -130,9 +132,11 @@ class WorldGroupDaoTest {
 
   @Test
   void findAllWorldGroupSettingsPropagatesException() {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenThrow(new RuntimeException("db error"));
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.findAllWorldGroupSettings());
   }
@@ -140,13 +144,14 @@ class WorldGroupDaoTest {
   @Test
   void findAllWorldGroupsReturnsListFromQueryExecutor() {
     List<WorldGroupEntry> expected = List.of(new WorldGroupEntry());
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
 
     when(queryExecutor.queryList(eq("getWorldGroups.sql"), any(StatementConfigurer.class),
         ArgumentMatchers.<RowMapper<WorldGroupEntry>>any())).thenReturn(expected);
-
 
     List<WorldGroupEntry> result = worldGroupDao.findAllWorldGroups();
 
@@ -156,7 +161,9 @@ class WorldGroupDaoTest {
   @Test
   void findAllWorldGroupsMapsAllFieldsFromResultSet() throws SQLException {
     try (ResultSet resultSet = mock(ResultSet.class)) {
-      lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
+      lenient()
+          .when(serviceContext.getSettingService())
+          .thenReturn(settingService);
 
       when(resultSet.getInt(FIELD_ID)).thenReturn(7);
       when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -169,13 +176,13 @@ class WorldGroupDaoTest {
 
       when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
           any())).thenReturn(List.of());
-      when(queryExecutor.queryList(eq("getWorldGroups.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<WorldGroupEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+      when(queryExecutor.queryList(eq("getWorldGroups.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<WorldGroupEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<WorldGroupEntry> result = worldGroupDao.findAllWorldGroups();
 
@@ -194,11 +201,13 @@ class WorldGroupDaoTest {
 
   @Test
   void findAllWorldGroupsPropagatesException() {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
-    when(queryExecutor.queryList(eq("getWorldGroups.sql"), any(StatementConfigurer.class),
-        any())).thenThrow(new RuntimeException("db error"));
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
+    when(queryExecutor.queryList(eq("getWorldGroups.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.findAllWorldGroups());
   }
@@ -223,7 +232,9 @@ class WorldGroupDaoTest {
 
     worldGroupDao.findWorldsByGroup(worldGroupEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, worldGroupEntry.getId());
   }
 
@@ -241,13 +252,13 @@ class WorldGroupDaoTest {
       when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(0);
       when(resultSet.getString(FIELD_NAME)).thenReturn("world_nether");
 
-      when(queryExecutor.queryList(eq("getWorldByGroup.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<WorldEntry> mapper = invocation.getArgument(2);
-        return List.of(mapper.map(resultSet));
-      });
+      when(queryExecutor.queryList(eq("getWorldByGroup.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<WorldEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
       List<WorldEntry> result = worldGroupDao.findWorldsByGroup(worldGroupEntry);
 
@@ -267,8 +278,8 @@ class WorldGroupDaoTest {
   @Test
   void findWorldsByGroupPropagatesException() {
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
-    when(queryExecutor.queryList(eq("getWorldByGroup.sql"), any(StatementConfigurer.class),
-        any())).thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.queryList(eq("getWorldByGroup.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.findWorldsByGroup(worldGroupEntry));
   }
@@ -278,8 +289,8 @@ class WorldGroupDaoTest {
     PlayerEntry playerEntry = buildPlayerEntry();
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
     WorldGroupInventoryEntry expected = new WorldGroupInventoryEntry();
-    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"),
-        any(StatementConfigurer.class), any())).thenReturn(expected);
+    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"), any(StatementConfigurer.class),
+        any())).thenReturn(expected);
 
     WorldGroupInventoryEntry result = worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry);
 
@@ -291,12 +302,14 @@ class WorldGroupDaoTest {
     PlayerEntry playerEntry = buildPlayerEntry();
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"), captor.capture(),
-        any())).thenReturn(null);
+    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"), captor.capture(), any())).thenReturn(
+        null);
 
     worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, worldGroupEntry.getId());
     verify(preparedStatement).setInt(2, playerEntry.getId());
   }
@@ -320,13 +333,13 @@ class WorldGroupDaoTest {
       when(resultSet.getInt(FIELD_FOOD)).thenReturn(18);
       when(resultSet.getString(FIELD_INVENTORY)).thenReturn("{}");
 
-      when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"),
-          any(StatementConfigurer.class), any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<WorldGroupInventoryEntry> mapper = invocation.getArgument(2);
-        return mapper.map(resultSet);
-      });
+      when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"), any(StatementConfigurer.class),
+          any())).thenAnswer(invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<WorldGroupInventoryEntry> mapper = invocation.getArgument(2);
+            return mapper.map(resultSet);
+          });
 
       WorldGroupInventoryEntry result = worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry);
 
@@ -350,8 +363,8 @@ class WorldGroupDaoTest {
   void findInventoryByGroupAndPlayerPropagatesException() {
     PlayerEntry playerEntry = buildPlayerEntry();
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
-    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"),
-        any(StatementConfigurer.class), any())).thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.querySingle(eq("getWorldInventoryByGroupAndPlayer.sql"), any(StatementConfigurer.class),
+        any())).thenThrow(new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class,
         () -> worldGroupDao.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry));
@@ -361,16 +374,23 @@ class WorldGroupDaoTest {
   void insertInventorySetsAllFieldsOnPreparedStatement() throws SQLException {
     WorldGroupInventoryEntry inventoryEntry = buildWorldGroupInventoryEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("insertWorldInventoryByGroupAndPlayer.sql"),
-        captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("insertWorldInventoryByGroupAndPlayer.sql"), captor.capture());
 
     worldGroupDao.insertInventory(inventoryEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, inventoryEntry.getPlayerId());
     verify(preparedStatement).setInt(2, inventoryEntry.getPlayerId());
-    verify(preparedStatement).setInt(3, inventoryEntry.getWorldGroupEntry().getId());
-    verify(preparedStatement).setString(4, inventoryEntry.getInventory().toString());
+    verify(preparedStatement).setInt(3, inventoryEntry
+        .getWorldGroupEntry()
+        .getId());
+    verify(preparedStatement).setString(4, inventoryEntry
+        .getInventory()
+        .toString());
     verify(preparedStatement).setDouble(5, inventoryEntry.getHealth());
     verify(preparedStatement).setInt(6, inventoryEntry.getFoodLevel());
     verify(preparedStatement).setInt(7, inventoryEntry.getTotalExperience());
@@ -379,7 +399,8 @@ class WorldGroupDaoTest {
   @Test
   void insertInventoryPropagatesException() {
     WorldGroupInventoryEntry inventoryEntry = buildWorldGroupInventoryEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("insertWorldInventoryByGroupAndPlayer.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.insertInventory(inventoryEntry));
@@ -389,25 +410,33 @@ class WorldGroupDaoTest {
   void updateInventorySetsAllFieldsOnPreparedStatement() throws SQLException {
     WorldGroupInventoryEntry inventoryEntry = buildWorldGroupInventoryEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateWorldInventoryByGroupAndPlayer.sql"),
-        captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateWorldInventoryByGroupAndPlayer.sql"), captor.capture());
 
     worldGroupDao.updateInventory(inventoryEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, inventoryEntry.getUpdatedBy());
-    verify(preparedStatement).setString(2, inventoryEntry.getInventory().toString());
+    verify(preparedStatement).setString(2, inventoryEntry
+        .getInventory()
+        .toString());
     verify(preparedStatement).setDouble(3, inventoryEntry.getHealth());
     verify(preparedStatement).setInt(4, inventoryEntry.getFoodLevel());
     verify(preparedStatement).setInt(5, inventoryEntry.getTotalExperience());
     verify(preparedStatement).setInt(6, inventoryEntry.getPlayerId());
-    verify(preparedStatement).setInt(7, inventoryEntry.getWorldGroupEntry().getId());
+    verify(preparedStatement).setInt(7, inventoryEntry
+        .getWorldGroupEntry()
+        .getId());
   }
 
   @Test
   void updateInventoryPropagatesException() {
     WorldGroupInventoryEntry inventoryEntry = buildWorldGroupInventoryEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("updateWorldInventoryByGroupAndPlayer.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.updateInventory(inventoryEntry));
@@ -417,11 +446,15 @@ class WorldGroupDaoTest {
   void insertWorldGroupSetsAllFieldsOnPreparedStatement() throws SQLException {
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("insertWorldGroup.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("insertWorldGroup.sql"), captor.capture());
 
     worldGroupDao.insertWorldGroup(worldGroupEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, worldGroupEntry.getCreatedBy());
     verify(preparedStatement).setString(2, worldGroupEntry.getName());
   }
@@ -429,7 +462,8 @@ class WorldGroupDaoTest {
   @Test
   void insertWorldGroupPropagatesException() {
     WorldGroupEntry worldGroupEntry = buildWorldGroupEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("insertWorldGroup.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.insertWorldGroup(worldGroupEntry));
@@ -437,12 +471,14 @@ class WorldGroupDaoTest {
 
   @Test
   void findWorldGroupByNameReturnsSingleEntry() {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
     WorldGroupEntry expected = buildWorldGroupEntry();
-    when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(expected);
+    when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        expected);
 
     WorldGroupEntry result = worldGroupDao.findWorldGroupByName("GroupAlpha");
 
@@ -451,23 +487,29 @@ class WorldGroupDaoTest {
 
   @Test
   void findWorldGroupByNameSetsNameOnPreparedStatement() throws SQLException {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
     when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), captor.capture(), any())).thenReturn(null);
 
     worldGroupDao.findWorldGroupByName("GroupAlpha");
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(1, "GroupAlpha");
   }
 
   @Test
   void findWorldGroupByNameMapsAllFieldsFromResultSet() throws SQLException {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
 
     try (ResultSet resultSet = mock(ResultSet.class)) {
       when(resultSet.getInt(FIELD_ID)).thenReturn(7);
@@ -479,13 +521,13 @@ class WorldGroupDaoTest {
       when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(0);
       when(resultSet.getString(FIELD_NAME)).thenReturn("GroupAlpha");
 
-      when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class),
-          any())).thenAnswer(invocation -> {
-        StatementConfigurer configurer = invocation.getArgument(1);
-        configurer.configure(preparedStatement);
-        RowMapper<WorldGroupEntry> mapper = invocation.getArgument(2);
-        return mapper.map(resultSet);
-      });
+      when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<WorldGroupEntry> mapper = invocation.getArgument(2);
+            return mapper.map(resultSet);
+          });
 
       WorldGroupEntry result = worldGroupDao.findWorldGroupByName("GroupAlpha");
 
@@ -503,11 +545,13 @@ class WorldGroupDaoTest {
 
   @Test
   void findWorldGroupByNamePropagatesException() {
-    lenient().when(serviceContext.getSettingService()).thenReturn(settingService);
-    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class),
-        any())).thenReturn(List.of());
-    when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class),
-        any())).thenThrow(new RuntimeException("db error"));
+    lenient()
+        .when(serviceContext.getSettingService())
+        .thenReturn(settingService);
+    when(queryExecutor.queryList(eq("getAllWorldGroupSettings.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        List.of());
+    when(queryExecutor.querySingle(eq("getWorldGroupByName.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.findWorldGroupByName("GroupAlpha"));
   }
@@ -516,21 +560,30 @@ class WorldGroupDaoTest {
   void insertWorldSetsAllFieldsOnPreparedStatement() throws SQLException {
     WorldEntry worldEntry = buildWorldEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("insertWorld.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("insertWorld.sql"), captor.capture());
 
     worldGroupDao.insertWorld(worldEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, worldEntry.getCreatedBy());
     verify(preparedStatement).setString(2, worldEntry.getName());
-    verify(preparedStatement).setInt(3, worldEntry.getWorldGroupEntry().getId());
-    verify(preparedStatement).setInt(4, worldEntry.getGroupEntry().getId());
+    verify(preparedStatement).setInt(3, worldEntry
+        .getWorldGroupEntry()
+        .getId());
+    verify(preparedStatement).setInt(4, worldEntry
+        .getGroupEntry()
+        .getId());
   }
 
   @Test
   void insertWorldPropagatesException() {
     WorldEntry worldEntry = buildWorldEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("insertWorld.sql"), any(StatementConfigurer.class));
 
     assertThrows(RuntimeException.class, () -> worldGroupDao.insertWorld(worldEntry));

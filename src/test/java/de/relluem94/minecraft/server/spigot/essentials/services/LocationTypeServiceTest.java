@@ -43,10 +43,8 @@ class LocationTypeServiceTest {
 
     Optional<LocationTypeEntry> result = locationTypeService.findById(1);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(locationTypeEntryFirst, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(locationTypeEntryFirst, result.get());
   }
 
   @Test
@@ -79,10 +77,8 @@ class LocationTypeServiceTest {
 
     Optional<LocationTypeEntry> result = locationTypeService.findByName(LocationType.DEATH);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(locationTypeEntryFirst, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(locationTypeEntryFirst, result.get());
   }
 
   @Test
@@ -92,10 +88,8 @@ class LocationTypeServiceTest {
 
     Optional<LocationTypeEntry> result = locationTypeService.findByName(LocationType.HOME);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(locationTypeEntryFirst, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(locationTypeEntryFirst, result.get());
   }
 
   @Test
@@ -105,9 +99,7 @@ class LocationTypeServiceTest {
 
     Optional<LocationTypeEntry> result = locationTypeService.findByName(LocationType.DEATH);
 
-    assertAll(
-        () -> assertFalse(result.isPresent())
-    );
+    assertFalse(result.isPresent());
   }
 
   @Test
@@ -116,8 +108,6 @@ class LocationTypeServiceTest {
 
     Optional<LocationTypeEntry> result = locationTypeService.findByName(LocationType.HOME);
 
-    assertAll(
-        () -> assertFalse(result.isPresent())
-    );
+    assertFalse(result.isPresent());
   }
 }

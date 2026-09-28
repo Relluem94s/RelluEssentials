@@ -3,28 +3,29 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UuidHelperTest {
-    @Test
-    public void testDashed() {
-        String test = "ec0149f98b2144ee97318bff508087e7";
-        Assertions.assertEquals(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"), UuidHelper.dashed(test));
-    }
+class UuidHelperTest {
 
-    @Test
-    public void testUnDashed() {
-        UUID test = UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7") ;
-        Assertions.assertEquals("ec0149f98b2144ee97318bff508087e7", UuidHelper.unDashed(test));
-    }
+  @Test
+  public void testDashed() {
+    String test = "ec0149f98b2144ee97318bff508087e7";
+    Assertions.assertEquals(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"), UuidHelper.dashed(test));
+  }
 
-    @Test
-    public void testPrivateConstructorThrowsException() throws NoSuchMethodException {
-        Constructor<UuidHelper> constructor = UuidHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        InvocationTargetException exception = Assertions.assertThrows(InvocationTargetException.class, constructor::newInstance);
-        Assertions.assertInstanceOf(IllegalStateException.class, exception.getCause());
-    }
+  @Test
+  public void testUnDashed() {
+    UUID test = UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7");
+    Assertions.assertEquals("ec0149f98b2144ee97318bff508087e7", UuidHelper.unDashed(test));
+  }
+
+  @Test
+  public void testPrivateConstructorThrowsException() throws NoSuchMethodException {
+    Constructor<UuidHelper> constructor = UuidHelper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException exception =
+        Assertions.assertThrows(InvocationTargetException.class, constructor::newInstance);
+    Assertions.assertInstanceOf(IllegalStateException.class, exception.getCause());
+  }
 }

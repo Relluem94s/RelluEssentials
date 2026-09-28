@@ -36,113 +36,104 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class LocationMapperTest {
 
-    @Mock
-    private ResultSet resultSet;
+  @Mock
+  private ResultSet resultSet;
 
-    private LocationTypeService locationTypeService;
+  private LocationTypeService locationTypeService;
 
-    private LocationTypeEntry matchingLocationType;
-    private LocationTypeEntry nonMatchingLocationType;
+  private LocationTypeEntry matchingLocationType;
+  private LocationTypeEntry nonMatchingLocationType;
 
-    @BeforeEach
-    void setUp() {
-        matchingLocationType = new LocationTypeEntry();
-        matchingLocationType.setId(3);
-        matchingLocationType.setType("HOME");
+  @BeforeEach
+  void setUp() {
+    matchingLocationType = new LocationTypeEntry();
+    matchingLocationType.setId(3);
+    matchingLocationType.setType("HOME");
 
-        nonMatchingLocationType = new LocationTypeEntry();
-        nonMatchingLocationType.setId(99);
-        nonMatchingLocationType.setType("WARP");
-    }
+    nonMatchingLocationType = new LocationTypeEntry();
+    nonMatchingLocationType.setId(99);
+    nonMatchingLocationType.setType("WARP");
+  }
 
-    private LocationTypeService buildServiceWith(List<LocationTypeEntry> types) {
-        LocationTypeRegistry registry = new LocationTypeRegistry();
-        registry.initialize(types);
-        return new LocationTypeService(registry);
-    }
+  private LocationTypeService buildServiceWith(List<LocationTypeEntry> types) {
+    LocationTypeRegistry registry = new LocationTypeRegistry();
+    registry.initialize(types);
+    return new LocationTypeService(registry);
+  }
 
-    @Test
-    void privateConstructorThrowsIllegalStateException() throws NoSuchMethodException {
-        Constructor<LocationMapper> constructor = LocationMapper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
-        assertInstanceOf(IllegalStateException.class, thrown.getCause());
-    }
+  @Test
+  void privateConstructorThrowsIllegalStateException() throws NoSuchMethodException {
+    Constructor<LocationMapper> constructor = LocationMapper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
+    assertInstanceOf(IllegalStateException.class, thrown.getCause());
+  }
 
-    @Test
-    void mapLocationMapsAllFieldsCorrectly() throws SQLException {
-        locationTypeService = buildServiceWith(List.of(nonMatchingLocationType, matchingLocationType));
+  @Test
+  void mapLocationMapsAllFieldsCorrectly() throws SQLException {
+    locationTypeService = buildServiceWith(List.of(nonMatchingLocationType, matchingLocationType));
 
-        when(resultSet.getInt(FIELD_ID)).thenReturn(1);
-        when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
-        when(resultSet.getString(FIELD_LOCATION_NAME)).thenReturn("MyHome");
-        when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
-        when(resultSet.getFloat(FIELD_POS_X)).thenReturn(10.5f);
-        when(resultSet.getFloat(FIELD_POS_Y)).thenReturn(64.0f);
-        when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
-        when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
-        when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
-        when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(3);
+    when(resultSet.getInt(FIELD_ID)).thenReturn(1);
+    when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
+    when(resultSet.getString(FIELD_LOCATION_NAME)).thenReturn("MyHome");
+    when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
+    when(resultSet.getFloat(FIELD_POS_X)).thenReturn(10.5f);
+    when(resultSet.getFloat(FIELD_POS_Y)).thenReturn(64.0f);
+    when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
+    when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
+    when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
+    when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(3);
 
-        LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
+    LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
 
-        assertAll(
-            () -> assertEquals(1, result.getId()),
-            () -> assertEquals(42, result.getPlayerId()),
-            () -> assertEquals("MyHome", result.getLocationName()),
-            () -> assertEquals("world", result.getWorld()),
-            () -> assertEquals(10.5f, result.getX()),
-            () -> assertEquals(64.0f, result.getY()),
-            () -> assertEquals(-30.25f, result.getZ()),
-            () -> assertEquals(0.5f, result.getPitch()),
-            () -> assertEquals(180.0f, result.getYaw()),
-            () -> assertEquals(matchingLocationType, result.getLocationType())
-        );
-    }
+    assertAll(() -> assertEquals(1, result.getId()), () -> assertEquals(42, result.getPlayerId()),
+        () -> assertEquals("MyHome", result.getLocationName()), () -> assertEquals("world", result.getWorld()),
+        () -> assertEquals(10.5f, result.getX()), () -> assertEquals(64.0f, result.getY()),
+        () -> assertEquals(-30.25f, result.getZ()), () -> assertEquals(0.5f, result.getPitch()),
+        () -> assertEquals(180.0f, result.getYaw()),
+        () -> assertEquals(matchingLocationType, result.getLocationType()));
+  }
 
-    @Test
-    void mapLocationSetsNoLocationTypeWhenNoMatchFound() throws SQLException {
-        locationTypeService = buildServiceWith(List.of(nonMatchingLocationType));
+  @Test
+  void mapLocationSetsNoLocationTypeWhenNoMatchFound() throws SQLException {
+    locationTypeService = buildServiceWith(List.of(nonMatchingLocationType));
 
-        when(resultSet.getInt(FIELD_ID)).thenReturn(1);
-        when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
-        when(resultSet.getString(FIELD_LOCATION_NAME)).thenReturn("MyHome");
-        when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
-        when(resultSet.getFloat(FIELD_POS_X)).thenReturn(10.5f);
-        when(resultSet.getFloat(FIELD_POS_Y)).thenReturn(64.0f);
-        when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
-        when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
-        when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
-        when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(1);
+    when(resultSet.getInt(FIELD_ID)).thenReturn(1);
+    when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
+    when(resultSet.getString(FIELD_LOCATION_NAME)).thenReturn("MyHome");
+    when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
+    when(resultSet.getFloat(FIELD_POS_X)).thenReturn(10.5f);
+    when(resultSet.getFloat(FIELD_POS_Y)).thenReturn(64.0f);
+    when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
+    when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
+    when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
+    when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(1);
 
-        LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
+    LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
 
-        assertNull(result.getLocationType());
-    }
+    assertNull(result.getLocationType());
+  }
 
-    @Test
-    void mapLocationPropagatesSQLException() throws SQLException {
-        locationTypeService = buildServiceWith(List.of());
-        when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
-        assertThrows(SQLException.class, () -> LocationMapper.mapLocation(resultSet, locationTypeService));
-    }
+  @Test
+  void mapLocationPropagatesSQLException() throws SQLException {
+    locationTypeService = buildServiceWith(List.of());
+    when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
+    assertThrows(SQLException.class, () -> LocationMapper.mapLocation(resultSet, locationTypeService));
+  }
 
-    @Test
-    void mapLocationTypeMapsAllFieldsCorrectly() throws SQLException {
-        when(resultSet.getInt(FIELD_ID)).thenReturn(5);
-        when(resultSet.getString(FIELD_LOCATION_TYPE)).thenReturn("WARP");
+  @Test
+  void mapLocationTypeMapsAllFieldsCorrectly() throws SQLException {
+    when(resultSet.getInt(FIELD_ID)).thenReturn(5);
+    when(resultSet.getString(FIELD_LOCATION_TYPE)).thenReturn("WARP");
 
-        LocationTypeEntry result = LocationMapper.mapLocationType(resultSet);
+    LocationTypeEntry result = LocationMapper.mapLocationType(resultSet);
 
-        assertAll(
-            () -> assertEquals(5, result.getId()),
-            () -> assertEquals("WARP", result.getType())
-        );
-    }
+    assertAll(() -> assertEquals(5, result.getId()), () -> assertEquals("WARP", result.getType()));
+  }
 
-    @Test
-    void mapLocationTypePropagatesSQLException() throws SQLException {
-        when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
-        assertThrows(SQLException.class, () -> LocationMapper.mapLocationType(resultSet));
-    }
+  @Test
+  void mapLocationTypePropagatesSQLException() throws SQLException {
+    when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
+    assertThrows(SQLException.class, () -> LocationMapper.mapLocationType(resultSet));
+  }
 }

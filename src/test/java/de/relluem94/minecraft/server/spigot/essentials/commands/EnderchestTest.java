@@ -65,7 +65,7 @@ class EnderchestTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         TRANSLATED_MESSAGE);
@@ -102,7 +102,7 @@ class EnderchestTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerWhenTargetNotFound() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
@@ -116,7 +116,7 @@ class EnderchestTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTargetPlayerIsNull() {
+  void onCommandSendsTargetNotaPlayerWhenTargetPlayerIsNull() {
     String targetName = "OfflinePlayer";
     Player offlinePlayerEntity = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);

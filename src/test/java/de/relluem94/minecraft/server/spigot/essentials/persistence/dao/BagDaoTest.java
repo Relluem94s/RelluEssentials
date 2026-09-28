@@ -311,7 +311,6 @@ class BagDaoTest {
     }
   }
 
-
   @Test
   void findAllBagsMapperPopulatesBagEntryFromResultSet() throws SQLException {
     when(resultSet.getInt(DatabaseMappings.FIELD_ID)).thenReturn(10);

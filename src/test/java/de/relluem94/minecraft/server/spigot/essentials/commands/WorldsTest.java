@@ -45,35 +45,26 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WorldsTest {
 
-  @Mock
-  private ServiceContext serviceContext;
-
-  @Mock
-  private TranslationService translationService;
-
-  @Mock
-  private GroupService groupService;
-
-  @Mock
-  private TeleportService teleportService;
-
-  @Mock
-  private WorldMenuService worldMenuService;
-
-  @Mock
-  private ServerService serverService;
-
-  @Mock
-  private Player player;
-
-  @Mock
-  private Command command;
-
-  private Worlds worlds;
-
   private static final Logger SILENT_LOGGER = Logger.getLogger("test-silent");
   @SuppressWarnings("LoggerInitializedWithForeignClass")
   private static final Logger WORLDS_CLASS_LOGGER = Logger.getLogger(Worlds.class.getName());
+  @Mock
+  private ServiceContext serviceContext;
+  @Mock
+  private TranslationService translationService;
+  @Mock
+  private GroupService groupService;
+  @Mock
+  private TeleportService teleportService;
+  @Mock
+  private WorldMenuService worldMenuService;
+  @Mock
+  private ServerService serverService;
+  @Mock
+  private Player player;
+  @Mock
+  private Command command;
+  private Worlds worlds;
 
   @BeforeAll
   static void setUpServer() {
@@ -101,17 +92,21 @@ class WorldsTest {
     worlds = new Worlds();
     worlds.injectContext(serviceContext);
 
-    lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
-    lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
+    lenient()
+        .when(serviceContext.getTranslationService())
+        .thenReturn(translationService);
+    lenient()
+        .when(serviceContext.getGroupService())
+        .thenReturn(groupService);
   }
 
   @Test
-  void onCommandSenderIsNotPlayerSendsNotAPlayerMessage() {
+  void onCommandSenderIsNotPlayerSendsNotaPlayerMessage() {
     org.bukkit.command.ConsoleCommandSender consoleSender = mock(org.bukkit.command.ConsoleCommandSender.class);
     String expectedMessage = "not a player";
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(consoleSender, command, "world", new String[]{});
+    boolean result = worlds.onCommand(consoleSender, command, "world", new String[] {});
 
     assertTrue(result);
     verify(consoleSender).sendMessage(expectedMessage);
@@ -123,7 +118,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(false);
     when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -133,10 +128,11 @@ class WorldsTest {
   void onCommandNoArgsOpensWorldMenuAndSendsInfoMessage() {
     String expectedMessage = "world info";
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_WORLD_INFO), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn(expectedMessage);
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_WORLD_INFO), anyString(), anyString(), anyString(),
+        anyString(), anyString())).thenReturn(expectedMessage);
     when(serviceContext.getWorldMenuService()).thenReturn(worldMenuService);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -148,7 +144,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"someWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"someWorld"});
 
     assertTrue(result);
     verify(teleportService).teleportWorld(player, "someWorld");
@@ -161,7 +157,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
     when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"list"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"list"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -179,7 +175,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_INFO)).thenReturn(expectedMessage);
 
-    de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService pluginMetadataService = mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class);
+    de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService pluginMetadataService =
+        mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class);
     org.bukkit.plugin.Plugin plugin = mock(org.bukkit.plugin.Plugin.class);
     org.bukkit.Server server = mock(org.bukkit.Server.class);
 
@@ -188,7 +185,7 @@ class WorldsTest {
     when(plugin.getServer()).thenReturn(server);
     when(server.getWorlds()).thenReturn(List.of(world1, world2));
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"list"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"list"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -203,7 +200,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(false);
     when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"load", "someWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "someWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -215,7 +212,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unload", "nonexistentWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "nonexistentWorld"});
 
     assertTrue(result);
   }
@@ -225,7 +222,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unloadNoSave", "nonexistentWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "nonexistentWorld"});
 
     assertTrue(result);
   }
@@ -237,11 +234,17 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)).thenReturn(expectedMessage);
-    Bukkit.getServer().getWorlds(); // warm-up
-    when(Bukkit.getServer().getWorld("loadedWorld")).thenReturn(loadedWorld);
-    when(Bukkit.getServer().unloadWorld(loadedWorld, true)).thenReturn(true);
+    Bukkit
+        .getServer()
+        .getWorlds(); // warm-up
+    when(Bukkit
+        .getServer()
+        .getWorld("loadedWorld")).thenReturn(loadedWorld);
+    when(Bukkit
+        .getServer()
+        .unloadWorld(loadedWorld, true)).thenReturn(true);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unload", "loadedWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "loadedWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -254,10 +257,14 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE)).thenReturn(expectedMessage);
-    when(Bukkit.getServer().getWorld("loadedWorld")).thenReturn(loadedWorld);
-    when(Bukkit.getServer().unloadWorld(loadedWorld, false)).thenReturn(true);
+    when(Bukkit
+        .getServer()
+        .getWorld("loadedWorld")).thenReturn(loadedWorld);
+    when(Bukkit
+        .getServer()
+        .unloadWorld(loadedWorld, false)).thenReturn(true);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unloadNoSave", "loadedWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "loadedWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -268,9 +275,11 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
-    when(Bukkit.getServer().getWorld("nonexistentWorld")).thenReturn(null);
+    when(Bukkit
+        .getServer()
+        .getWorld("nonexistentWorld")).thenReturn(null);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unload", "nonexistentWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "nonexistentWorld"});
 
     assertTrue(result);
     verify(player, never()).sendMessage(anyString());
@@ -281,9 +290,11 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
-    when(Bukkit.getServer().getWorld("nonexistentWorld")).thenReturn(null);
+    when(Bukkit
+        .getServer()
+        .getWorld("nonexistentWorld")).thenReturn(null);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unloadNoSave", "nonexistentWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "nonexistentWorld"});
 
     assertTrue(result);
     verify(player, never()).sendMessage(anyString());
@@ -296,7 +307,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE_INFO)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"create", "myWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"create", "myWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -309,7 +320,7 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"unknown", "someWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"unknown", "someWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -322,7 +333,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"create", "n", "FLAT", "NORMAL", "true", "extra"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "n", "FLAT", "NORMAL", "true", "extra"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -335,7 +347,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"load", "myWorld", "FLAT", "NORMAL", "true"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"load", "myWorld", "FLAT", "NORMAL", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -348,7 +361,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"create", "myWorld", "INVALID_TYPE", "INVALID_ENV", "notABoolean"});
+    boolean result = worlds.onCommand(player, command, "world",
+        new String[] {"create", "myWorld", "INVALID_TYPE", "INVALID_ENV", "notABoolean"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -358,7 +372,7 @@ class WorldsTest {
   void onTabCompleteWithoutModPermissionReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"li"});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"li"});
 
     assertTrue(result.isEmpty());
   }
@@ -367,7 +381,8 @@ class WorldsTest {
   void onTabCompleteMoreThanFiveStringsReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"create", "name", "FLAT", "NORMAL", "true", "extra"});
+    List<String> result = worlds.onTabComplete(player, command, "world",
+        new String[] {"create", "name", "FLAT", "NORMAL", "true", "extra"});
 
     assertTrue(result.isEmpty());
   }
@@ -380,7 +395,7 @@ class WorldsTest {
     when(serviceContext.getServerService()).thenReturn(serverService);
     when(serverService.getWorlds()).thenReturn(List.of(world));
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"w"});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"w"});
 
     assertFalse(result.isEmpty());
     assertTrue(result.contains("world"));
@@ -399,7 +414,7 @@ class WorldsTest {
     when(serviceContext.getServerService()).thenReturn(serverService);
     when(serverService.getWorlds()).thenReturn(List.of(world));
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"unload", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"unload", ""});
 
     assertTrue(result.contains("world"));
   }
@@ -408,7 +423,7 @@ class WorldsTest {
   void onTabCompleteSecondArgCreateReturnsNamePlaceholder() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"create", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"create", ""});
 
     assertTrue(result.contains("<enter name>"));
   }
@@ -417,7 +432,7 @@ class WorldsTest {
   void onTabCompleteThirdArgCreateReturnsWorldTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"create", "myWorld", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", ""});
 
     assertFalse(result.isEmpty());
   }
@@ -426,7 +441,8 @@ class WorldsTest {
   void onTabCompleteFourthArgCreateReturnsEnvironmentTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"create", "myWorld", "FLAT", ""});
+    List<String> result =
+        worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", "FLAT", ""});
 
     assertFalse(result.isEmpty());
   }
@@ -435,7 +451,8 @@ class WorldsTest {
   void onTabCompleteFifthArgCreateReturnsBooleanOptions() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"create", "myWorld", "FLAT", "NORMAL", ""});
+    List<String> result =
+        worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", "FLAT", "NORMAL", ""});
 
     assertEquals(2, result.size());
     assertTrue(result.contains("true"));
@@ -446,7 +463,7 @@ class WorldsTest {
   void onTabCompleteSecondArgNeitherUnloadNorCreateReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"list", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"list", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -461,8 +478,11 @@ class WorldsTest {
   @ParameterizedTest
   @ValueSource(strings = {"create", "load", "list", "unload", "unloadNoSave"})
   void commandsEnumGetNameReturnsCorrectName(String expectedName) {
-    Worlds.Commands found = java.util.Arrays.stream(Worlds.Commands.values())
-        .filter(c -> c.getName().equals(expectedName))
+    Worlds.Commands found = java.util.Arrays
+        .stream(Worlds.Commands.values())
+        .filter(c -> c
+            .getName()
+            .equals(expectedName))
         .findFirst()
         .orElseThrow();
 
@@ -481,7 +501,7 @@ class WorldsTest {
     org.bukkit.command.ConsoleCommandSender consoleSender = mock(org.bukkit.command.ConsoleCommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("msg");
 
-    boolean result = worlds.onCommand(consoleSender, command, "world", new String[]{});
+    boolean result = worlds.onCommand(consoleSender, command, "world", new String[] {});
 
     assertTrue(result);
   }
@@ -490,13 +510,13 @@ class WorldsTest {
   void onCommandPlayerWithUserPermissionAndNoArgsDoesNotTeleport() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serviceContext.getWorldMenuService()).thenReturn(worldMenuService);
-    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_WORLD_INFO), anyString(), anyString(), anyString(), anyString(), anyString())).thenReturn("info");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_WORLD_INFO), anyString(), anyString(), anyString(),
+        anyString(), anyString())).thenReturn("info");
 
-    worlds.onCommand(player, command, "world", new String[]{});
+    worlds.onCommand(player, command, "world", new String[] {});
 
     verify(teleportService, never()).teleportWorld(any(), anyString());
   }
-
 
   @Test
   void onCommandFiveArgsCreateWithValidArgumentsCreatesWorldAndSendsCreateMessage() {
@@ -505,8 +525,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myNewWorld", "FLAT", "NORMAL", "true"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "myNewWorld", "FLAT", "NORMAL", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -520,7 +540,7 @@ class WorldsTest {
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
 
     boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myWorld", "INVALID_TYPE", "NORMAL", "true"});
+        new String[] {"create", "myWorld", "INVALID_TYPE", "NORMAL", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -533,8 +553,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myWorld", "FLAT", "INVALID_ENV", "true"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "myWorld", "FLAT", "INVALID_ENV", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -547,8 +567,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myWorld", "FLAT", "NORMAL", "false"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "myWorld", "FLAT", "NORMAL", "false"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -561,8 +581,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myNether", "FLAT", "NETHER", "true"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "myNether", "FLAT", "NETHER", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -575,8 +595,8 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
-    boolean result = worlds.onCommand(player, command, "world",
-        new String[]{"create", "myEnd", "FLAT", "THE_END", "true"});
+    boolean result =
+        worlds.onCommand(player, command, "world", new String[] {"create", "myEnd", "FLAT", "THE_END", "true"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -589,9 +609,11 @@ class WorldsTest {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_LOAD)).thenReturn(expectedMessage);
-    when(Bukkit.getServer().getWorld("existingWorld")).thenReturn(existingWorld);
+    when(Bukkit
+        .getServer()
+        .getWorld("existingWorld")).thenReturn(existingWorld);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"load", "existingWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "existingWorld"});
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
@@ -601,16 +623,18 @@ class WorldsTest {
   void onCommandTwoArgsLoadWithNonExistentWorldDoesNotSendLoadMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(Bukkit.getServer().getWorld("nonExistentWorld")).thenReturn(null);
+    when(Bukkit
+        .getServer()
+        .getWorld("nonExistentWorld")).thenReturn(null);
 
-    boolean result = worlds.onCommand(player, command, "world", new String[]{"load", "nonExistentWorld"});
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "nonExistentWorld"});
 
     assertTrue(result);
     verify(player, never()).sendMessage(anyString());
   }
 
   @Test
-  void onCommandCmdBlockWithAtPAndNoPlayerInReachSendsTargetNotAPlayerMessage() {
+  void onCommandCmdBlockWithAtpAndNoPlayerInReachSendsTargetNotaPlayerMessage() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     Block block = mock(Block.class);
     CommandBlock commandBlock = mock(CommandBlock.class);
@@ -623,18 +647,16 @@ class WorldsTest {
     when(block.getLocation()).thenReturn(location);
     when(location.getWorld()).thenReturn(world);
     when(world.getPlayers()).thenReturn(List.of());
-    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER))
-        .thenReturn("target: %s");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER)).thenReturn("target: %s");
 
-    boolean result = worlds.onCommand(blockCommandSender, command, "world",
-        new String[]{"someWorld", "@p"});
+    boolean result = worlds.onCommand(blockCommandSender, command, "world", new String[] {"someWorld", "@p"});
 
     assertTrue(result);
     verify(blockCommandSender).sendMessage("target: No Player in Reach");
   }
 
   @Test
-  void onCommandCmdBlockWithAtPAndPlayerInReachTeleportsNearestPlayer() {
+  void onCommandCmdBlockWithAtpAndPlayerInReachTeleportsNearestPlayer() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     Block block = mock(Block.class);
     CommandBlock commandBlock = mock(CommandBlock.class);
@@ -653,47 +675,40 @@ class WorldsTest {
     when(commandBlockLocation.distanceSquared(playerLocation)).thenReturn(4.0);
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
 
-    boolean result = worlds.onCommand(blockCommandSender, command, "world",
-        new String[]{"someWorld", "@p"});
+    boolean result = worlds.onCommand(blockCommandSender, command, "world", new String[] {"someWorld", "@p"});
 
     assertTrue(result);
     verify(teleportService).teleportWorld(nearestPlayer, "someWorld");
   }
 
   @Test
-  void onCommandCmdBlockWithListSubCommandFallsThroughToNotAPlayerMessage() {
+  void onCommandCmdBlockWithListSubCommandFallsThroughToNotaPlayerMessage() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER))
-        .thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
 
-    boolean result = worlds.onCommand(blockCommandSender, command, "world",
-        new String[]{"list", "@p"});
+    boolean result = worlds.onCommand(blockCommandSender, command, "world", new String[] {"list", "@p"});
 
     assertTrue(result);
     verify(blockCommandSender).sendMessage("not a player");
   }
 
   @Test
-  void onCommandCmdBlockWithNonAtPSecondArgFallsThroughToNotAPlayerMessage() {
+  void onCommandCmdBlockWithNonAtpSecondArgFallsThroughToNotaPlayerMessage() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER))
-        .thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
 
-    boolean result = worlds.onCommand(blockCommandSender, command, "world",
-        new String[]{"someWorld", "notAtP"});
+    boolean result = worlds.onCommand(blockCommandSender, command, "world", new String[] {"someWorld", "notAtP"});
 
     assertTrue(result);
     verify(blockCommandSender).sendMessage("not a player");
   }
 
   @Test
-  void onCommandCmdBlockWithWrongArgCountFallsThroughToNotAPlayerMessage() {
+  void onCommandCmdBlockWithWrongArgCountFallsThroughToNotaPlayerMessage() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER))
-        .thenReturn("not a player");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn("not a player");
 
-    boolean result = worlds.onCommand(blockCommandSender, command, "world",
-        new String[]{"someWorld"});
+    boolean result = worlds.onCommand(blockCommandSender, command, "world", new String[] {"someWorld"});
 
     assertTrue(result);
     verify(blockCommandSender).sendMessage("not a player");
@@ -703,7 +718,7 @@ class WorldsTest {
   void onTabCompleteThirdArgNotCreateReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"load", "myWorld", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"load", "myWorld", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -712,7 +727,7 @@ class WorldsTest {
   void onTabCompleteFourthArgNotCreateReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"load", "myWorld", "FLAT", ""});
+    List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"load", "myWorld", "FLAT", ""});
 
     assertTrue(result.isEmpty());
   }
@@ -721,7 +736,8 @@ class WorldsTest {
   void onTabCompleteFifthArgNotCreateReturnsEmptyList() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
-    List<String> result = worlds.onTabComplete(player, command, "world", new String[]{"load", "myWorld", "FLAT", "NORMAL", ""});
+    List<String> result =
+        worlds.onTabComplete(player, command, "world", new String[] {"load", "myWorld", "FLAT", "NORMAL", ""});
 
     assertTrue(result.isEmpty());
   }

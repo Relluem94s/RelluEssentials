@@ -78,7 +78,7 @@ class AfkTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -116,7 +116,7 @@ class AfkTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerWhenTargetNotFound() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
@@ -206,7 +206,6 @@ class AfkTest {
     assertNotNull(result);
   }
 
-
   @Test
   void onCommandReturnsFalseWhenSenderIsModAndTargetExistsButTooManyArgsProvided() {
     String targetName = "TargetPlayer";
@@ -222,5 +221,4 @@ class AfkTest {
         () -> verify(playerService, never()).setAfk(targetPlayer, false)
     );
   }
-
 }

@@ -28,316 +28,314 @@ import org.junit.jupiter.api.Test;
 
 class FillCommandTest {
 
-    private Player player;
-    private UndoHistoryService undoHistoryService;
-    private ProtectionService protectionService;
-    private FillCommand fillCommand;
-    private FillCommand fillrCommand;
-
-    private static final int BLOCKS_PER_TICK = 2;
-    private static final int MAX_RADIUS = 10;
-    private static final int MAX_ITERATIONS = 1000;
-
-    @BeforeEach
-    void setUp() {
-        player = mock(Player.class);
-        undoHistoryService = mock(UndoHistoryService.class);
-        protectionService = mock(ProtectionService.class);
-
-        fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
-        fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
-    }
-
-    private ServiceContext buildServiceContext() {
-        TranslationService translationService = mock(TranslationService.class);
-        when(translationService.getWithPrefix(any())).thenReturn("msg");
-        when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
-
-        SchedulerService schedulerService = mock(SchedulerService.class);
-        ServerService serverService = mock(ServerService.class);
-
-        PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
-
-        ServiceContext serviceContext = mock(ServiceContext.class);
-        when(serviceContext.getTranslationService()).thenReturn(translationService);
-        when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
-        when(serviceContext.getProtectionService()).thenReturn(protectionService);
-        when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
-        when(serviceContext.getServerService()).thenReturn(serverService);
-        when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-
-        return serviceContext;
-    }
-
-    @Test
-    void executeFillWithInvalidMaterialSendsWrongMaterialMessage() {
-        fillCommand.execute(player, new String[]{"fill", "NOT_A_REAL_MATERIAL_XYZ", "5"});
-
-        verify(player).sendMessage(any(String.class));
-        verify(undoHistoryService, never()).addHistory(any(), any());
-    }
-
-    @Test
-    void executeFillWithNonIntegerRadiusSendsInvalidMessage() {
-        fillCommand.execute(player, new String[]{"fill", "STONE", "notANumber"});
-
-        verify(player).sendMessage(any(String.class));
-        verify(undoHistoryService, never()).addHistory(any(), any());
-    }
-
-    @Test
-    void executeFillWithZeroRadiusSendsInvalidMessage() {
-        fillCommand.execute(player, new String[]{"fill", "STONE", "0"});
-
-        verify(player).sendMessage(any(String.class));
-        verify(undoHistoryService, never()).addHistory(any(), any());
-    }
-
-    @Test
-    void executeFillWithNegativeRadiusSendsInvalidMessage() {
-        fillCommand.execute(player, new String[]{"fill", "STONE", "-3"});
-
-        verify(player).sendMessage(any(String.class));
-        verify(undoHistoryService, never()).addHistory(any(), any());
-    }
-
-    @Test
-    void executeFillWithRadiusExceedingMaxSendsRadiusTooHighMessage() {
-        World world = mock(World.class);
-        Block startBlock = buildSolidBlock(world);
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "99"});
-
-        verify(player, atLeastOnce()).sendMessage(any(String.class));
-        verify(undoHistoryService).addHistory(eq(player), any());
-    }
-
-    @Test
-    void executeFillWithNonEmptyStartBlockAddsEmptyHistory() {
-        World world = mock(World.class);
-        Block startBlock = buildSolidBlock(world);
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(java.util.List::isEmpty));
-    }
-
-    @Test
-    void executeFillWithEmptyStartBlockFillsAdjacentAirAndAddsHistory() {
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block solidNeighbor = buildSolidBlock(world);
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
-
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-    }
-
-    @Test
-    void executeFillrWithEmptyStartBlockAndEmptyBelowSpreadsBothDirections() {
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block belowBlock = buildEmptyBlock(world, 0, -1);
-        Block solidNeighbor = buildSolidBlock(world);
-
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
-        when(world.getBlockAt(0, -1, 0)).thenReturn(belowBlock);
-
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillrCommand.execute(player, new String[]{"fillr", "STONE", "5"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
-    }
-
-    @Test
-    void matchesFillWithCorrectArgsReturnsTrue() {
-        assert fillCommand.matches(new String[]{"fill", "STONE", "5"});
-    }
-
-    @Test
-    void matchesFillrWithCorrectArgsReturnsTrue() {
-        assert fillrCommand.matches(new String[]{"fillr", "STONE", "5"});
-    }
-
-    @Test
-    void matchesFillWithWrongCommandReturnsFalse() {
-        assert !fillCommand.matches(new String[]{"fillr", "STONE", "5"});
-    }
-
-    @Test
-    void matchesFillrWithWrongCommandReturnsFalse() {
-        assert !fillrCommand.matches(new String[]{"fill", "STONE", "5"});
-    }
-
-    @Test
-    void matchesFillWithTooFewArgsReturnsFalse() {
-        assert !fillCommand.matches(new String[]{"fill", "STONE"});
-    }
-
-    @Test
-    void matchesFillWithTooManyArgsReturnsFalse() {
-        assert !fillCommand.matches(new String[]{"fill", "STONE", "5", "extra"});
-    }
-
-    @Test
-    void executeFillWhenMaxIterationsReachedStopsProcessingAndAddsPartialHistory() {
-        FillCommand limitedFillCommand = new FillCommand(
-            buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, 2);
-
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block emptyNeighbor1 = buildEmptyBlock(world, 1, 0);
-        Block emptyNeighbor2 = buildEmptyBlock(world, -1, 0);
-        Block solidFallback = buildSolidBlock(world);
-
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
-        when(world.getBlockAt(1, 0, 0)).thenReturn(emptyNeighbor1);
-        when(world.getBlockAt(-1, 0, 0)).thenReturn(emptyNeighbor2);
-
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        limitedFillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() < 3));
-    }
-
-    @Test
-    void executeFillWhenBlockExceedsRadiusSkipsBlockAndDoesNotAddToHistory() {
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block farEmptyBlock = buildEmptyBlock(world, 10, 0);
-        Block solidFallback = buildSolidBlock(world);
-
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
-        when(world.getBlockAt(10, 0, 0)).thenReturn(farEmptyBlock);
-
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-    }
-
-    @Test
-    void executeFillWhenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block leftNeighbor = buildEmptyBlock(world, -1, 0);
-        Block rightNeighbor = buildEmptyBlock(world, 1, 0);
-        Block solidFallback = buildSolidBlock(world);
-
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
-        when(world.getBlockAt(-1, 0, 0)).thenReturn(leftNeighbor);
-        when(world.getBlockAt(1, 0, 0)).thenReturn(rightNeighbor);
-        when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
-
-        Location playerLocation = buildLocation(world);
-        when(player.getLocation()).thenReturn(playerLocation);
-        when(playerLocation.clone()).thenReturn(playerLocation);
-        when(playerLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 4));
-    }
-
-    @Test
-    void executeFillWhenNeighborExceedsRadiusSkipsNeighborAndDoesNotAddToHistory() {
-        World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0);
-        Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0);
-        Block solidFallback = buildSolidBlock(world);
-
-        when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
-        when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
-        when(world.getBlockAt(1, 0, 0)).thenReturn(outOfRadiusNeighbor);
-
-        Location startLocation = mock(Location.class);
-        when(startLocation.getWorld()).thenReturn(world);
-        when(startLocation.getBlockX()).thenReturn(0);
-        when(startLocation.getBlockY()).thenReturn(0);
-        when(startLocation.getBlockZ()).thenReturn(0);
-        when(startLocation.distance(any(Location.class))).thenReturn(0.0);
-
-        Location neighborLocation = mock(Location.class);
-        when(neighborLocation.getWorld()).thenReturn(world);
-        when(neighborLocation.getBlockX()).thenReturn(1);
-        when(neighborLocation.getBlockY()).thenReturn(0);
-        when(neighborLocation.getBlockZ()).thenReturn(0);
-        when(neighborLocation.distance(any(Location.class))).thenReturn(2.0);
-
-        when(startBlock.getLocation()).thenReturn(startLocation);
-        when(outOfRadiusNeighbor.getLocation()).thenReturn(neighborLocation);
-
-        when(player.getLocation()).thenReturn(startLocation);
-        when(startLocation.clone()).thenReturn(startLocation);
-        when(startLocation.getBlock()).thenReturn(startBlock);
-
-        fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
-
-        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-    }
-
-    private Location buildLocation(World world) {
-        Location location = mock(Location.class);
-        when(location.getWorld()).thenReturn(world);
-        when(location.getBlockX()).thenReturn(0);
-        when(location.getBlockY()).thenReturn(0);
-        when(location.getBlockZ()).thenReturn(0);
-        return location;
-    }
-
-    private Block buildEmptyBlock(World world, int x, int y) {
-        Block block = mock(Block.class);
-        BlockData blockData = mock(BlockData.class);
-        Location location = mock(Location.class);
-        when(block.getType()).thenReturn(Material.AIR);
-        when(block.isEmpty()).thenReturn(true);
-        when(block.getBlockData()).thenReturn(blockData);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getX()).thenReturn(x);
-        when(block.getY()).thenReturn(y);
-        when(block.getZ()).thenReturn(0);
-        when(block.getWorld()).thenReturn(world);
-        return block;
-    }
-
-    private Block buildSolidBlock(World world) {
-        Block block = mock(Block.class);
-        BlockData blockData = mock(BlockData.class);
-        Location location = mock(Location.class);
-        when(block.getType()).thenReturn(Material.STONE);
-        when(block.isEmpty()).thenReturn(false);
-        when(block.getBlockData()).thenReturn(blockData);
-        when(block.getLocation()).thenReturn(location);
-        when(block.getX()).thenReturn(0);
-        when(block.getY()).thenReturn(0);
-        when(block.getZ()).thenReturn(0);
-        when(block.getWorld()).thenReturn(world);
-        return block;
-    }
+  private static final int BLOCKS_PER_TICK = 2;
+  private static final int MAX_RADIUS = 10;
+  private static final int MAX_ITERATIONS = 1000;
+  private Player player;
+  private UndoHistoryService undoHistoryService;
+  private ProtectionService protectionService;
+  private FillCommand fillCommand;
+  private FillCommand fillrCommand;
+
+  @BeforeEach
+  void setUp() {
+    player = mock(Player.class);
+    undoHistoryService = mock(UndoHistoryService.class);
+    protectionService = mock(ProtectionService.class);
+
+    fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
+    fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
+  }
+
+  private ServiceContext buildServiceContext() {
+    TranslationService translationService = mock(TranslationService.class);
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
+
+    SchedulerService schedulerService = mock(SchedulerService.class);
+    ServerService serverService = mock(ServerService.class);
+
+    PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+
+    ServiceContext serviceContext = mock(ServiceContext.class);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+
+    return serviceContext;
+  }
+
+  @Test
+  void executeFillWithInvalidMaterialSendsWrongMaterialMessage() {
+    fillCommand.execute(player, new String[] {"fill", "NOT_A_REAL_MATERIAL_XYZ", "5"});
+
+    verify(player).sendMessage(any(String.class));
+    verify(undoHistoryService, never()).addHistory(any(), any());
+  }
+
+  @Test
+  void executeFillWithNonIntegerRadiusSendsInvalidMessage() {
+    fillCommand.execute(player, new String[] {"fill", "STONE", "notANumber"});
+
+    verify(player).sendMessage(any(String.class));
+    verify(undoHistoryService, never()).addHistory(any(), any());
+  }
+
+  @Test
+  void executeFillWithZeroRadiusSendsInvalidMessage() {
+    fillCommand.execute(player, new String[] {"fill", "STONE", "0"});
+
+    verify(player).sendMessage(any(String.class));
+    verify(undoHistoryService, never()).addHistory(any(), any());
+  }
+
+  @Test
+  void executeFillWithNegativeRadiusSendsInvalidMessage() {
+    fillCommand.execute(player, new String[] {"fill", "STONE", "-3"});
+
+    verify(player).sendMessage(any(String.class));
+    verify(undoHistoryService, never()).addHistory(any(), any());
+  }
+
+  @Test
+  void executeFillWithRadiusExceedingMaxSendsRadiusTooHighMessage() {
+    World world = mock(World.class);
+    Block startBlock = buildSolidBlock(world);
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "99"});
+
+    verify(player, atLeastOnce()).sendMessage(any(String.class));
+    verify(undoHistoryService).addHistory(eq(player), any());
+  }
+
+  @Test
+  void executeFillWithNonEmptyStartBlockAddsEmptyHistory() {
+    World world = mock(World.class);
+    Block startBlock = buildSolidBlock(world);
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "5"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(java.util.List::isEmpty));
+  }
+
+  @Test
+  void executeFillWithEmptyStartBlockFillsAdjacentAirAndAddsHistory() {
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block solidNeighbor = buildSolidBlock(world);
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
+
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "5"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
+  }
+
+  @Test
+  void executeFillrWithEmptyStartBlockAndEmptyBelowSpreadsBothDirections() {
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block belowBlock = buildEmptyBlock(world, 0, -1);
+    Block solidNeighbor = buildSolidBlock(world);
+
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
+    when(world.getBlockAt(0, -1, 0)).thenReturn(belowBlock);
+
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillrCommand.execute(player, new String[] {"fillr", "STONE", "5"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
+  }
+
+  @Test
+  void matchesFillWithCorrectArgsReturnsTrue() {
+    assert fillCommand.matches(new String[] {"fill", "STONE", "5"});
+  }
+
+  @Test
+  void matchesFillrWithCorrectArgsReturnsTrue() {
+    assert fillrCommand.matches(new String[] {"fillr", "STONE", "5"});
+  }
+
+  @Test
+  void matchesFillWithWrongCommandReturnsFalse() {
+    assert !fillCommand.matches(new String[] {"fillr", "STONE", "5"});
+  }
+
+  @Test
+  void matchesFillrWithWrongCommandReturnsFalse() {
+    assert !fillrCommand.matches(new String[] {"fill", "STONE", "5"});
+  }
+
+  @Test
+  void matchesFillWithTooFewArgsReturnsFalse() {
+    assert !fillCommand.matches(new String[] {"fill", "STONE"});
+  }
+
+  @Test
+  void matchesFillWithTooManyArgsReturnsFalse() {
+    assert !fillCommand.matches(new String[] {"fill", "STONE", "5", "extra"});
+  }
+
+  @Test
+  void executeFillWhenMaxIterationsReachedStopsProcessingAndAddsPartialHistory() {
+
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block emptyNeighbor1 = buildEmptyBlock(world, 1, 0);
+    Block emptyNeighbor2 = buildEmptyBlock(world, -1, 0);
+    Block solidFallback = buildSolidBlock(world);
+
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
+    when(world.getBlockAt(1, 0, 0)).thenReturn(emptyNeighbor1);
+    when(world.getBlockAt(-1, 0, 0)).thenReturn(emptyNeighbor2);
+
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    FillCommand limitedFillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, 2);
+    limitedFillCommand.execute(player, new String[] {"fill", "STONE", "5"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() < 3));
+  }
+
+  @Test
+  void executeFillWhenBlockExceedsRadiusSkipsBlockAndDoesNotAddToHistory() {
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block farEmptyBlock = buildEmptyBlock(world, 10, 0);
+    Block solidFallback = buildSolidBlock(world);
+
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
+    when(world.getBlockAt(10, 0, 0)).thenReturn(farEmptyBlock);
+
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "1"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
+  }
+
+  @Test
+  void executeFillWhenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block leftNeighbor = buildEmptyBlock(world, -1, 0);
+    Block rightNeighbor = buildEmptyBlock(world, 1, 0);
+    Block solidFallback = buildSolidBlock(world);
+
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
+    when(world.getBlockAt(-1, 0, 0)).thenReturn(leftNeighbor);
+    when(world.getBlockAt(1, 0, 0)).thenReturn(rightNeighbor);
+    when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
+
+    Location playerLocation = buildLocation(world);
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.clone()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "5"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 4));
+  }
+
+  @Test
+  void executeFillWhenNeighborExceedsRadiusSkipsNeighborAndDoesNotAddToHistory() {
+    World world = mock(World.class);
+    Block startBlock = buildEmptyBlock(world, 0, 0);
+    Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0);
+    Block solidFallback = buildSolidBlock(world);
+
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
+    when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
+    when(world.getBlockAt(1, 0, 0)).thenReturn(outOfRadiusNeighbor);
+
+    Location startLocation = mock(Location.class);
+    when(startLocation.getWorld()).thenReturn(world);
+    when(startLocation.getBlockX()).thenReturn(0);
+    when(startLocation.getBlockY()).thenReturn(0);
+    when(startLocation.getBlockZ()).thenReturn(0);
+    when(startLocation.distance(any(Location.class))).thenReturn(0.0);
+
+    Location neighborLocation = mock(Location.class);
+    when(neighborLocation.getWorld()).thenReturn(world);
+    when(neighborLocation.getBlockX()).thenReturn(1);
+    when(neighborLocation.getBlockY()).thenReturn(0);
+    when(neighborLocation.getBlockZ()).thenReturn(0);
+    when(neighborLocation.distance(any(Location.class))).thenReturn(2.0);
+
+    when(startBlock.getLocation()).thenReturn(startLocation);
+    when(outOfRadiusNeighbor.getLocation()).thenReturn(neighborLocation);
+
+    when(player.getLocation()).thenReturn(startLocation);
+    when(startLocation.clone()).thenReturn(startLocation);
+    when(startLocation.getBlock()).thenReturn(startBlock);
+
+    fillCommand.execute(player, new String[] {"fill", "STONE", "1"});
+
+    verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
+  }
+
+  private Location buildLocation(World world) {
+    Location location = mock(Location.class);
+    when(location.getWorld()).thenReturn(world);
+    when(location.getBlockX()).thenReturn(0);
+    when(location.getBlockY()).thenReturn(0);
+    when(location.getBlockZ()).thenReturn(0);
+    return location;
+  }
+
+  private Block buildEmptyBlock(World world, int x, int y) {
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+    Location location = mock(Location.class);
+    when(block.getType()).thenReturn(Material.AIR);
+    when(block.isEmpty()).thenReturn(true);
+    when(block.getBlockData()).thenReturn(blockData);
+    when(block.getLocation()).thenReturn(location);
+    when(block.getX()).thenReturn(x);
+    when(block.getY()).thenReturn(y);
+    when(block.getZ()).thenReturn(0);
+    when(block.getWorld()).thenReturn(world);
+    return block;
+  }
+
+  private Block buildSolidBlock(World world) {
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+    Location location = mock(Location.class);
+    when(block.getType()).thenReturn(Material.STONE);
+    when(block.isEmpty()).thenReturn(false);
+    when(block.getBlockData()).thenReturn(blockData);
+    when(block.getLocation()).thenReturn(location);
+    when(block.getX()).thenReturn(0);
+    when(block.getY()).thenReturn(0);
+    when(block.getZ()).thenReturn(0);
+    when(block.getWorld()).thenReturn(world);
+    return block;
+  }
 }

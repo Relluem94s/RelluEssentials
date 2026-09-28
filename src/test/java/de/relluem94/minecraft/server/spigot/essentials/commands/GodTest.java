@@ -122,7 +122,7 @@ class GodTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenConsoleTargetsUnknownPlayer() {
+  void onCommandSendsTargetNotaPlayerWhenConsoleTargetsUnknownPlayer() {
     ConsoleCommandSender consoleSender = mock(ConsoleCommandSender.class);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
@@ -134,7 +134,7 @@ class GodTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenCommandBlockTargetsUnknownPlayer() {
+  void onCommandSendsTargetNotaPlayerWhenCommandBlockTargetsUnknownPlayer() {
     BlockCommandSender blockSender = mock(BlockCommandSender.class);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
@@ -146,7 +146,7 @@ class GodTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNeitherPlayerNorConsoleNorCommandBlock() {
+  void onCommandSendsNotaPlayerMessageWhenSenderIsNeitherPlayerNorConsoleNorCommandBlock() {
     CommandSender unknownSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 

@@ -52,9 +52,6 @@ class CopyCommandTest {
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
     clipboardService = new ClipboardService();
-    SchedulerService schedulerService = mock(SchedulerService.class);
-
-    ProtectionService protectionServiceMock = mock(ProtectionService.class);
     PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
     Plugin plugin = mock(Plugin.class);
     Server server = mock(Server.class);
@@ -71,6 +68,9 @@ class CopyCommandTest {
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
+
+    SchedulerService schedulerService = mock(SchedulerService.class);
+    ProtectionService protectionServiceMock = mock(ProtectionService.class);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);

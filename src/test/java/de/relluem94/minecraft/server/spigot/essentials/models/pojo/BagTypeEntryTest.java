@@ -10,29 +10,29 @@ import org.junit.jupiter.api.Test;
 
 class BagTypeEntryTest {
 
-    private BagTypeEntry bagTypeEntry;
+  private static final int EXPECTED_BAG_SIZE = BAG_SIZE;
+  private BagTypeEntry bagTypeEntry;
 
-    private static final int EXPECTED_BAG_SIZE = BAG_SIZE;
+  @BeforeEach
+  void setUp() {
+    bagTypeEntry = new BagTypeEntry();
+  }
 
-    @BeforeEach
-    void setUp() {
-        bagTypeEntry = new BagTypeEntry();
-    }
+  @Test
+  void shouldInitializeSlotNamesWithCorrectSize() {
+    assertNotNull(bagTypeEntry.getSlotNames());
+    assertEquals(EXPECTED_BAG_SIZE, bagTypeEntry.getSlotNames().length);
+  }
 
-    @Test
-    void shouldInitializeSlotNamesWithCorrectSize() {
-        assertNotNull(bagTypeEntry.getSlotNames());
-        assertEquals(EXPECTED_BAG_SIZE, bagTypeEntry.getSlotNames().length);
-    }
+  @Test
+  void shouldThrowExceptionForOutOfBoundsSlot() {
+    assertThrows(ArrayIndexOutOfBoundsException.class,
+        () -> bagTypeEntry.setSlotName(EXPECTED_BAG_SIZE, "OutOfBounds"));
+  }
 
-    @Test
-    void shouldThrowExceptionForOutOfBoundsSlot() {
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> bagTypeEntry.setSlotName(EXPECTED_BAG_SIZE, "OutOfBounds"));
-    }
-
-    @Test
-    void shouldSetAndGetLastSlotName() {
-        bagTypeEntry.setSlotName(EXPECTED_BAG_SIZE - 1, "LastSlot");
-        assertEquals("LastSlot", bagTypeEntry.getSlotName(EXPECTED_BAG_SIZE - 1));
-    }
+  @Test
+  void shouldSetAndGetLastSlotName() {
+    bagTypeEntry.setSlotName(EXPECTED_BAG_SIZE - 1, "LastSlot");
+    assertEquals("LastSlot", bagTypeEntry.getSlotName(EXPECTED_BAG_SIZE - 1));
+  }
 }

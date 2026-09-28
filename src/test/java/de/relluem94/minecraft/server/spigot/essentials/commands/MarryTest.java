@@ -160,7 +160,7 @@ class MarryTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenTargetIsNull() {
+  void onCommandSendsTargetNotaPlayerWhenTargetIsNull() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);

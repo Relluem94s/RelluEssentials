@@ -103,7 +103,7 @@ class PlayerInfoTest {
   }
 
   @Test
-  void onCommandTargetPlayerNotFoundSendsNotAPlayerMessage() {
+  void onCommandTargetPlayerNotFoundSendsNotaPlayerMessage() {
     when(groupService.isSenderAuthorized(sender, "vip")).thenReturn(true);
     when(translationService.getWithPrefix(eq(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), anyString())).thenReturn("not a player");
 
@@ -120,7 +120,7 @@ class PlayerInfoTest {
   }
 
   @Test
-  void onCommandPlayerEntryNullSendsNotAPlayerMessage() {
+  void onCommandPlayerEntryNullSendsNotaPlayerMessage() {
     when(groupService.isSenderAuthorized(sender, "vip")).thenReturn(true);
     when(translationService.getWithPrefix(eq(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), anyString())).thenReturn("not a player");
 
@@ -403,7 +403,7 @@ class PlayerInfoTest {
   }
 
   @Test
-  void onCommandPlayerHelperReturnsNullOnSecondCallInsideShowPlayerInfoSendsNotAPlayerMessage() {
+  void onCommandPlayerHelperReturnsNullOnSecondCallInsideShowPlayerInfoSendsNotaPlayerMessage() {
     when(groupService.isSenderAuthorized(sender, "vip")).thenReturn(true);
     when(translationService.getWithPrefix(eq(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), anyString()))
         .thenReturn("not a player");

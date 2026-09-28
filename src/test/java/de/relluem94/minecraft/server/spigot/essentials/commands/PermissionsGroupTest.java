@@ -113,7 +113,7 @@ class PermissionsGroupTest {
   }
 
   @Test
-  void onCommandReturnsTrueAndSendsNotAPlayerMessageWhenTargetPlayerNotFound() {
+  void onCommandReturnsTrueAndSendsNotaPlayerMessageWhenTargetPlayerNotFound() {
     ConsoleCommandSender sender = mock(ConsoleCommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer"))
         .thenReturn("not a player");
@@ -129,7 +129,7 @@ class PermissionsGroupTest {
   }
 
   @Test
-  void onCommandReturnsTrueAndSendsNotAPlayerMessageWhenPlayerEntryNotFound() {
+  void onCommandReturnsTrueAndSendsNotaPlayerMessageWhenPlayerEntryNotFound() {
     ConsoleCommandSender sender = mock(ConsoleCommandSender.class);
     OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
     Player onlinePlayer = mock(Player.class);

@@ -71,7 +71,7 @@ class InventoryTest {
   }
 
   @Test
-  void onCommandReturnsTrueAndSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandReturnsTrueAndSendsNotaPlayerMessageWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -108,7 +108,7 @@ class InventoryTest {
   }
 
   @Test
-  void onCommandReturnsTrueAndSendsTargetNotAPlayerMessageWhenTargetNotFound() {
+  void onCommandReturnsTrueAndSendsTargetNotaPlayerMessageWhenTargetNotFound() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer("UnknownPlayer")).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);

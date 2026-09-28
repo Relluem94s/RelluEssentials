@@ -37,14 +37,16 @@ class CustomItemTest {
   BukkitRegistryAdapter registryAdapter;
 
   private CustomItem buildMinimalItem() {
-    return new CustomItem(Material.STONE, 1, "Name", List.of(), Type.NONE, Rarity.NONE, null,
-        List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+    return new CustomItem(Material.STONE, 1, "Name", List.of(), Type.NONE, Rarity.NONE, null, List.of(), Map.of(),
+        List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
   }
 
   private ItemMeta mockItemMetaOnItemStack(ItemStack mockedItemStack) {
     ItemMeta meta = mock(ItemMeta.class);
     PersistentDataContainer container = mock(PersistentDataContainer.class);
-    lenient().when(meta.getPersistentDataContainer()).thenReturn(container);
+    lenient()
+        .when(meta.getPersistentDataContainer())
+        .thenReturn(container);
     when(mockedItemStack.getItemMeta()).thenReturn(meta);
     return meta;
   }
@@ -64,9 +66,9 @@ class CustomItemTest {
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
         (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock))) {
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, "My Sword", List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, "My Sword", List.of(), Type.NONE, Rarity.NONE, null, List.of(), Map.of(),
+              List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -81,9 +83,9 @@ class CustomItemTest {
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
         (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock))) {
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(), Map.of(),
+              List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -100,8 +102,9 @@ class CustomItemTest {
 
       List<String> lore = List.of("Line 1", "Line 2");
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, lore, Type.NONE, Rarity.NONE,
-          null, List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, lore, Type.NONE, Rarity.NONE, null, List.of(), Map.of(), List.of(),
+              new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -113,20 +116,18 @@ class CustomItemTest {
   void toItemStackAddsRarityToNullLore() {
     ItemMeta[] capturedMeta = new ItemMeta[1];
 
-    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
-        (mock, _) -> {
-          capturedMeta[0] = mockItemMetaOnItemStack(mock);
-          when(capturedMeta[0].getLore()).thenReturn(null);
-        })) {
+    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class, (mock, _) -> {
+      capturedMeta[0] = mockItemMetaOnItemStack(mock);
+      when(capturedMeta[0].getLore()).thenReturn(null);
+    })) {
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.RARE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.RARE, null, List.of(), Map.of(),
+              List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
-      verify(capturedMeta[0]).setLore(
-          List.of(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()));
+      verify(capturedMeta[0]).setLore(List.of(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()));
     }
   }
 
@@ -134,20 +135,18 @@ class CustomItemTest {
   void toItemStackAddsRarityToExistingLore() {
     ItemMeta[] capturedMeta = new ItemMeta[1];
 
-    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
-        (mock, _) -> {
-          capturedMeta[0] = mockItemMetaOnItemStack(mock);
-          when(capturedMeta[0].getLore()).thenReturn(new ArrayList<>(List.of("Existing Line")));
-        })) {
+    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class, (mock, _) -> {
+      capturedMeta[0] = mockItemMetaOnItemStack(mock);
+      when(capturedMeta[0].getLore()).thenReturn(new ArrayList<>(List.of("Existing Line")));
+    })) {
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.EPIC, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.EPIC, null, List.of(), Map.of(),
+              List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
-      verify(capturedMeta[0]).setLore(
-          List.of("Existing Line", Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
+      verify(capturedMeta[0]).setLore(List.of("Existing Line", Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
     }
   }
 
@@ -157,20 +156,20 @@ class CustomItemTest {
     NamespacedKey mockedCostKey = mock(NamespacedKey.class);
 
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
-        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(
-            mock)); MockedStatic<NamespacedKeyConstants> mockedKeyConstants = Mockito.mockStatic(
-        NamespacedKeyConstants.class)) {
+        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock));
+        MockedStatic<NamespacedKeyConstants> mockedKeyConstants = Mockito.mockStatic(NamespacedKeyConstants.class)) {
 
-      mockedKeyConstants.when(NamespacedKeyConstants::itemCost).thenReturn(mockedCostKey);
+      mockedKeyConstants
+          .when(NamespacedKeyConstants::itemCost)
+          .thenReturn(mockedCostKey);
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, 250, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, 250, List.of(), Map.of(),
+              List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
-      verify(capturedMeta[0].getPersistentDataContainer()).set(mockedCostKey,
-          PersistentDataType.INTEGER, 250);
+      verify(capturedMeta[0].getPersistentDataContainer()).set(mockedCostKey, PersistentDataType.INTEGER, 250);
     }
   }
 
@@ -183,9 +182,9 @@ class CustomItemTest {
 
       @SuppressWarnings("unchecked") Consumer<ItemMeta> modifier = mock(Consumer.class);
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of(), List.of(modifier),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(), Map.of(),
+              List.of(modifier), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -200,9 +199,9 @@ class CustomItemTest {
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
         (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock))) {
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, "", List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, "", List.of(), Type.NONE, Rarity.NONE, null, List.of(), Map.of(), List.of(),
+              new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -229,11 +228,12 @@ class CustomItemTest {
     NamespacedKey mockedCostKey = mock(NamespacedKey.class);
 
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
-        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(
-            mock)); MockedStatic<NamespacedKeyConstants> mockedKeyConstants = Mockito.mockStatic(
-        NamespacedKeyConstants.class)) {
+        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock));
+        MockedStatic<NamespacedKeyConstants> mockedKeyConstants = Mockito.mockStatic(NamespacedKeyConstants.class)) {
 
-      mockedKeyConstants.when(NamespacedKeyConstants::itemCost).thenReturn(mockedCostKey);
+      mockedKeyConstants
+          .when(NamespacedKeyConstants::itemCost)
+          .thenReturn(mockedCostKey);
 
       buildMinimalItem().toItemStack();
 
@@ -251,15 +251,15 @@ class CustomItemTest {
 
       NamespacedKey dataKey = NamespacedKey.fromString("test:mykey");
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of("test:mykey", "hello"), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(),
+              Map.of("test:mykey", "hello"), List.of(), new RelluEssentialsNamespacedKey("test", "stone"),
+              registryAdapter);
 
       customItem.toItemStack();
 
       assertNotNull(dataKey);
-      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.STRING,
-          "hello");
+      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.STRING, "hello");
     }
   }
 
@@ -272,15 +272,14 @@ class CustomItemTest {
 
       NamespacedKey dataKey = NamespacedKey.fromString("test:mykey");
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of("test:mykey", 42), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(),
+              Map.of("test:mykey", 42), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
       assertNotNull(dataKey);
-      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.INTEGER,
-          42);
+      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.INTEGER, 42);
     }
   }
 
@@ -293,15 +292,15 @@ class CustomItemTest {
 
       NamespacedKey dataKey = NamespacedKey.fromString("test:mykey");
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of("test:mykey", true), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(),
+              Map.of("test:mykey", true), List.of(), new RelluEssentialsNamespacedKey("test", "stone"),
+              registryAdapter);
 
       customItem.toItemStack();
 
       assertNotNull(dataKey);
-      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.BYTE,
-          (byte) 1);
+      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.BYTE, (byte) 1);
     }
   }
 
@@ -314,15 +313,15 @@ class CustomItemTest {
 
       NamespacedKey dataKey = NamespacedKey.fromString("test:mykey");
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(), Map.of("test:mykey", 3.14), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem =
+          new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null, List.of(),
+              Map.of("test:mykey", 3.14), List.of(), new RelluEssentialsNamespacedKey("test", "stone"),
+              registryAdapter);
 
       customItem.toItemStack();
 
       assertNotNull(dataKey);
-      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.DOUBLE,
-          3.14);
+      verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.DOUBLE, 3.14);
     }
   }
 
@@ -331,21 +330,20 @@ class CustomItemTest {
     ItemMeta[] capturedMeta = new ItemMeta[1];
 
     try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
-        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(
-            mock)); MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(
-        NamespacedKey.class)) {
+        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock));
+        MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(NamespacedKey.class)) {
 
-      mockedNamespacedKey.when(() -> NamespacedKey.fromString("not a valid key!!"))
+      mockedNamespacedKey
+          .when(() -> NamespacedKey.fromString("not a valid key!!"))
           .thenReturn(null);
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("not a valid key!!", 1)),
-          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null,
+          List.of(new CustomItem.EnchantmentData("not a valid key!!", 1)), Map.of(), List.of(),
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
-      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(),
-          Mockito.anyBoolean());
+      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(), Mockito.anyBoolean());
     }
   }
 
@@ -358,19 +356,19 @@ class CustomItemTest {
         MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(NamespacedKey.class)) {
 
       NamespacedKey resolvedKey = mock(NamespacedKey.class);
-      mockedNamespacedKey.when(() -> NamespacedKey.fromString("minecraft:sharpness"))
+      mockedNamespacedKey
+          .when(() -> NamespacedKey.fromString("minecraft:sharpness"))
           .thenReturn(resolvedKey);
 
       when(registryAdapter.resolveEnchantment(resolvedKey)).thenReturn(null);
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)),
-          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null,
+          List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)), Map.of(), List.of(),
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
-      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(),
-          Mockito.anyBoolean());
+      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(), Mockito.anyBoolean());
     }
   }
 
@@ -381,14 +379,15 @@ class CustomItemTest {
         MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(NamespacedKey.class)) {
 
       NamespacedKey resolvedKey = mock(NamespacedKey.class);
-      mockedNamespacedKey.when(() -> NamespacedKey.fromString("minecraft:sharpness"))
+      mockedNamespacedKey
+          .when(() -> NamespacedKey.fromString("minecraft:sharpness"))
           .thenReturn(resolvedKey);
 
       when(registryAdapter.resolveEnchantment(resolvedKey)).thenReturn(null);
 
-      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
-          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 5)),
-          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE, Rarity.NONE, null,
+          List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 5)), Map.of(), List.of(),
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 

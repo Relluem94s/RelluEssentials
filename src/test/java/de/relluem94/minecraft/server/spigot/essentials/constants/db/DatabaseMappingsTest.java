@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DatabaseMappingsTest {
+class DatabaseMappingsTest {
 
   @Test
   public void constructorThrowsIllegalStateException() throws Exception {
@@ -153,17 +153,17 @@ public class DatabaseMappingsTest {
   }
 
   @Test
-  public void fieldPosXHasCorrectValue() {
+  public void fieldPosxHasCorrectValue() {
     Assertions.assertEquals("x", DatabaseMappings.FIELD_POS_X);
   }
 
   @Test
-  public void fieldPosYHasCorrectValue() {
+  public void fieldPosyHasCorrectValue() {
     Assertions.assertEquals("y", DatabaseMappings.FIELD_POS_Y);
   }
 
   @Test
-  public void fieldPosZHasCorrectValue() {
+  public void fieldPoszHasCorrectValue() {
     Assertions.assertEquals("z", DatabaseMappings.FIELD_POS_Z);
   }
 

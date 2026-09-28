@@ -84,7 +84,7 @@ class CookiesTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerWhenSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerWhenSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
         TRANSLATED_MESSAGE);
@@ -96,7 +96,7 @@ class CookiesTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenOneArgAndTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerWhenOneArgAndTargetNotFound() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
@@ -137,7 +137,6 @@ class CookiesTest {
       );
     }
   }
-
 
   @Test
   void onTabCompleteReturnsEmptyListWhenSenderIsNotVip() {
@@ -215,7 +214,7 @@ class CookiesTest {
   }
 
   @Test
-  void onCommandSendsNoPlayerInReachWhenSenderIsCommandBlockWithAtPAndNoPlayerNearby() {
+  void onCommandSendsNoPlayerInReachWhenSenderIsCommandBlockWithAtpAndNoPlayerNearby() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     Block block = mock(Block.class);
     CommandBlock commandBlock = mock(CommandBlock.class);
@@ -241,7 +240,7 @@ class CookiesTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerWhenSenderIsCommandBlockWithOneArgNotAtP() {
+  void onCommandSendsNotaPlayerWhenSenderIsCommandBlockWithOneArgNotAtP() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -254,7 +253,7 @@ class CookiesTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerWhenSenderIsCommandBlockWithNoArgs() {
+  void onCommandSendsNotaPlayerWhenSenderIsCommandBlockWithNoArgs() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
 

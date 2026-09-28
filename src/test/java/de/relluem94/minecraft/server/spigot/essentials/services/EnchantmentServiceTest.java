@@ -60,7 +60,9 @@ class EnchantmentServiceTest {
   @Test
   void registerPropagatesExceptionFromRegistry() {
     String key = "test:enchantment";
-    doThrow(new RuntimeException("registry error")).when(enchantmentRegistry).register(plugin, key, enchantmentHelper);
+    doThrow(new RuntimeException("registry error"))
+        .when(enchantmentRegistry)
+        .register(plugin, key, enchantmentHelper);
 
     assertThrows(RuntimeException.class, () -> enchantmentService.register(plugin, key, enchantmentHelper));
   }
@@ -71,8 +73,8 @@ class EnchantmentServiceTest {
 
     Optional<EnchantmentHelper> result = enchantmentService.find(namespacedKey);
 
-     assertTrue(result.isPresent());
-     assertEquals(enchantmentHelper, result.get());
+    assertTrue(result.isPresent());
+    assertEquals(enchantmentHelper, result.get());
   }
 
   @Test
@@ -81,10 +83,7 @@ class EnchantmentServiceTest {
 
     Optional<EnchantmentHelper> result = enchantmentService.find(namespacedKey);
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertFalse(result.isPresent())
-    );
+    assertAll(() -> assertNotNull(result), () -> assertFalse(result.isPresent()));
   }
 
   @Test
@@ -101,11 +100,8 @@ class EnchantmentServiceTest {
 
     List<EnchantmentHelper> result = enchantmentService.findAll();
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(1, result.size()),
-        () -> assertEquals(enchantmentHelper, result.getFirst())
-    );
+    assertAll(() -> assertNotNull(result), () -> assertEquals(1, result.size()),
+        () -> assertEquals(enchantmentHelper, result.getFirst()));
   }
 
   @Test
@@ -131,10 +127,7 @@ class EnchantmentServiceTest {
 
     Optional<EnchantmentHelper> result = enchantmentService.findByBookItemStack(itemStack);
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertFalse(result.isPresent())
-    );
+    assertAll(() -> assertNotNull(result), () -> assertFalse(result.isPresent()));
   }
 
   @Test
@@ -153,7 +146,9 @@ class EnchantmentServiceTest {
 
   @Test
   void clearPropagatesExceptionFromRegistry() {
-    doThrow(new RuntimeException("clear error")).when(enchantmentRegistry).clear();
+    doThrow(new RuntimeException("clear error"))
+        .when(enchantmentRegistry)
+        .clear();
 
     assertThrows(RuntimeException.class, () -> enchantmentService.clear());
   }

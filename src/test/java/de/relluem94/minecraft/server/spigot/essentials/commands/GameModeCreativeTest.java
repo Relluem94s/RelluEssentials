@@ -98,7 +98,7 @@ class GameModeCreativeTest {
   }
 
   @Test
-  void onCommandSendsTargetNotAPlayerWhenOneArgAndTargetNotFound() {
+  void onCommandSendsTargetNotaPlayerWhenOneArgAndTargetNotFound() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serverService.getPlayer(targetName)).thenReturn(null);
@@ -112,7 +112,7 @@ class GameModeCreativeTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerWhenNoArgsAndSenderIsNotPlayer() {
+  void onCommandSendsNotaPlayerWhenNoArgsAndSenderIsNotPlayer() {
     CommandSender nonPlayerSender = mock(CommandSender.class);
     when(groupService.isSenderAuthorized(nonPlayerSender, "mod")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
