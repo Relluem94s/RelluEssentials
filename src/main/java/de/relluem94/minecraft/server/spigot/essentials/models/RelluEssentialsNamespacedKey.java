@@ -4,6 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/**
+ * Represents a namespaced key used in RelluEssentials.
+ *
+ * @author rellu
+ */
+@SuppressWarnings("ClassCanBeRecord")
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
