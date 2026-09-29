@@ -2,17 +2,15 @@ package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
- * Represents a single bag type configuration entry loaded from the plugin configuration.
- * Holds metadata such as display name, cost, and the names assigned to each inventory slot.
+ * Represents a single bag type configuration entry loaded from the plugin configuration. Holds metadata such as display
+ * name, cost, and the names assigned to each inventory slot.
  *
  * @author rellu
  */
-@Getter
-@Setter
+@Data
 public class BagTypeEntry {
 
   private int id;

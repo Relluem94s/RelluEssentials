@@ -2,8 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * Represents a bag entry stored in the database, holding metadata, ownership information,
@@ -11,9 +10,7 @@ import lombok.Setter;
  *
  * @author rellu
  */
-
-@Setter
-@Getter
+@Data
 public class BagEntry {
 
   private int id;

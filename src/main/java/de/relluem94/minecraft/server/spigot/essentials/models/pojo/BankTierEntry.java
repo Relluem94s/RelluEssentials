@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a single bank tier configuration entry.
@@ -11,8 +11,8 @@ import lombok.Setter;
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class BankTierEntry {
 
   private int id;
