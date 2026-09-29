@@ -6,6 +6,8 @@ import org.bukkit.inventory.Inventory;
  * Defines the contract for creating GUI inventories used by the Banker NPC.
  *
  * @author rellu
+ * @version 4.0
+ * @since 2.0
  */
 public interface BankerGui {
 

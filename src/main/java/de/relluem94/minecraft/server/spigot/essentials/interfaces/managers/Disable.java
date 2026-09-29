@@ -19,6 +19,10 @@ import org.bukkit.plugin.Plugin;
  *     }
  * }
  * }</pre>
+ *
+ * @author rellu
+ * @version 1.0
+ * @since 4.4
  */
 public interface Disable {
 

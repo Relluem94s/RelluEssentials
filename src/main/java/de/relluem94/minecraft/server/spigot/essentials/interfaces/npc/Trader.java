@@ -11,6 +11,8 @@ import org.bukkit.inventory.Inventory;
  * profession and functional type.
  *
  * @author rellu
+ * @version 4.0
+ * @since 2.0
  */
 public interface Trader {
 
