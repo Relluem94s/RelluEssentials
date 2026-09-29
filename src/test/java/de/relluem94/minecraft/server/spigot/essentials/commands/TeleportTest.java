@@ -260,7 +260,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandSendsInvalidWhenThreeArgsAndXIsNotInt() {
+  void onCommandSendsInvalidWhenThreeArgsAndXaxisIsNotInt() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_INVALID)).thenReturn(TRANSLATED_MESSAGE);
@@ -463,7 +463,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandDoesNotTeleportWhenYCoordinateIsNotInt() {
+  void onCommandDoesNotTeleportWhenYaxisCoordinateIsNotInt() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 
@@ -474,7 +474,7 @@ class TeleportTest {
   }
 
   @Test
-  void onCommandDoesNotTeleportWhenZCoordinateIsNotInt() {
+  void onCommandDoesNotTeleportWhenZaxisCoordinateIsNotInt() {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
 

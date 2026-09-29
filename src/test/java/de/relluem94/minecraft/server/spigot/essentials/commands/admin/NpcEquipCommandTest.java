@@ -260,7 +260,7 @@ class NpcEquipCommandTest {
     UUID npcId = UUID.fromString(VALID_UUID_STRING);
     UUID entityUuid = UUID.randomUUID();
     Npc npc = new Npc(1, npcId, "TestNpc", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(entityUuid);
+    npc.setEntityUuid(entityUuid);
     Inventory inventoryMock = mock(Inventory.class);
 
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);

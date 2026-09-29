@@ -98,7 +98,7 @@ class NpcEquipmentInventoryCloseListenerTest {
   void onInventoryCloseUnregistersListenerWhenPlayerAndInventoryMatch() {
     when(inventoryCloseEvent.getPlayer()).thenReturn(closingPlayer);
     when(inventoryCloseEvent.getInventory()).thenReturn(equipmentInventory);
-    when(targetNpc.getEntityUUID()).thenReturn(null);
+    when(targetNpc.getEntityUuid()).thenReturn(null);
 
     listener.onInventoryClose(inventoryCloseEvent);
 
@@ -109,7 +109,7 @@ class NpcEquipmentInventoryCloseListenerTest {
   void onInventoryCloseSavesNpcInventoryWhenPlayerAndInventoryMatch() {
     when(inventoryCloseEvent.getPlayer()).thenReturn(closingPlayer);
     when(inventoryCloseEvent.getInventory()).thenReturn(equipmentInventory);
-    when(targetNpc.getEntityUUID()).thenReturn(null);
+    when(targetNpc.getEntityUuid()).thenReturn(null);
 
     listener.onInventoryClose(inventoryCloseEvent);
 
@@ -118,22 +118,22 @@ class NpcEquipmentInventoryCloseListenerTest {
 
   @Test
   void onInventoryCloseAppliesEquipmentToEntityWhenEntityUuidIsPresent() {
-    UUID entityUUID = UUID.randomUUID();
+    UUID entityUuid = UUID.randomUUID();
     when(inventoryCloseEvent.getPlayer()).thenReturn(closingPlayer);
     when(inventoryCloseEvent.getInventory()).thenReturn(equipmentInventory);
-    when(targetNpc.getEntityUUID()).thenReturn(entityUUID);
+    when(targetNpc.getEntityUuid()).thenReturn(entityUuid);
 
     listener.onInventoryClose(inventoryCloseEvent);
 
     npcEquipmentInventoryHelperMockedStatic.verify(() ->
-        NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory, entityUUID));
+        NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory, entityUuid));
   }
 
   @Test
   void onInventoryCloseSkipsApplyEquipmentWhenEntityUuidIsNull() {
     when(inventoryCloseEvent.getPlayer()).thenReturn(closingPlayer);
     when(inventoryCloseEvent.getInventory()).thenReturn(equipmentInventory);
-    when(targetNpc.getEntityUUID()).thenReturn(null);
+    when(targetNpc.getEntityUuid()).thenReturn(null);
 
     listener.onInventoryClose(inventoryCloseEvent);
 
@@ -142,16 +142,16 @@ class NpcEquipmentInventoryCloseListenerTest {
 
   @Test
   void onInventoryCloseExecutesFullSequenceWhenAllConditionsMet() {
-    UUID entityUUID = UUID.randomUUID();
+    UUID entityUuid = UUID.randomUUID();
     when(inventoryCloseEvent.getPlayer()).thenReturn(closingPlayer);
     when(inventoryCloseEvent.getInventory()).thenReturn(equipmentInventory);
-    when(targetNpc.getEntityUUID()).thenReturn(entityUUID);
+    when(targetNpc.getEntityUuid()).thenReturn(entityUuid);
 
     listener.onInventoryClose(inventoryCloseEvent);
 
     handlerListMockedStatic.verify(() -> HandlerList.unregisterAll(listener));
     verify(npcService).saveNpcInventory(targetNpc, equipmentInventory);
     npcEquipmentInventoryHelperMockedStatic.verify(() ->
-        NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory, entityUUID));
+        NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory, entityUuid));
   }
 }

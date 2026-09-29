@@ -71,9 +71,9 @@ public class NpcEquipmentInventoryCloseListener implements Listener {
 
     serviceContext.getNpcService().saveNpcInventory(targetNpc, event.getInventory());
 
-    if (targetNpc.getEntityUUID() != null) {
+    if (targetNpc.getEntityUuid() != null) {
       NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(event.getInventory(),
-          targetNpc.getEntityUUID());
+          targetNpc.getEntityUuid());
     }
   }
 }

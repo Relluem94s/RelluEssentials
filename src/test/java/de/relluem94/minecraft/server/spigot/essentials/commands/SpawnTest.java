@@ -208,7 +208,7 @@ class SpawnTest {
   }
 
   @Test
-  void onCommandSendsNoPlayerInReachMessageWhenCommandBlockUsesAtPAndNoNearestPlayer() {
+  void onCommandSendsNoPlayerInReachMessageWhenCommandBlockUsesAtPlayerAndNoNearestPlayer() {
     BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
     Block block = mock(Block.class);
     CommandBlock commandBlock = mock(CommandBlock.class);

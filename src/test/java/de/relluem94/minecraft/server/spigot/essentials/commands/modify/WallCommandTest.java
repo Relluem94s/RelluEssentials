@@ -223,11 +223,11 @@ class WallCommandTest {
   }
 
   @Test
-  void executeWithBlockOnMinZWallAddsToHistory() {
+  void executeWithBlockOnMinZaxisWallAddsToHistory() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block minZWallBlock = buildBlock(Material.AIR, 2, 65, 0);
+    Block minZaxisWallBlock = buildBlock(Material.AIR, 2, 65, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -237,7 +237,7 @@ class WallCommandTest {
               de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
-            consumer.accept(minZWallBlock);
+            consumer.accept(minZaxisWallBlock);
             return null;
           });
 
@@ -248,11 +248,11 @@ class WallCommandTest {
   }
 
   @Test
-  void executeWithBlockOnMaxZWallAddsToHistory() {
+  void executeWithBlockOnMaxZaxisWallAddsToHistory() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block maxZWallBlock = buildBlock(Material.AIR, 2, 65, 4);
+    Block maxZaxisWallBlock = buildBlock(Material.AIR, 2, 65, 4);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -262,7 +262,7 @@ class WallCommandTest {
               de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
-            consumer.accept(maxZWallBlock);
+            consumer.accept(maxZaxisWallBlock);
             return null;
           });
 

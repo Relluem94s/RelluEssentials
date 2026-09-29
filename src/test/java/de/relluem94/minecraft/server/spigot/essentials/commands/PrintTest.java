@@ -149,7 +149,7 @@ class PrintTest {
   }
 
   @Test
-  void onCommandReplacesAtPSelectorWithNearestPlayerFromCommandBlock() {
+  void onCommandReplacesAtPlayerSelectorWithNearestPlayerFromCommandBlock() {
     BlockCommandSender sender = mock(BlockCommandSender.class);
     when(sender.getName()).thenReturn("@CommandBlock");
 
@@ -181,7 +181,7 @@ class PrintTest {
   }
 
   @Test
-  void onCommandSendsNoPlayerInReachMessageWhenAtPSelectorFindsNoPlayer() {
+  void onCommandSendsNoPlayerInReachMessageWhenAtPlayerSelectorFindsNoPlayer() {
     BlockCommandSender sender = mock(BlockCommandSender.class);
     when(sender.getName()).thenReturn("@CommandBlock");
 

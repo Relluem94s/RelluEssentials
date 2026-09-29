@@ -69,7 +69,7 @@ class ProtectionHelperTest {
   }
 
   @Test
-  void hasFlagReturnsTrueWhenFlagStoredAsJSONArray() {
+  void hasFlagReturnsTrueWhenFlagStoredAsJsonArray() {
     JSONArray flagArray = new JSONArray();
     flagArray.put(ProtectionFlags.AUTO_CLOSE.name());
     JSONObject flags = new JSONObject();
@@ -208,7 +208,7 @@ class ProtectionHelperTest {
   }
 
   @Test
-  void getLocationFromBlockAlternateForDoorAdjustsYWhenDoorIsTopHalf() {
+  void getLocationFromBlockAlternateForDoorAdjustsYaxisWhenDoorIsTopHalf() {
     Location location = new Location(world, 1, 2, 3);
     when(block.getLocation()).thenReturn(location);
     when(door.getHalf()).thenReturn(Half.TOP);
@@ -223,7 +223,7 @@ class ProtectionHelperTest {
   }
 
   @Test
-  void getLocationFromBlockAlternateForDoorDoesNotAdjustYWhenDoorIsBottomHalf() {
+  void getLocationFromBlockAlternateForDoorDoesNotAdjustYaxisWhenDoorIsBottomHalf() {
     Location location = new Location(world, 1, 2, 3);
     when(block.getLocation()).thenReturn(location);
     when(door.getHalf()).thenReturn(Half.BOTTOM);

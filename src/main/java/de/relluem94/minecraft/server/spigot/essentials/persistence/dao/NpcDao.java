@@ -34,7 +34,7 @@ public class NpcDao {
   public List<NpcEntry> findAll() {
     return queryExecutor.queryList("getCustomNPCs.sql",
         _ -> {},
-        NpcMapper::mapNPC);
+        NpcMapper::mapNpc);
   }
 
   /**
@@ -46,7 +46,7 @@ public class NpcDao {
   public NpcEntry findByUuid(UUID uuid) {
     return queryExecutor.querySingle("getCustomNPCByUuid.sql",
         ps -> ps.setString(1, uuid.toString()),
-        NpcMapper::mapNPC);
+        NpcMapper::mapNpc);
   }
 
   /**

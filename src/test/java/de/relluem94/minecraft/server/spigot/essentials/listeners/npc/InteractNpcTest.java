@@ -117,7 +117,7 @@ class InteractNpcTest {
     UUID mannequinUuid = UUID.randomUUID();
 
     Npc npc = new Npc(1, npcId, "TestNpc", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(mannequinUuid);
+    npc.setEntityUuid(mannequinUuid);
     npc.setDialogueLines(List.of());
 
     when(event.getRightClicked()).thenReturn(mannequin);
@@ -143,7 +143,7 @@ class InteractNpcTest {
     dialogueEntry.setText("Hello traveler!");
 
     Npc npc = new Npc(1, npcId, "Gandalf", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(mannequinUuid);
+    npc.setEntityUuid(mannequinUuid);
     npc.setDialogueLines(List.of(dialogueEntry));
 
     when(event.getRightClicked()).thenReturn(mannequin);
@@ -172,7 +172,7 @@ class InteractNpcTest {
     dialogueEntry.setText("Hello again!");
 
     Npc npc = new Npc(1, npcId, "Merlin", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(mannequinUuid);
+    npc.setEntityUuid(mannequinUuid);
     npc.setDialogueLines(List.of(dialogueEntry));
 
     when(event.getRightClicked()).thenReturn(mannequin);
@@ -207,7 +207,7 @@ class InteractNpcTest {
     secondEntry.setText("Second line");
 
     Npc npc = new Npc(1, npcId, "Narrator", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(mannequinUuid);
+    npc.setEntityUuid(mannequinUuid);
     npc.setDialogueLines(List.of(firstEntry, secondEntry));
 
     when(event.getRightClicked()).thenReturn(mannequin);
@@ -238,7 +238,7 @@ class InteractNpcTest {
     dialogueEntry.setText("Greetings!");
 
     Npc npc = new Npc(1, npcId, "Guard", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(mannequinUuid);
+    npc.setEntityUuid(mannequinUuid);
     npc.setDialogueLines(List.of(dialogueEntry));
 
     PlayerInteractEntityEvent secondEvent = mock(PlayerInteractEntityEvent.class);

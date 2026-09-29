@@ -9,4 +9,5 @@
   <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*Tests\.java"/>
   <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*IT\.java"/>
   <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*ITCase\.java"/>
+  <suppress checks="MemberName" files=".*[\\/]models[\\/]Npc\.java"/>
 </suppressions>

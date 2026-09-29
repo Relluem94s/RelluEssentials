@@ -151,7 +151,7 @@ class SudoTest {
   }
 
   @Test
-  void onCommandSendsWrongSubCommandWhenMoreThanOneArgAndNotACommand() {
+  void onCommandSendsWrongSubCommandWhenMoreThanOneArgAndNotAnCommand() {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND)).thenReturn(TRANSLATED_MESSAGE);

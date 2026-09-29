@@ -77,7 +77,7 @@ public class InteractNpc implements ListenerConstruct {
     lastInteractionTimestamp.put(playerUuid, now);
 
     Optional<Npc> matchedNpc = serviceContext.getNpcService().getNpcs().stream()
-        .filter(npc -> clickedMannequin.getUniqueId().equals(npc.getEntityUUID())).findFirst();
+        .filter(npc -> clickedMannequin.getUniqueId().equals(npc.getEntityUuid())).findFirst();
 
     if (matchedNpc.isEmpty()) {
       return;
