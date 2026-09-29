@@ -7,6 +7,9 @@ package de.relluem94.minecraft.server.spigot.essentials.exceptions;
  * custom input was not provided or found.</p>
  *
  * @author rellu
+ * @version 2.0
+ * @since 1.30
+ *
  */
 public class SignMissingCustomInputException extends Exception {
 
