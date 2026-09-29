@@ -81,7 +81,7 @@ class SettingMapperTest {
   }
 
   @Test
-  void mapSettingPropagatesSQLExceptionWhenResultSetThrows() throws SQLException {
+  void mapSettingPropagatesSqlExceptionWhenResultSetThrows() throws SQLException {
     when(resultSet.getTimestamp("UPDATED")).thenThrow(new SQLException("connection lost"));
 
     assertThrows(SQLException.class, () -> SettingMapper.mapSetting(resultSet));

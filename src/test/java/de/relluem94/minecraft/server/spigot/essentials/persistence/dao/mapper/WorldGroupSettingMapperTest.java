@@ -109,7 +109,7 @@ class WorldGroupSettingMapperTest {
   }
 
   @Test
-  void mapWorldGroupSettingPropagatesSQLException() throws SQLException {
+  void mapWorldGroupSettingPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
 
     assertThrows(SQLException.class, () -> WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService));

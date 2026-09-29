@@ -316,7 +316,7 @@ class TranslationServiceTest {
   }
 
   @Test
-  void loadLanguagesLogsErrorWhenLanguageFileThrowsIOException() throws IOException {
+  void loadLanguagesLogsErrorWhenLanguageFileThrowsException() throws IOException {
     InputStream brokenStream = mock(InputStream.class);
     when(brokenStream.read(any(), anyInt(), anyInt())).thenThrow(
         new IOException("Simulated read error"));

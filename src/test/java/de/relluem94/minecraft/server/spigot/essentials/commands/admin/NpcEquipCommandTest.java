@@ -104,7 +104,7 @@ class NpcEquipCommandTest {
   }
 
   @Test
-  void executeSendsInvalidIdMessageWhenNpcIdIsNotValidUUID() {
+  void executeSendsInvalidIdMessageWhenNpcIdIsNotValidUuid() {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID)).thenReturn(TRANSLATED_MESSAGE);
 
@@ -128,7 +128,7 @@ class NpcEquipCommandTest {
   }
 
   @Test
-  void executeOpensEquipmentInventoryWhenNpcExistsWithoutInventoryAndWithoutEntityUUID() {
+  void executeOpensEquipmentInventoryWhenNpcExistsWithoutInventoryAndWithoutEntityUuid() {
     UUID npcId = UUID.fromString(VALID_UUID_STRING);
     Npc npc = new Npc(1, npcId, "TestNpc", 0, 0, 0, 0f, 0f, "world");
     Inventory inventoryMock = mock(Inventory.class);
@@ -256,11 +256,11 @@ class NpcEquipCommandTest {
   }
 
   @Test
-  void executeCallsLoadEntityEquipmentIntoInventoryWhenNpcHasEntityUUID() {
+  void executeCallsLoadEntityEquipmentIntoInventoryWhenNpcHasEntityUuid() {
     UUID npcId = UUID.fromString(VALID_UUID_STRING);
-    UUID entityUUID = UUID.randomUUID();
+    UUID entityUuid = UUID.randomUUID();
     Npc npc = new Npc(1, npcId, "TestNpc", 0, 0, 0, 0f, 0f, "world");
-    npc.setEntityUUID(entityUUID);
+    npc.setEntityUUID(entityUuid);
     Inventory inventoryMock = mock(Inventory.class);
 
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
@@ -273,7 +273,7 @@ class NpcEquipCommandTest {
     try (var mockedNpcEquipmentHelper = org.mockito.Mockito.mockStatic(NpcEquipmentInventoryHelper.class)) {
       npcEquipCommand.execute(player, new String[]{"npc", "equip", VALID_UUID_STRING});
 
-      mockedNpcEquipmentHelper.verify(() -> NpcEquipmentInventoryHelper.loadEntityEquipmentIntoInventory(eq(entityUUID), eq(inventoryMock)));
+      mockedNpcEquipmentHelper.verify(() -> NpcEquipmentInventoryHelper.loadEntityEquipmentIntoInventory(eq(entityUuid), eq(inventoryMock)));
     }
   }
 }

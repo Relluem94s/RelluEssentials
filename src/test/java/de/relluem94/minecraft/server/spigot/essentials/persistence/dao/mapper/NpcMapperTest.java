@@ -52,7 +52,7 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCMapsAllFieldsIncludingEntityUuidAndUpdatedBy() throws SQLException {
+  void mapNpcMapsAllFieldsIncludingEntityUuidAndUpdatedBy() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
     UUID entityUuid = UUID.randomUUID();
     String inventoryJson = "{\"key\":\"value\"}";
@@ -93,7 +93,7 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCMapsNullInventoryAsNull() throws SQLException {
+  void mapNpcMapsNullInventoryAsNull() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
 
     when(resultSet.getInt(FIELD_ID)).thenReturn(1);
@@ -120,7 +120,7 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCPropagatesSQLException() throws SQLException {
+  void mapNpcPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
     assertThrows(SQLException.class, () -> NpcMapper.mapNPC(resultSet));

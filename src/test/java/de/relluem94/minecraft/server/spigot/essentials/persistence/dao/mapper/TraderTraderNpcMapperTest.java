@@ -86,7 +86,7 @@ class TraderTraderNpcMapperTest {
   }
 
   @Test
-  void mapNpcPropagatesSQLException() throws SQLException {
+  void mapNpcPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
     assertThrows(SQLException.class, () -> TraderNpcMapper.mapNpc(resultSet, PROFESSION_RESOLVER));

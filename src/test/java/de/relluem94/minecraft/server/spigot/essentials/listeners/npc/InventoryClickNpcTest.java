@@ -155,8 +155,8 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenClickerIsNotPlayerDoesNothing() {
     InventoryClickEvent event = mock(InventoryClickEvent.class);
-    HumanEntity notAPlayer = mock(HumanEntity.class);
-    when(event.getWhoClicked()).thenReturn(notAPlayer);
+    HumanEntity notAnPlayer = mock(HumanEntity.class);
+    when(event.getWhoClicked()).thenReturn(notAnPlayer);
 
     listener.onInventoryClickItem(event);
 
@@ -374,7 +374,7 @@ class InventoryClickNpcTest {
   }
 
   @Test
-  void handleBankerInventoryWhenClickedItemMatchesDepositOpensDepositGUI() {
+  void handleBankerInventoryWhenClickedItemMatchesDepositOpensDepositGui() {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry();
     BankAccountEntry bankAccount = buildBankAccount();
@@ -444,7 +444,7 @@ class InventoryClickNpcTest {
   }
 
   @Test
-  void handleBankerInventoryWhenClickedItemMatchesBalanceOpensBalanceGUI() {
+  void handleBankerInventoryWhenClickedItemMatchesBalanceOpensBalanceGui() {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry();
     BankAccountEntry bankAccount = buildBankAccount();
@@ -481,7 +481,7 @@ class InventoryClickNpcTest {
   }
 
   @Test
-  void handleBankerInventoryWhenClickedItemMatchesWithdrawOpensWithdrawGUI() {
+  void handleBankerInventoryWhenClickedItemMatchesWithdrawOpensWithdrawGui() {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry();
     BankAccountEntry bankAccount = buildBankAccount();
@@ -618,7 +618,7 @@ class InventoryClickNpcTest {
   }
 
   @Test
-  void handleBankerInventoryWhenClickedItemMatchesUpgradeItemOpensUpgradeGUI() {
+  void handleBankerInventoryWhenClickedItemMatchesUpgradeItemOpensUpgradeGui() {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry();
     BankAccountEntry bankAccount = buildBankAccount();

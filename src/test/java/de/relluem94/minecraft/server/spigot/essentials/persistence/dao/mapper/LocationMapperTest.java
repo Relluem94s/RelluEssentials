@@ -115,7 +115,7 @@ class LocationMapperTest {
   }
 
   @Test
-  void mapLocationPropagatesSQLException() throws SQLException {
+  void mapLocationPropagatesSqlException() throws SQLException {
     locationTypeService = buildServiceWith(List.of());
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
     assertThrows(SQLException.class, () -> LocationMapper.mapLocation(resultSet, locationTypeService));
@@ -132,7 +132,7 @@ class LocationMapperTest {
   }
 
   @Test
-  void mapLocationTypePropagatesSQLException() throws SQLException {
+  void mapLocationTypePropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
     assertThrows(SQLException.class, () -> LocationMapper.mapLocationType(resultSet));
   }

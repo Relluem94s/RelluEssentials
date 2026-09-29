@@ -105,7 +105,7 @@ class PlayerMapperTest {
   }
 
   @Test
-  void mapPlayerPropagatesSQLException() throws SQLException {
+  void mapPlayerPropagatesSqlException() throws SQLException {
     QueryExecutor queryExecutor = mock(QueryExecutor.class);
 
     when(queryExecutor.queryList(any(), any(), any())).thenReturn(List.of());
@@ -144,7 +144,7 @@ class PlayerMapperTest {
   }
 
   @Test
-  void mapPlayerPartnerPropagatesSQLException() throws SQLException {
+  void mapPlayerPartnerPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> PlayerMapper.mapPlayerPartner(resultSet));
   }
@@ -162,7 +162,7 @@ class PlayerMapperTest {
   }
 
   @Test
-  void mapGroupPropagatesSQLException() throws SQLException {
+  void mapGroupPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> PlayerMapper.mapGroup(resultSet));
   }

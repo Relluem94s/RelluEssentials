@@ -4,9 +4,9 @@
   "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 
 <suppressions>
-  <suppress checks="LineLength" files=".*[\\/]test[\\/].*\.java"/>
-  <suppress checks="LineLength" files=".*Test\.java"/>
-  <suppress checks="LineLength" files=".*Tests\.java"/>
-  <suppress checks="LineLength" files=".*IT\.java"/>
-  <suppress checks="LineLength" files=".*ITCase\.java"/>
+  <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*[\\/]test[\\/].*\.java"/>
+  <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*Test\.java"/>
+  <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*Tests\.java"/>
+  <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*IT\.java"/>
+  <suppress checks="LineLength|VariableDeclarationUsageDistance" files=".*ITCase\.java"/>
 </suppressions>

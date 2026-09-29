@@ -68,7 +68,7 @@ class MiscMapperTest {
   }
 
   @Test
-  void mapPluginInformationPropagatesSQLException() throws SQLException {
+  void mapPluginInformationPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> MiscMapper.mapPluginInformation(resultSet));
   }
@@ -95,7 +95,7 @@ class MiscMapperTest {
   }
 
   @Test
-  void mapCropPropagatesSQLException() throws SQLException {
+  void mapCropPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> MiscMapper.mapCrop(resultSet));
   }
@@ -120,7 +120,7 @@ class MiscMapperTest {
   }
 
   @Test
-  void mapDropPropagatesSQLException() throws SQLException {
+  void mapDropPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> MiscMapper.mapDrop(resultSet));
   }
