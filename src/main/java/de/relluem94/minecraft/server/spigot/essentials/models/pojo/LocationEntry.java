@@ -1,9 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
 import java.util.Objects;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -12,9 +11,8 @@ import org.bukkit.Location;
  *
  * @author rellu
  */
-@Setter
-@Getter
-@EqualsAndHashCode
+@Data
+@NoArgsConstructor
 public class LocationEntry {
 
   private int id;
@@ -44,7 +42,9 @@ public class LocationEntry {
    * @param location the location to extract data from
    */
   public void setLocation(Location location) {
-    this.world = Objects.requireNonNull(location.getWorld()).getName();
+    this.world = Objects
+        .requireNonNull(location.getWorld())
+        .getName();
     this.x = location.getX();
     this.y = location.getY();
     this.z = location.getZ();

@@ -3,15 +3,22 @@ package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NonNull;
 
 /**
+ * Represents a stored player profile in the Essentials plugin.
+ *
+ * <p>A PlayerEntry holds persistent metadata about a Minecraft player, including
+ * audit information (creation, update and deletion data), economic balance,
+ * group membership, current state flags (AFK, flying), homes and death locations,
+ * partner information, and state-specific parameters.</p>
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class PlayerEntry {
 
   private int id;
@@ -36,31 +43,33 @@ public class PlayerEntry {
 
   private boolean hasToBeUpdated = false;
 
-  public PlayerEntry() {
-  }
-
-  public PlayerEntry(PlayerEntry pe) {
-    setAfk(pe.isAfk());
-    setCreated(pe.getCreated());
-    setCreatedBy(pe.getCreatedBy());
-    setUpdated(pe.getUpdated());
-    setUpdatedBy(pe.getUpdatedBy());
-    setCustomName(pe.getCustomName());
-    setDeleted(pe.getDeleted());
-    setDeletedBy(pe.getDeletedBy());
-    setPurse(pe.getPurse());
-    setUuid(pe.getUuid());
-    setGroup(pe.getGroup());
-    setAfk(pe.isAfk());
-    setName(pe.getName());
-    setCustomName(pe.getCustomName());
-    setHasToBeUpdated(pe.isHasToBeUpdated());
-    setDeaths(pe.getDeaths());
-    setFlying(pe.isFlying());
-    setHomes(pe.getHomes());
-    setId(pe.getId());
-    setPlayerState(pe.getPlayerState());
-    setPlayerStateParameter(pe.getPlayerStateParameter());
-    setPartner(pe.getPartner());
+  /**
+   * Creates a new PlayerEntry by copying all properties from the given source entry.
+   * This constructor is useful for creating modified snapshots or detached copies
+   * of an existing player profile.
+   *
+   * @param sourcePlayerEntry the player entry whose values are copied into this instance
+   */
+  public PlayerEntry(@NonNull PlayerEntry sourcePlayerEntry) {
+    setId(sourcePlayerEntry.getId());
+    setCreated(sourcePlayerEntry.getCreated());
+    setCreatedBy(sourcePlayerEntry.getCreatedBy());
+    setUpdated(sourcePlayerEntry.getUpdated());
+    setUpdatedBy(sourcePlayerEntry.getUpdatedBy());
+    setDeleted(sourcePlayerEntry.getDeleted());
+    setDeletedBy(sourcePlayerEntry.getDeletedBy());
+    setPurse(sourcePlayerEntry.getPurse());
+    setUuid(sourcePlayerEntry.getUuid());
+    setGroup(sourcePlayerEntry.getGroup());
+    setAfk(sourcePlayerEntry.isAfk());
+    setName(sourcePlayerEntry.getName());
+    setCustomName(sourcePlayerEntry.getCustomName());
+    setHasToBeUpdated(sourcePlayerEntry.isHasToBeUpdated());
+    setFlying(sourcePlayerEntry.isFlying());
+    setHomes(sourcePlayerEntry.getHomes());
+    setDeaths(sourcePlayerEntry.getDeaths());
+    setPlayerState(sourcePlayerEntry.getPlayerState());
+    setPlayerStateParameter(sourcePlayerEntry.getPlayerStateParameter());
+    setPartner(sourcePlayerEntry.getPartner());
   }
 }

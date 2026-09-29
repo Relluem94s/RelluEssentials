@@ -4,6 +4,13 @@ import java.util.UUID;
 import lombok.Data;
 import org.json.JSONObject;
 
+/**
+ * Represents a persistent non-player character entry including identification,
+ * profile information, inventory data, world location and creator metadata.
+ *
+ * @author rellu
+ */
+@SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
 @Data
 public class NpcEntry {
 

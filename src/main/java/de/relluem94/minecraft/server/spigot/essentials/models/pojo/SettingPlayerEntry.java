@@ -1,12 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+/**
+ * Represents a persisted player-specific setting entry including
+ * audit metadata and a reference to the related setting definition.
+ *
+ * @author rellu
+ */
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingPlayerEntry {
