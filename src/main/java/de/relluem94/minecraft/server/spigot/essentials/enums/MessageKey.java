@@ -6,6 +6,8 @@ import lombok.Getter;
  * Enum representing all message keys used to retrieve localized messages from configuration files.
  *
  * @author rellu
+ * @version 2.0
+ * @since 4.4
  */
 @Getter
 public enum MessageKey {

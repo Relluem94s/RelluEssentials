@@ -4,6 +4,14 @@ import lombok.Getter;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Enumeration of coin rewards associated with Bukkit {@link EntityType} values.
+ * Each constant represents a specific entity type and the amount of coins granted for it.
+ *
+ * @author rellu
+ * @version 6.0
+ * @since 1.40
+ */
 @SuppressWarnings("SpellCheckingInspection")
 @Getter
 public enum EntityCoins {
@@ -173,6 +181,13 @@ public enum EntityCoins {
     this.coins = coins;
   }
 
+  /**
+   * Resolves the corresponding {@link EntityCoins} constant for the given Bukkit {@link EntityType}.
+   * If the entity type has no explicit mapping in this enumeration, {@link #UNKNOWN} is returned.
+   *
+   * @param type the Bukkit entity type to resolve, never {@code null}
+   * @return the matching {@link EntityCoins} constant, or {@link #UNKNOWN} if no mapping exists
+   */
   public static EntityCoins from(@NotNull EntityType type) {
     try {
       return EntityCoins.valueOf(type.name());
