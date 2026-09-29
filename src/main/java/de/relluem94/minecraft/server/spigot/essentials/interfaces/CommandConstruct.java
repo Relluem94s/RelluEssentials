@@ -36,13 +36,21 @@ public interface CommandConstruct extends CommandExecutor, TabCompleter {
    * <p>By default, this returns an empty {@link Optional}, meaning the command has no sub-commands.
    * Override this method to provide a registry when sub-commands are needed.</p>
    *
-   * @return an {@link Optional} wrapping the {@link SubCommandRegistry}, or
-   * {@link Optional#empty()} if none exists
+   * @return an {@link Optional} wrapping the {@link SubCommandRegistry}, or {@link Optional#empty()} if none exists
    */
   default Optional<SubCommandRegistry<?>> getSubCommandRegistry() {
     return Optional.empty();
   }
 
+  /**
+   * Injects the shared {@link ServiceContext} into this command.
+   *
+   * <p>This method is called by the plugin infrastructure to provide access to core services,
+   * registries, and configuration before the command starts handling executions.</p>
+   *
+   * @param context the service context providing access to shared services and configuration
+   *                required by this command
+   */
   void injectContext(ServiceContext context);
 
 }

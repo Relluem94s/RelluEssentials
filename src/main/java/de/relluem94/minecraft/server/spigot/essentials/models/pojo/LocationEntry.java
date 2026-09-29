@@ -11,6 +11,7 @@ import org.bukkit.Location;
  *
  * @author rellu
  */
+@SuppressWarnings("checkstyle:GoogleNonConstantFieldName")
 @Data
 @NoArgsConstructor
 public class LocationEntry {
