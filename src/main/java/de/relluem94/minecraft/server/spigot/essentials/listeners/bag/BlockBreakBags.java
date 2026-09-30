@@ -146,14 +146,11 @@ public class BlockBreakBags implements ListenerConstruct {
           dropCount++;
         }
 
-        // TODO: TEST IF THIS IS OKAY TO REMOVE!
-        //  if (!m.equals(Material.AIR) && dropCount > 0) {
         e.setCancelled(true);
         Item item = e.getBlock().getWorld()
             .dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
         EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, dropCount);
         serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
-        // }
       }
     }
   }
