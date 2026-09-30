@@ -26,9 +26,9 @@ import org.jspecify.annotations.Nullable;
  *
  * <p>Supports teleporting to players, to specific coordinates, and sending teleport requests
  * that require acceptance. Handles both direct teleportation for authorized users and request-based
- * teleportation for standard users.
+ * teleportation for standard users.</p>
  *
- * <p>Subcommands:
+ * <p>Subcommands:</p>
  * <ul>
  *   <li>{@code /teleport <player>} – Teleports the sender to the target player or
  *   sends a request.</li>
@@ -38,6 +38,8 @@ import org.jspecify.annotations.Nullable;
  *   <li>{@code /teleport <x> <y> <z>} – Teleports the sender to the given
  *   coordinates (mod only).</li>
  * </ul>
+ *
+ * @author rellu
  */
 @CommandName("teleport")
 public class Teleport implements CommandConstruct {
@@ -105,7 +107,7 @@ public class Teleport implements CommandConstruct {
   /**
    * Teleports the target player to the given player's location.
    *
-   * <p>Saves a back point for the target player before teleporting and notifies the target.
+   * <p>Saves a back point for the target player before teleporting and notifies the target.</p>
    *
    * @param p the player whose location is the teleport destination
    * @param t the player being teleported
@@ -121,7 +123,7 @@ public class Teleport implements CommandConstruct {
    * Teleports the requesting player to the target player's location.
    *
    * <p>Saves a back point for the requesting player before teleporting
-   * and notifies both players.
+   * and notifies both players.</p>
    *
    * @param p the player being teleported to the target
    * @param t the target player whose location is the destination
@@ -139,7 +141,7 @@ public class Teleport implements CommandConstruct {
    * Handles execution of the teleport command.
    *
    * <p>Validates that the sender is a player and is authorized. Delegates to the appropriate
-   * teleport behavior based on the provided arguments.
+   * teleport behavior based on the provided arguments.</p>
    *
    * @param sender  the entity executing the command
    * @param command the command that was executed
@@ -292,7 +294,7 @@ public class Teleport implements CommandConstruct {
    * Provides tab completion suggestions for the teleport command.
    *
    * <p>Returns available subcommands and online player names based on the current input.
-   * Returns an empty list if the sender is not an authorized player.
+   * Returns an empty list if the sender is not an authorized player.</p>
    *
    * @param commandSender the entity requesting tab completion
    * @param command       the command being completed
