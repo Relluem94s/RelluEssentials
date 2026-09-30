@@ -13,5 +13,11 @@
       </list>
     </option>
   </component>
+  <component name="ProjectResources">
+    <resource url="http://checkstyle.org/dtds/configuration_1_3.dtd" location="$PROJECT_DIR$" />
+    <resource url="http://checkstyle.org/dtds/suppressions_1_2.dtd" location="$PROJECT_DIR$" />
+    <resource url="https://checkstyle.org/dtds/configuration_1_3.dtd" location="$PROJECT_DIR$" />
+    <resource url="https://checkstyle.org/dtds/suppressions_1_2.dtd" location="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_25" project-jdk-name="25" project-jdk-type="JavaSDK" />
 </project>

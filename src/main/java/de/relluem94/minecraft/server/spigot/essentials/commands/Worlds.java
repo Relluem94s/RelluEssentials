@@ -1,33 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCmdBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
-import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.block.CommandBlock;
@@ -35,42 +26,20 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command handler for world management operations.
+ *
+ * <p>Provides functionality to teleport between worlds, list loaded worlds,
+ * load, unload and create worlds. Also supports command block execution targeting the nearest
+ * player.</p>
+ */
 @CommandName("world")
 public class Worlds implements CommandConstruct {
 
   private ServiceContext serviceContext;
-
-  public static void openWorldMenu(Player p, ItemService itemService, PluginMetadataService pluginMetadataService) {
-    org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(18,
-            Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        itemService.find(
-                new RelluEssentialsNamespacedKey(pluginMetadataService.getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-            .orElseThrow()
-            .toItemStack()
-    );
-
-    for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
-      ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
-      ItemMeta im = is.getItemMeta();
-
-      if (im == null) {
-        return;
-      }
-
-      im.setDisplayName(Bukkit.getWorlds().get(i).getName());
-
-      is.setItemMeta(im);
-      inv.setItem(i, is);
-    }
-
-    InventoryHelper.openInventory(p, inv);
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
@@ -80,17 +49,14 @@ public class Worlds implements CommandConstruct {
   @Override
   public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
-    if (isCMDBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(
-        Commands.LIST.getName())
-        && args[1].equals("@p")) {
+    if (isCmdBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(
+        Commands.LIST.getName()) && args[1].equals("@p")) {
       BlockCommandSender bcs = (BlockCommandSender) commandSender;
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        commandSender.sendMessage(
-            String.format(serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER),
-                "No Player in Reach"));
+        commandSender.sendMessage(String.format(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), "No Player in Reach"));
         return true;
       }
 
@@ -113,15 +79,11 @@ public class Worlds implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO,
-              Commands.LIST.getName(),
-              Commands.LOAD.getName(),
-              Commands.UNLOAD.getName(),
-              Commands.UNLOAD_NO_SAVE.getName(),
-              Commands.CREATE.getName()
-          ));
-      openWorldMenu(p, serviceContext.getItemService(), serviceContext.getPluginMetadataService());
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_INFO, Commands.LIST.getName(),
+              Commands.LOAD.getName(), Commands.UNLOAD.getName(), Commands.UNLOAD_NO_SAVE.getName(),
+              Commands.CREATE.getName()));
+      serviceContext.getWorldMenuService().openWorldMenu(p);
       return true;
     }
 
@@ -139,7 +101,8 @@ public class Worlds implements CommandConstruct {
 
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
-      Bukkit.getWorlds().forEach(w -> p.sendMessage(w.getName()));
+      serviceContext.getPluginMetadataService().getPlugin().getServer().getWorlds()
+          .forEach(w -> p.sendMessage(w.getName()));
       return true;
     }
 
@@ -189,10 +152,9 @@ public class Worlds implements CommandConstruct {
   }
 
   private boolean isValidWorldEnvironment(String input) {
-    return Arrays.stream(World.Environment.values())
-        .filter(env -> env.name().equalsIgnoreCase(input))
-        .findFirst()
-        .orElse(null) != null;
+    return
+        Arrays.stream(World.Environment.values()).filter(env -> env.name().equalsIgnoreCase(input))
+            .findFirst().orElse(null) != null;
   }
 
   private void createWorld(Player p, String @NotNull [] args) {
@@ -213,15 +175,13 @@ public class Worlds implements CommandConstruct {
   private void unloadWorld(@NotNull Player p, String name, boolean save) {
     try {
       WorldHelper.unloadWorld(name, save);
-      p.sendMessage(save
-          ? serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)
-          : serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
+      p.sendMessage(save ? serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD) : serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
     } catch (WorldNotLoadedException ex) {
-      Logger.getLogger(Worlds.class.getName())
-          .log(Level.SEVERE, serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
-              ex);
+      Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE,
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
+          ex);
     }
   }
 
@@ -231,7 +191,7 @@ public class Worlds implements CommandConstruct {
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
@@ -244,14 +204,16 @@ public class Worlds implements CommandConstruct {
     if (strings.length == 1) {
       List<String> tabList = new ArrayList<>();
       tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-      tabList.addAll(TabCompleterHelper.getWorlds());
+      tabList.addAll(
+          serviceContext.getServerService().getWorlds().stream().map(World::getName).toList());
       return tabList;
 
     }
 
     if (strings.length == 2) {
       if (Commands.UNLOAD.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorlds();
+        return serviceContext.getServerService().getWorlds().stream().map(World::getName)
+            .collect(Collectors.toList());
       }
 
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {
@@ -280,13 +242,12 @@ public class Worlds implements CommandConstruct {
     return new ArrayList<>();
   }
 
+  /**
+   * Enumeration of all available sub-commands for the {@code /world} command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
-    CREATE("create"),
-    LOAD("load"),
-    LIST("list"),
-    UNLOAD("unload"),
-    UNLOAD_NO_SAVE("unloadNoSave");
+    CREATE("create"), LOAD("load"), LIST("list"), UNLOAD("unload"), UNLOAD_NO_SAVE("unloadNoSave");
 
     private final String name;
     private final String[] subCommands;

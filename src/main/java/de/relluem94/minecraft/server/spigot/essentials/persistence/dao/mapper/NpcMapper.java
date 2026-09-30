@@ -25,13 +25,25 @@ import java.util.List;
 import java.util.UUID;
 import org.json.JSONObject;
 
+/**
+ * Maps NPC data between database rows, persistence entries, and domain objects.
+ *
+ * @author rellu
+ */
 public class NpcMapper {
 
   private NpcMapper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static NpcEntry mapNPC(ResultSet rs) throws SQLException {
+  /**
+   * Maps the current result set row to an NPC persistence entry.
+   *
+   * @param rs the result set positioned at the NPC row
+   * @return the mapped NPC entry
+   * @throws SQLException if a database field cannot be read
+   */
+  public static NpcEntry mapNpc(ResultSet rs) throws SQLException {
     NpcEntry entry = new NpcEntry();
     entry.setId(rs.getInt(FIELD_ID));
     entry.setUuid(UUID.fromString(rs.getString(FIELD_UUID)));
@@ -59,6 +71,14 @@ public class NpcMapper {
     return entry;
   }
 
+  /**
+   * Creates a persistence entry from an NPC and records the acting player as its
+   * creator and updater.
+   *
+   * @param npc the NPC to convert
+   * @param actorPlayerId the database ID of the acting player
+   * @return the NPC persistence entry
+   */
   public static NpcEntry toEntry(Npc npc, int actorPlayerId) {
     NpcEntry entry = new NpcEntry();
     entry.setUuid(npc.getId());
@@ -72,20 +92,33 @@ public class NpcMapper {
     entry.setPitch(npc.getPitch());
     entry.setCreatedBy(actorPlayerId);
     entry.setUpdatedBy(actorPlayerId);
-    if (npc.getEntityUUID() != null) {
-      entry.setEntityUuid(npc.getEntityUUID());
+    if (npc.getEntityUuid() != null) {
+      entry.setEntityUuid(npc.getEntityUuid());
     }
     return entry;
   }
 
+  /**
+   * Creates an NPC domain object from a persistence entry.
+   *
+   * @param entry the NPC persistence entry
+   * @return the NPC domain object
+   */
   public static Npc toDomain(NpcEntry entry) {
     Npc npc = new Npc(entry.getId(), entry.getUuid(), entry.getProfileName(), entry.getX(),
         entry.getY(), entry.getZ(), entry.getYaw(), entry.getPitch(), entry.getWorld());
-    npc.setEntityUUID(entry.getEntityUuid());
+    npc.setEntityUuid(entry.getEntityUuid());
     npc.setInventory(entry.getInventory());
     return npc;
   }
 
+  /**
+   * Creates an NPC domain object and assigns its dialogue lines.
+   *
+   * @param entry the NPC persistence entry
+   * @param dialogueLines the dialogue lines to assign
+   * @return the NPC domain object with its dialogue lines
+   */
   public static Npc toDomain(NpcEntry entry, List<NpcDialogueEntry> dialogueLines) {
     Npc npc = toDomain(entry);
     npc.setDialogueLines(dialogueLines);

@@ -1,26 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Represents a permission or role group with an identifier, name, and chat prefix.
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupEntry {
 
   private int id;
   private String name;
   private String prefix;
-
-  public GroupEntry() {
-  }
-
-  public GroupEntry(int id, String name, String prefix) {
-    this.id = id;
-    this.name = name;
-    this.prefix = prefix;
-  }
 }

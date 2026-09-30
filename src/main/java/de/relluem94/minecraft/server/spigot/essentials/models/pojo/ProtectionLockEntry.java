@@ -1,15 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 
 /**
+ * Represents a single protection lock entry containing auditing metadata
+ * and the protected material value.
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class ProtectionLockEntry {
 
   private int id;

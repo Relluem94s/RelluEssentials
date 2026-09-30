@@ -26,7 +26,6 @@ class ClipboardCommandTest {
   private ClipboardCommand clipboardCommand;
   private ClipboardService clipboardService;
 
-
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
@@ -43,14 +42,14 @@ class ClipboardCommandTest {
   }
 
   @Test
-  void execute_withNoClipboardEntry_sendsNoClipboardMessage() {
+  void executeWithNoClipboardEntrySendsNoClipboardMessage() {
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
     verify(player).sendMessage(anyString());
   }
 
   @Test
-  void execute_withNullClipboardList_sendsNoClipboardMessage() {
+  void executeWithNullClipboardListSendsNoClipboardMessage() {
     Selection selectionMock = mock(Selection.class);
     clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, null));
 
@@ -60,7 +59,7 @@ class ClipboardCommandTest {
   }
 
   @Test
-  void execute_withEmptyClipboardList_sendsNoClipboardMessage() {
+  void executeWithEmptyClipboardListSendsNoClipboardMessage() {
     Selection selectionMock = mock(Selection.class);
     clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, List.of()));
 
@@ -70,7 +69,7 @@ class ClipboardCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_rotatesAndUpdatesClipboard() {
+  void executeWithValidClipboardRotatesAndUpdatesClipboard() {
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
@@ -94,27 +93,27 @@ class ClipboardCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert clipboardCommand.matches(new String[]{"clipboard", "rotate"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !clipboardCommand.matches(new String[]{"clipboard", "flip"});
   }
 
   @Test
-  void matches_withWrongCommand_returnsFalse() {
+  void matchesWithWrongCommandReturnsFalse() {
     assert !clipboardCommand.matches(new String[]{"set", "rotate"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !clipboardCommand.matches(new String[]{"clipboard"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !clipboardCommand.matches(new String[]{"clipboard", "rotate", "extra"});
   }
 }

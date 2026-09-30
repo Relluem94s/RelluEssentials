@@ -3,7 +3,14 @@ package de.relluem94.minecraft.server.spigot.essentials.enums;
 import java.util.UUID;
 import lombok.Getter;
 
-@SuppressWarnings({"unused", "SpellCheckingInspection"})
+/**
+ * Holds Custom Heads.
+ *
+ * @author rellu
+ * @version 2.0
+ * @since 2.2
+ */
+@SuppressWarnings({"unused", "SpellCheckingInspection", "CheckStyle"})
 public enum CustomHeads {
 
   BOOKS1("GoodBook1", "2565e12a-e70b-4f64-9398-7d0f108eb53a",
@@ -131,7 +138,6 @@ public enum CustomHeads {
   LOVE("Villager in Love", UUID.randomUUID().toString(),
       "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmMzOTAxMTQ4Y2VmODYyNzI5OTkxNGY4MjA2NDk4ODI5ODFiM2JlMmI2YjQzNTg1YTk2YzdiMGFkMTA5MGI5YSJ9fX0=");
 
-
   @Getter
   private final String name;
   private final String uuid;
@@ -144,8 +150,7 @@ public enum CustomHeads {
     this.base64 = base64;
   }
 
-  public UUID getUUID() {
+  public UUID getUuid() {
     return UUID.fromString(uuid);
   }
-
 }

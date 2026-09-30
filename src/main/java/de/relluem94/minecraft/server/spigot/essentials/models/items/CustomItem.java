@@ -2,13 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.models.items;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -30,11 +30,13 @@ import org.bukkit.persistence.PersistentDataType;
  * @param persistentData               A map of persistent data (NamespacedKey and value).
  * @param metaModifiers                A list of functions to apply custom logic to the ItemMeta.
  * @param relluEssentialsNamespacedKey The unique identifier for this item in the registry.
+ * @param registryAdapter              The adapter used to resolve Bukkit registry entries.
  */
 public record CustomItem(Material material, int amount, String displayName, List<String> lore,
                          Type type, Rarity rarity, Integer cost, List<EnchantmentData> enchantments,
                          Map<String, Object> persistentData, List<Consumer<ItemMeta>> metaModifiers,
-                         RelluEssentialsNamespacedKey relluEssentialsNamespacedKey) {
+                         RelluEssentialsNamespacedKey relluEssentialsNamespacedKey,
+                         BukkitRegistryAdapter registryAdapter) {
 
   /**
    * Converts this data model into a Bukkit ItemStack, applying all properties including
@@ -73,7 +75,7 @@ public record CustomItem(Material material, int amount, String displayName, List
       for (EnchantmentData enchantment : enchantments) {
         NamespacedKey enchantmentKey = NamespacedKey.fromString(enchantment.key());
         if (enchantmentKey != null) {
-          Enchantment bukkitEnchantment = Registry.ENCHANTMENT.get(enchantmentKey);
+          Enchantment bukkitEnchantment = registryAdapter.resolveEnchantment(enchantmentKey);
           if (bukkitEnchantment != null) {
             meta.addEnchant(bukkitEnchantment, enchantment.level(), true);
           }

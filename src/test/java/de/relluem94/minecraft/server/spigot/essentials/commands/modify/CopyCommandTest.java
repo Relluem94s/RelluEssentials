@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getRelativeCopySelection;
@@ -18,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
@@ -28,16 +28,17 @@ import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 class CopyCommandTest {
-
 
   private Player player;
   private SelectionService selectionService;
@@ -45,30 +46,34 @@ class CopyCommandTest {
   private ClipboardService clipboardService;
   private ServiceContext serviceContext;
 
-
-
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
     clipboardService = new ClipboardService();
-    SchedulerService schedulerService = mock(SchedulerService.class);
-
-    ProtectionService protectionServiceMock = mock(ProtectionService.class);
+    PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+    Plugin plugin = mock(Plugin.class);
+    Server server = mock(Server.class);
 
     TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
 
     serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
+
+    SchedulerService schedulerService = mock(SchedulerService.class);
+    ProtectionService protectionServiceMock = mock(ProtectionService.class);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
-
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
 
     Location playerLocation = mock(Location.class);
     Location clonedLocation = mock(Location.class);
@@ -80,7 +85,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_copy_withNoSelection_abortsEarly() {
+  void executeCopyWithNoSelectionAbortsEarly() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     when(selectionService.resolve(player)).thenReturn(null);
 
@@ -90,7 +95,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_cut_withNoSelection_abortsEarly() {
+  void executeCutWithNoSelectionAbortsEarly() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     when(selectionService.resolve(player)).thenReturn(null);
 
@@ -100,14 +105,14 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_copy_withValidSelection_storesClipboardAndSendsMessage() {
+  void executeCopyWithValidSelectionStoresClipboardAndSendsMessage() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
     clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, clipboardList));
 
-    Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
+    Selection selection = buildSelection();
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block blockA = buildBlock(Material.STONE, 0, 0, 0);
@@ -136,14 +141,14 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_cut_withValidSelection_clearsBlocksAndAddsHistory() {
+  void executeCutWithValidSelectionClearsBlocksAndAddsHistory() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
     clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, clipboardList));
 
-    Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
+    Selection selection = buildSelection();
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block blockA = buildBlock(Material.STONE, 0, 0, 0);
@@ -163,7 +168,6 @@ class CopyCommandTest {
       modifyHelper.when(() -> getRelativeCopySelection(any(), any())).thenReturn(selection);
       modifyHelper.when(() -> getModifyClipboardEntry(any(), any(), any()))
           .thenReturn(mock(ModifyClipboardEntry.class));
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       cutCommand.execute(player, new String[]{"cut"});
 
@@ -173,53 +177,53 @@ class CopyCommandTest {
   }
 
   @Test
-  void matches_copy_withCorrectArgs_returnsTrue() {
+  void matchesCopyWithCorrectArgsReturnsTrue() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert copyCommand.matches(new String[]{"copy"});
   }
 
   @Test
-  void matches_cut_withCorrectArgs_returnsTrue() {
+  void matchesCutWithCorrectArgsReturnsTrue() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert cutCommand.matches(new String[]{"cut"});
   }
 
   @Test
-  void matches_copy_withWrongCommand_returnsFalse() {
+  void matchesCopyWithWrongCommandReturnsFalse() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert !copyCommand.matches(new String[]{"cut"});
   }
 
   @Test
-  void matches_cut_withWrongCommand_returnsFalse() {
+  void matchesCutWithWrongCommandReturnsFalse() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert !cutCommand.matches(new String[]{"copy"});
   }
 
   @Test
-  void matches_copy_withTooManyArgs_returnsFalse() {
+  void matchesCopyWithTooManyArgsReturnsFalse() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert !copyCommand.matches(new String[]{"copy", "extra"});
   }
 
   @Test
-  void matches_cut_withTooManyArgs_returnsFalse() {
+  void matchesCutWithTooManyArgsReturnsFalse() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert !cutCommand.matches(new String[]{"cut", "extra"});
   }
 
-  private Selection buildSelection(int x1, int y1, int z1, int x2, int y2, int z2) {
+  private Selection buildSelection() {
     World world = mock(World.class);
     Location pos1 = mock(Location.class);
     Location pos2 = mock(Location.class);
     when(pos1.getWorld()).thenReturn(world);
     when(pos2.getWorld()).thenReturn(world);
-    when(pos1.getBlockX()).thenReturn(x1);
-    when(pos1.getBlockY()).thenReturn(y1);
-    when(pos1.getBlockZ()).thenReturn(z1);
-    when(pos2.getBlockX()).thenReturn(x2);
-    when(pos2.getBlockY()).thenReturn(y2);
-    when(pos2.getBlockZ()).thenReturn(z2);
+    when(pos1.getBlockX()).thenReturn(0);
+    when(pos1.getBlockY()).thenReturn(0);
+    when(pos1.getBlockZ()).thenReturn(0);
+    when(pos2.getBlockX()).thenReturn(1);
+    when(pos2.getBlockY()).thenReturn(1);
+    when(pos2.getBlockZ()).thenReturn(1);
     return new Selection(pos1, pos2);
   }
 

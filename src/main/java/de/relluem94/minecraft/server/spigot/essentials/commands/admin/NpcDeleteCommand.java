@@ -10,6 +10,12 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command implementation that handles the deletion of an existing NPC. Validates the sender's permissions, parses
+ * the provided NPC UUID and delegates the deletion to the NPC service.
+ *
+ * @author rellu
+ */
 public class NpcDeleteCommand implements SubCommand {
 
   private static final int ARGS_SUBCOMMAND_INDEX = 0;
@@ -19,20 +25,29 @@ public class NpcDeleteCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new NpcDeleteCommand with the given service context.
+   *
+   * @param context the service context providing access to group, translation, player and NPC services
+   */
   public NpcDeleteCommand(ServiceContext context) {
     this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
-      player.sendMessage(serviceContext.getTranslationService()
+    if (!serviceContext
+        .getGroupService()
+        .isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_LENGTH) {
-      player.sendMessage(serviceContext.getTranslationService()
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_DELETE_USAGE));
       return;
     }
@@ -41,31 +56,40 @@ public class NpcDeleteCommand implements SubCommand {
     try {
       npcId = UUID.fromString(args[ARGS_ID_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
+      player.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
-    PlayerEntry playerEntry = serviceContext.getPlayerService()
+    PlayerEntry playerEntry = serviceContext
+        .getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = serviceContext.getNpcService()
+    NpcOperationResult result = serviceContext
+        .getNpcService()
         .deleteNpc(npcId, playerEntry.getId());
 
     if (!result.isSuccessful()) {
-      player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND)
-              + " "
-              + result.getErrorMessage());
+      player.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_OPERATION_FAILED) + " " + serviceContext
+          .getTranslationService()
+          .get(result
+              .getValidationResult()
+              .messageKey(), result
+              .getValidationResult()
+              .params()));
       return;
     }
 
-    player.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_DELETED));
+    player.sendMessage(serviceContext
+        .getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_NPC_DELETED));
   }
 
   @Override
   public boolean matches(String @NonNull [] args) {
-    return args.length >= 2
-        && Admin.Commands.NPC.getName().equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX])
-        && "delete".equalsIgnoreCase(args[ARGS_ACTION_INDEX]);
+    return args.length >= 2 && Admin.Commands.NPC
+        .getName()
+        .equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX]) && "delete".equalsIgnoreCase(args[ARGS_ACTION_INDEX]);
   }
 }

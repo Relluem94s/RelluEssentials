@@ -9,32 +9,34 @@ import org.junit.jupiter.api.Test;
 
 class OfflinePlayerEntryTest {
 
-    private OfflinePlayerEntry offlinePlayerEntry;
+  private OfflinePlayerEntry offlinePlayerEntry;
 
-    @BeforeEach
-    void setUp() {
-        offlinePlayerEntry = new OfflinePlayerEntry();
-    }
+  @BeforeEach
+  void setUp() {
+    offlinePlayerEntry = new OfflinePlayerEntry();
+  }
 
-    @Test
-    void shouldSetAndGetId() {
-        UUID uuid = UUID.randomUUID();
-        offlinePlayerEntry.setId(uuid);
-        assertEquals(uuid, offlinePlayerEntry.getId());
-    }
+  @Test
+  void shouldSetAndGetId() {
+    UUID uuid = UUID.randomUUID();
+    offlinePlayerEntry.setId(uuid);
+    assertEquals(uuid, offlinePlayerEntry.getId());
+  }
 
-    @Test
-    void shouldSetAndGetName() {
-        offlinePlayerEntry.setName("TestPlayer");
-        assertEquals("TestPlayer", offlinePlayerEntry.getName());
-    }
+  @Test
+  void shouldSetAndGetName() {
+    offlinePlayerEntry.setName("TestPlayer");
+    assertEquals("TestPlayer", offlinePlayerEntry.getName());
+  }
 
-    @Test
-    void shouldSetAndGetProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("key", "value");
-        offlinePlayerEntry.setProperties(properties);
-        assertEquals(properties, offlinePlayerEntry.getProperties());
-        assertEquals("value", offlinePlayerEntry.getProperties().getProperty("key"));
-    }
+  @Test
+  void shouldSetAndGetProperties() {
+    Properties properties = new Properties();
+    properties.setProperty("key", "value");
+    offlinePlayerEntry.setProperties(properties);
+    assertEquals(properties, offlinePlayerEntry.getProperties());
+    assertEquals("value", offlinePlayerEntry
+        .getProperties()
+        .getProperty("key"));
+  }
 }

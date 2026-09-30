@@ -14,7 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
@@ -76,7 +78,7 @@ class SettingPlayerMapperTest {
         () -> assertEquals("2024-12-01", result.getDeleted()),
         () -> assertEquals(4, result.getDeletedBy()),
         () -> assertEquals(100, result.getPlayerFk()),
-        () -> assertEquals(true, result.isValue()),
+        () -> assertTrue(result.isValue()),
         () -> assertEquals(settingFk, result.getSettingFk()),
         () -> assertNotNull(result.getSettingEntry()),
         () -> assertEquals(expectedSettingEntry, result.getSettingEntry())
@@ -103,12 +105,12 @@ class SettingPlayerMapperTest {
 
     assertAll(
         () -> assertEquals(settingFk, result.getSettingFk()),
-        () -> assertEquals(null, result.getSettingEntry())
+        () -> assertNull(result.getSettingEntry())
     );
   }
 
   @Test
-  void mapSettingPlayerPropagatesSQLException() throws SQLException {
+  void mapSettingPlayerPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
     assertThrows(SQLException.class, () -> SettingPlayerMapper.mapSettingPlayer(resultSet, settingService));
   }

@@ -2,6 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.enums;
 
 import lombok.Getter;
 
+/**
+ * Enum representing all message keys used to retrieve localized messages from configuration files.
+ *
+ * @author rellu
+ * @version 2.0
+ * @since 4.4
+ */
 @Getter
 public enum MessageKey {
   PLUGIN_MANAGER_START_MESSAGE("plugin.manager.start_message"),
@@ -90,7 +97,8 @@ public enum MessageKey {
   COMMAND_ADMIN_CLEAN_PROTECTIONS("command.admin.clean_protections"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_START("command.admin.clean_protections_start"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP("command.admin.clean_protections_cleaning_up"),
-  COMMAND_ADMIN_CLEAN_PROTECTIONS_OUTDATED_REMOVED("command.admin.clean_protections_outdated_removed"),
+  COMMAND_ADMIN_CLEAN_PROTECTIONS_OUTDATED_REMOVED(
+      "command.admin.clean_protections_outdated_removed"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_END("command.admin.clean_protections_end"),
   COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END("command.admin.clean_old_protections_end"),
   COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END("command.admin.clean_old_locations_end"),
@@ -376,7 +384,14 @@ public enum MessageKey {
   PLUGIN_EVENT_POSITION_AXE_FIRST_RESET("plugin.event.position_axe.first_reset"),
   PLUGIN_EVENT_POSITION_AXE_SECOND_RESET("plugin.event.position_axe.second_reset"),
   PLUGIN_EVENT_POSITION_AXE_FIRST_SET("plugin.event.position_axe.first_set"),
-  PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set");
+  PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_EMPTY("plugin.npc.validation.profile_name_empty"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_LENGTH("plugin.npc.validation.profile_name_length"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS("plugin.npc.validation.profile_name_invalid_characters"),
+  PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_x_coordinate_out_of_bounds"),
+  PLUGIN_NPC_VALIDATION_NPC_Y_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_y_coordinate_out_of_bounds"),
+  PLUGIN_NPC_VALIDATION_NPC_Z_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_z_coordinate_out_of_bounds"),
+  PLUGIN_NPC_ERROR_NPC_NOT_FOUND("plugin.npc.error.npc_not_found");
 
   private final String key;
 

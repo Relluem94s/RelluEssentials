@@ -1,14 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Represents metadata and configuration information for the essentials plugin, including MOTD content, tab header and
+ * footer, and audit attributes.
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class PluginInformationEntry {
 
   private int id;

@@ -7,6 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
 /**
+ * Represents a single modification entry for a clipboard operation.
+ * Each entry describes which block should be placed at a specific location,
+ * including the target material and its detailed block data.
  *
  * @author rellu
  */

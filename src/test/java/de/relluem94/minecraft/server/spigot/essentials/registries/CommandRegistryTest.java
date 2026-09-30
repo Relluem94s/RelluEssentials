@@ -3,7 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.registration.CommandWrapper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class CommandRegistryTest {
     List<CommandWrapper> allCommands = commandRegistry.getAll();
 
     assertEquals(1, allCommands.size());
-    assertEquals(commandWrapperOne, allCommands.get(0));
+    assertEquals(commandWrapperOne, allCommands.getFirst());
   }
 
   @Test
@@ -54,9 +54,7 @@ class CommandRegistryTest {
     commandRegistry.register(commandWrapperOne);
     List<CommandWrapper> allCommands = commandRegistry.getAll();
 
-    assertThrows(UnsupportedOperationException.class, () -> {
-      allCommands.add(commandWrapperTwo);
-    });
+    assertThrows(UnsupportedOperationException.class, () -> allCommands.add(commandWrapperTwo));
   }
 
   @Test

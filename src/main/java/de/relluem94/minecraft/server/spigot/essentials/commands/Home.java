@@ -15,14 +15,24 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeE
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command handler for the {@code /home} command.
+ *
+ * <p>Allows players to manage and teleport to their saved home locations and death points.
+ * Supported sub-commands are {@code set}, {@code delete}, {@code list}, and {@code tp}. When
+ * executed without arguments, the player is teleported to their bed spawn location.</p>
+ *
+ * @author rellu
+ */
 @CommandName("home")
 public class Home implements CommandConstruct {
 
@@ -55,8 +65,7 @@ public class Home implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = serviceContext.getPlayerService()
-        .getPlayerEntry(p);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
     switch (args.length) {
       case 0:
@@ -67,25 +76,20 @@ public class Home implements CommandConstruct {
           if (!pe.getHomes().isEmpty()) {
             p.sendMessage(
                 serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_HOME_LIST));
-            pe.getHomes().forEach(fle -> p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_LIST_NAME,
-                        fle.getLocationName(),
-                        serviceContext.getMessageService().locationToString(fle.getLocation()))));
+            pe.getHomes().forEach(fle -> p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_LIST_NAME, fle.getLocationName(),
+                    serviceContext.getMessageService().locationToString(fle.getLocation()))));
           } else {
             p.sendMessage(
                 serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_HOME_NONE));
           }
 
           if (!pe.getDeaths().isEmpty()) {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
-            pe.getDeaths().forEach(fle -> p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME,
-                        fle.getLocationName(),
-                        serviceContext.getMessageService().locationToString(fle.getLocation()))));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
+            pe.getDeaths().forEach(fle -> p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(),
+                    serviceContext.getMessageService().locationToString(fle.getLocation()))));
           }
         } else {
           p.sendMessage(serviceContext.getTranslationService()
@@ -105,61 +109,47 @@ public class Home implements CommandConstruct {
 
         if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
           if (homeExists(pe, le)) {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
           } else if (!args[1].startsWith("death_")) {
             serviceContext.getLocationService().save(le);
             pe.getHomes().add(le);
             p.sendMessage(serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.COMMAND_HOME_SET, args[1]));
           } else {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_RESERVED, args[1]));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_RESERVED, args[1]));
           }
           return true;
         } else if (args[0].equalsIgnoreCase(Commands.DELETE.getName())) {
           if (homeExists(pe, le)) {
-            le = getLocationEntry(pe, le);
-            pe.getHomes().remove(le);
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_DELETE, args[1]));
-
-            if (le == null) {
-              return true;
-            }
-
-            serviceContext.getLocationService().delete(le);
+            findLocationEntry(pe, le).ifPresent(entry -> {
+              pe.getHomes().remove(entry);
+              p.sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_HOME_DELETE, args[1]));
+              serviceContext.getLocationService().delete(entry);
+            });
             return true;
           } else if (deathExists(pe, le)) {
-            le = getLocationEntry(pe, le);
-            pe.getDeaths().remove(le);
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE, args[1]));
-
-            if (le == null) {
-              return true;
-            }
-
-            serviceContext.getLocationService().delete(le);
+            findLocationEntry(pe, le).ifPresent(entry -> {
+              pe.getDeaths().remove(entry);
+              p.sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE, args[1]));
+              serviceContext.getLocationService().delete(entry);
+            });
             return true;
           } else if (le.getLocationName().startsWith("death_") && le.getLocationName()
               .contains("*")) {
             for (LocationEntry dle : pe.getDeaths()) {
               p.sendMessage(serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE,
-                      dle.getLocationName()));
+                  .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
               serviceContext.getLocationService().delete(dle);
             }
             pe.getDeaths().clear();
             return true;
           } else {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
             return true;
           }
         } else if (args[0].equalsIgnoreCase(Commands.TP.getName())) {
@@ -168,19 +158,23 @@ public class Home implements CommandConstruct {
           le.setPlayerId(pe.getId());
 
           if (homeExists(pe, le) || deathExists(pe, le)) {
-            serviceContext.getTeleportService().teleportHome(p, getLocationEntry(pe, le));
+            findLocationEntry(pe, le).ifPresent(
+                entry -> serviceContext.getTeleportService().teleportHome(p, entry));
           } else {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
           }
           return true;
+        } else {
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         }
-        break;
+        return true;
       default:
-        break;
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        return true;
     }
-    return false;
   }
 
   private boolean homeExists(@NotNull PlayerEntry pe, LocationEntry le) {
@@ -193,23 +187,13 @@ public class Home implements CommandConstruct {
         .anyMatch(fle -> fle.getLocationName().equals(le.getLocationName()));
   }
 
-  private @Nullable LocationEntry getLocationEntry(@NotNull PlayerEntry pe, LocationEntry le) {
-    for (LocationEntry fle : pe.getHomes()) {
-      if (fle.getLocationName().equals(le.getLocationName())) {
-        return fle;
-      }
-    }
-
-    for (LocationEntry fle : pe.getDeaths()) {
-      if (fle.getLocationName().equals(le.getLocationName())) {
-        return fle;
-      }
-    }
-    return null;
+  private Optional<LocationEntry> findLocationEntry(@NotNull PlayerEntry pe, LocationEntry le) {
+    return Stream.concat(pe.getHomes().stream(), pe.getDeaths().stream())
+        .filter(fle -> fle.getLocationName().equals(le.getLocationName())).findFirst();
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
@@ -233,20 +217,21 @@ public class Home implements CommandConstruct {
       if (Commands.LIST.getName().equalsIgnoreCase(strings[0])) {
         return tabList;
       }
-      tabList.addAll(serviceContext.getPlayerService().getHomeAndDeathLocationNames((Player) commandSender));
+      tabList.addAll(
+          serviceContext.getPlayerService().getHomeAndDeathLocationNames((Player) commandSender));
       return tabList;
     }
 
     return tabList;
   }
 
+  /**
+   * Defines the available sub-commands for the {@code /home} command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
-    SET("set"),
-    DELETE("delete"),
-    LIST("list"),
-    TP("tp");
+    SET("set"), DELETE("delete"), LIST("list"), TP("tp");
 
     private final String name;
     private final String[] subCommands;

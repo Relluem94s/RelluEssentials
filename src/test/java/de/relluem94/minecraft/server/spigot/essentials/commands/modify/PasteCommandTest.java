@@ -34,7 +34,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,7 +45,6 @@ class PasteCommandTest {
   private UndoHistoryService undoHistoryService;
   private ClipboardService clipboardService;
   private SchedulerService schedulerService;
-  private ProtectionService protectionService;
   private PasteCommand pasteCommand;
 
   @BeforeEach
@@ -55,7 +53,7 @@ class PasteCommandTest {
     undoHistoryService = mock(UndoHistoryService.class);
     clipboardService = new ClipboardService();
     schedulerService = mock(SchedulerService.class);
-    protectionService = mock(ProtectionService.class);
+    ProtectionService protectionService = mock(ProtectionService.class);
 
     TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
@@ -67,7 +65,7 @@ class PasteCommandTest {
       return null;
     }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
-    Location defaultPlayerLocation = buildPlayerLocation(0, 64, 0, 0f);
+    Location defaultPlayerLocation = buildPlayerLocation();
     when(player.getLocation()).thenReturn(defaultPlayerLocation);
 
     ServiceContext serviceContext = mock(ServiceContext.class);
@@ -80,12 +78,8 @@ class PasteCommandTest {
     pasteCommand = new PasteCommand(serviceContext, 2);
   }
 
-  @AfterEach
-  void tearDown() {
-  }
-
   @Test
-  void execute_withNullClipboardStore_sendsNoClipboardMessage() {
+  void executeWithNullClipboardStoreSendsNoClipboardMessage() {
     pasteCommand.execute(player, new String[]{"paste"});
 
     verify(player).sendMessage(anyString());
@@ -93,8 +87,8 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withClipboardStoreHavingNullEntries_sendsNoClipboardMessage() {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
+  void executeWithClipboardStoreHavingNullEntriesSendsNoClipboardMessage() {
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock();
     when(clipboardStore.getSecondValue()).thenReturn(null);
     clipboardService.setClipboard(player, clipboardStore);
 
@@ -105,8 +99,8 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withEmptyClipboard_sendsNoClipboardMessage() {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
+  void executeWithEmptyClipboardSendsNoClipboardMessage() {
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock();
     when(clipboardStore.getSecondValue()).thenReturn(Collections.emptyList());
     clipboardService.setClipboard(player, clipboardStore);
 
@@ -117,13 +111,13 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_addsHistoryAndSendsStartedMessage() {
-    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+  void executeWithValidClipboardAddsHistoryAndSendsStartedMessage() {
+    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
     clipboardService.setClipboard(player, clipboardStore);
 
-    Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
+    Block targetBlock = buildBlock(Material.AIR, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
@@ -139,18 +133,18 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBatchSize_incrementsDelayAfterBatchFills() {
-    ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0, 0, 0);
-    ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1, 0, 0);
-    ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2, 0, 0);
+  void executeWithMultipleBlocksExceedingBatchSizeIncrementsDelayAfterBatchFills() {
+    ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0);
+    ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1);
+    ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2);
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
     clipboardService.setClipboard(player, clipboardStore);
 
-    Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
-    Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
-    Block thirdBlock = buildBlock(Material.AIR, 2, 64, 0);
+    Block firstBlock = buildBlock(Material.AIR, 0);
+    Block secondBlock = buildBlock(Material.AIR, 1);
+    Block thirdBlock = buildBlock(Material.AIR, 2);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
@@ -168,14 +162,14 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_savesOriginalBlockStateInHistory() {
-    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+  void executeWithValidClipboardSavesOriginalBlockStateInHistory() {
+    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
     clipboardService.setClipboard(player, clipboardStore);
 
     Material originalMaterial = Material.DIRT;
-    Block targetBlock = buildBlock(originalMaterial, 0, 64, 0);
+    Block targetBlock = buildBlock(originalMaterial, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
@@ -193,13 +187,13 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_schedulesOneTaskPerBlock() {
-    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+  void executeWithValidClipboardSchedulesOneTaskPerBlock() {
+    ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
     clipboardService.setClipboard(player, clipboardStore);
 
-    Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
+    Block targetBlock = buildBlock(Material.AIR, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
@@ -214,18 +208,18 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBatchSize_schedulesOneTaskPerBlock() {
-    ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0, 0, 0);
-    ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1, 0, 0);
-    ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2, 0, 0);
+  void executeWithMultipleBlocksExceedingBatchSizeSchedulesOneTaskPerBlock() {
+    ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0);
+    ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1);
+    ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2);
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
     clipboardService.setClipboard(player, clipboardStore);
 
-    Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
-    Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
-    Block thirdBlock = buildBlock(Material.AIR, 2, 64, 0);
+    Block firstBlock = buildBlock(Material.AIR, 0);
+    Block secondBlock = buildBlock(Material.AIR, 1);
+    Block thirdBlock = buildBlock(Material.AIR, 2);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
@@ -242,38 +236,38 @@ class PasteCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert pasteCommand.matches(new String[]{"paste"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !pasteCommand.matches(new String[]{"set"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !pasteCommand.matches(new String[]{"paste", "extra"});
   }
 
   @Test
-  void matches_withNoArgs_returnsFalse() {
+  void matchesWithNoArgsReturnsFalse() {
     assert !pasteCommand.matches(new String[]{});
   }
 
-  private Location buildPlayerLocation(int x, int y, int z, float yaw) {
+  private Location buildPlayerLocation() {
     World world = mock(World.class);
     Location location = mock(Location.class);
-    when(location.getBlockX()).thenReturn(x);
-    when(location.getBlockY()).thenReturn(y);
-    when(location.getBlockZ()).thenReturn(z);
-    when(location.getYaw()).thenReturn(yaw);
+    when(location.getBlockX()).thenReturn(0);
+    when(location.getBlockY()).thenReturn(64);
+    when(location.getBlockZ()).thenReturn(0);
+    when(location.getYaw()).thenReturn((float) 0.0);
     when(location.clone()).thenReturn(location);
     when(location.getWorld()).thenReturn(world);
     return location;
   }
 
-  private Block buildBlock(Material material, int x, int y, int z) {
+  private Block buildBlock(Material material, int x) {
     Block block = mock(Block.class);
     Location location = mock(Location.class);
     BlockData blockData = mock(BlockData.class);
@@ -281,13 +275,12 @@ class PasteCommandTest {
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(blockData);
     when(block.getX()).thenReturn(x);
-    when(block.getY()).thenReturn(y);
-    when(block.getZ()).thenReturn(z);
+    when(block.getY()).thenReturn(64);
+    when(block.getZ()).thenReturn(0);
     return block;
   }
 
-  private ModifyClipboardEntry buildClipboardEntry(Material material, int relX, int relY,
-      int relZ) {
+  private ModifyClipboardEntry buildClipboardEntry(Material material, int relX) {
     ModifyClipboardEntry entry = mock(ModifyClipboardEntry.class);
     BlockData blockData = mock(BlockData.class);
     Location location = mock(Location.class);
@@ -295,14 +288,14 @@ class PasteCommandTest {
     when(entry.getData()).thenReturn(blockData);
     when(entry.getLocation()).thenReturn(location);
     when(entry.getLocation().getBlockX()).thenReturn(relX);
-    when(entry.getLocation().getBlockY()).thenReturn(relY);
-    when(entry.getLocation().getBlockZ()).thenReturn(relZ);
+    when(entry.getLocation().getBlockY()).thenReturn(0);
+    when(entry.getLocation().getBlockZ()).thenReturn(0);
     return entry;
   }
 
   private DoubleStore<Selection, List<ModifyClipboardEntry>> buildClipboardStore(
       List<ModifyClipboardEntry> entries) {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> store = mock(DoubleStore.class);
+    DoubleStore<Selection, List<ModifyClipboardEntry>> store = mock();
     when(store.getSecondValue()).thenReturn(entries);
     return store;
   }

@@ -29,7 +29,7 @@ class NpcDialogueMapperTest {
   private ResultSet resultSet;
 
   @Test
-  void mapNPCDialogueMapsAllFieldsWhenUpdatedByIsPresent() throws SQLException {
+  void mapNpcDialogueMapsAllFieldsWhenUpdatedByIsPresent() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenReturn(1);
     when(resultSet.getInt(FIELD_LIST_POSITION)).thenReturn(2);
     when(resultSet.getString(FIELD_TEXT)).thenReturn("Hello traveler");
@@ -51,7 +51,7 @@ class NpcDialogueMapperTest {
   }
 
   @Test
-  void mapNPCDialogueMapsAllFieldsWhenUpdatedByIsNull() throws SQLException {
+  void mapNpcDialogueMapsAllFieldsWhenUpdatedByIsNull() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenReturn(5);
     when(resultSet.getInt(FIELD_LIST_POSITION)).thenReturn(3);
     when(resultSet.getString(FIELD_TEXT)).thenReturn("Farewell");
@@ -72,7 +72,7 @@ class NpcDialogueMapperTest {
   }
 
   @Test
-  void mapNPCDialoguePropagatesSQLExceptionWhenResultSetThrows() throws SQLException {
+  void mapNpcDialoguePropagatesSqlExceptionWhenResultSetThrows() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
     assertThrows(SQLException.class, () -> NpcDialogueMapper.mapNPCDialogue(resultSet));

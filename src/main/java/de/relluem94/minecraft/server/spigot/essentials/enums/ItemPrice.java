@@ -4,6 +4,14 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Represents the price configuration for all supported item types, including
+ * their buy and sell values used by the essentials economy system.
+ *
+ * @author rellu
+ * @version 6.0
+ * @since 1.40
+ */
 @SuppressWarnings("SpellCheckingInspection")
 @Getter
 public enum ItemPrice {
@@ -1675,6 +1683,15 @@ public enum ItemPrice {
     this.sellPrice = sellPrice;
   }
 
+  /**
+   * Resolves the {@link ItemPrice} for the given {@link org.bukkit.Material}
+   * based on its enum name. If no matching price configuration exists, the
+   * {@link ItemPrice#UNKNOWN} value is returned.
+   *
+   * @param type the material whose price configuration should be resolved
+   * @return the corresponding {@link ItemPrice}, or {@link ItemPrice#UNKNOWN}
+   *         if the material is not explicitly configured
+   */
   public static ItemPrice from(@NotNull Material type) {
     try {
       return ItemPrice.valueOf(type.name());

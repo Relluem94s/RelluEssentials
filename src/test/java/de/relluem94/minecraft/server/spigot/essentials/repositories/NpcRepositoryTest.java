@@ -61,7 +61,7 @@ class NpcRepositoryTest {
 
     when(npcDao.findAll()).thenReturn(entries);
     when(npcEntry.getId()).thenReturn(npcDbId);
-    when(npcDao.getNPCDialogues(npcDbId)).thenReturn(dialogues);
+    when(npcDao.findDialoguesByNpcId(npcDbId)).thenReturn(dialogues);
 
     try (MockedStatic<NpcMapper> mapperMock = mockStatic(NpcMapper.class)) {
       mapperMock.when(() -> NpcMapper.toDomain(npcEntry, dialogues)).thenReturn(npc);
@@ -71,7 +71,7 @@ class NpcRepositoryTest {
       assertAll(
           () -> assertNotNull(result),
           () -> assertEquals(1, result.size()),
-          () -> assertEquals(npc, result.get(0))
+          () -> assertEquals(npc, result.getFirst())
       );
 
       mapperMock.verify(() -> NpcMapper.toDomain(npcEntry, dialogues));
@@ -101,19 +101,17 @@ class NpcRepositoryTest {
   void loadByIdReturnsMappedNpcWhenFound() {
     List<NpcDialogueEntry> dialogues = List.of(npcDialogueEntry);
 
-    when(npcDao.getNPC(npcUuid)).thenReturn(npcEntry);
+    when(npcDao.findByUuid(npcUuid)).thenReturn(npcEntry);
     when(npcEntry.getId()).thenReturn(npcDbId);
-    when(npcDao.getNPCDialogues(npcDbId)).thenReturn(dialogues);
+    when(npcDao.findDialoguesByNpcId(npcDbId)).thenReturn(dialogues);
 
     try (MockedStatic<NpcMapper> mapperMock = mockStatic(NpcMapper.class)) {
       mapperMock.when(() -> NpcMapper.toDomain(npcEntry, dialogues)).thenReturn(npc);
 
       Optional<Npc> result = npcRepository.loadById(npcUuid);
 
-      assertAll(
-          () -> assertTrue(result.isPresent()),
-          () -> assertEquals(npc, result.get())
-      );
+      assertTrue(result.isPresent());
+      assertEquals(npc, result.get());
 
       mapperMock.verify(() -> NpcMapper.toDomain(npcEntry, dialogues));
     }
@@ -121,7 +119,7 @@ class NpcRepositoryTest {
 
   @Test
   void loadByIdReturnsEmptyWhenNotFound() {
-    when(npcDao.getNPC(npcUuid)).thenReturn(null);
+    when(npcDao.findByUuid(npcUuid)).thenReturn(null);
 
     Optional<Npc> result = npcRepository.loadById(npcUuid);
 
@@ -133,7 +131,7 @@ class NpcRepositoryTest {
 
   @Test
   void loadByIdPropagatesDaoException() {
-    when(npcDao.getNPC(npcUuid)).thenThrow(new RuntimeException("db error"));
+    when(npcDao.findByUuid(npcUuid)).thenThrow(new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> npcRepository.loadById(npcUuid));
   }
@@ -141,24 +139,24 @@ class NpcRepositoryTest {
   @Test
   void saveInsertsNewNpcWhenNotExisting() {
     when(npc.getId()).thenReturn(npcUuid);
-    when(npcDao.getNPC(npcUuid)).thenReturn(null);
-    when(npcDao.insertNPC(npcEntry)).thenReturn(npcDbId);
+    when(npcDao.findByUuid(npcUuid)).thenReturn(null);
+    when(npcDao.insertNpc(npcEntry)).thenReturn(npcDbId);
 
     try (MockedStatic<NpcMapper> mapperMock = mockStatic(NpcMapper.class)) {
       mapperMock.when(() -> NpcMapper.toEntry(npc, actorPlayerId)).thenReturn(npcEntry);
 
       npcRepository.save(npc, actorPlayerId);
 
-      verify(npcDao).insertNPC(npcEntry);
+      verify(npcDao).insertNpc(npcEntry);
       verify(npc).setDbid(npcDbId);
-      verify(npcDao, never()).updateNPC(any());
+      verify(npcDao, never()).updateNpc(any());
     }
   }
 
   @Test
   void saveUpdatesExistingNpcWhenAlreadyExists() {
     when(npc.getId()).thenReturn(npcUuid);
-    when(npcDao.getNPC(npcUuid)).thenReturn(npcEntry);
+    when(npcDao.findByUuid(npcUuid)).thenReturn(npcEntry);
     when(npcEntry.getId()).thenReturn(npcDbId);
 
     try (MockedStatic<NpcMapper> mapperMock = mockStatic(NpcMapper.class)) {
@@ -167,16 +165,16 @@ class NpcRepositoryTest {
       npcRepository.save(npc, actorPlayerId);
 
       verify(npcEntry).setId(npcDbId);
-      verify(npcDao).updateNPC(npcEntry);
+      verify(npcDao).updateNpc(npcEntry);
       verify(npc).setDbid(npcDbId);
-      verify(npcDao, never()).insertNPC(any());
+      verify(npcDao, never()).insertNpc(any());
     }
   }
 
   @Test
   void savePropagatesDaoException() {
     when(npc.getId()).thenReturn(npcUuid);
-    when(npcDao.getNPC(npcUuid)).thenThrow(new RuntimeException("db error"));
+    when(npcDao.findByUuid(npcUuid)).thenThrow(new RuntimeException("db error"));
 
     try (MockedStatic<NpcMapper> mapperMock = mockStatic(NpcMapper.class)) {
       mapperMock.when(() -> NpcMapper.toEntry(npc, actorPlayerId)).thenReturn(npcEntry);
@@ -191,14 +189,14 @@ class NpcRepositoryTest {
 
     npcRepository.delete(npcUuid, deletedByPlayerId);
 
-    verify(npcDao).deleteNPCDialogueByNpcId(npcUuid, deletedByPlayerId);
-    verify(npcDao).deleteNPC(npcUuid, deletedByPlayerId);
+    verify(npcDao).deleteNpcDialogueByNpcId(npcUuid, deletedByPlayerId);
+    verify(npcDao).deleteNpc(npcUuid, deletedByPlayerId);
   }
 
   @Test
   void deletePropagatesDaoException() {
     int deletedByPlayerId = 99;
-    doThrow(new RuntimeException("db error")).when(npcDao).deleteNPCDialogueByNpcId(npcUuid, deletedByPlayerId);
+    doThrow(new RuntimeException("db error")).when(npcDao).deleteNpcDialogueByNpcId(npcUuid, deletedByPlayerId);
 
     assertThrows(RuntimeException.class, () -> npcRepository.delete(npcUuid, deletedByPlayerId));
   }
@@ -213,7 +211,7 @@ class NpcRepositoryTest {
     assertAll(
         () -> assertNotNull(result),
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(npcDialogueEntry, result.get(0))
+        () -> assertEquals(npcDialogueEntry, result.getFirst())
     );
   }
 
@@ -228,12 +226,12 @@ class NpcRepositoryTest {
   void addDialogueDelegatesToDao() {
     npcRepository.addDialogue(npcDialogueEntry);
 
-    verify(npcDao).insertNPCDialogue(npcDialogueEntry);
+    verify(npcDao).insertNpcDialogue(npcDialogueEntry);
   }
 
   @Test
   void addDialoguePropagatesDaoException() {
-    doThrow(new RuntimeException("db error")).when(npcDao).insertNPCDialogue(npcDialogueEntry);
+    doThrow(new RuntimeException("db error")).when(npcDao).insertNpcDialogue(npcDialogueEntry);
 
     assertThrows(RuntimeException.class, () -> npcRepository.addDialogue(npcDialogueEntry));
   }
@@ -241,18 +239,18 @@ class NpcRepositoryTest {
   @Test
   void updateDialogueReturnsTrueOnSuccess() {
     UUID dialogueUuid = UUID.randomUUID();
-    when(npcDao.updateNPCDialogue(npcDialogueEntry, dialogueUuid)).thenReturn(true);
+    when(npcDao.updateNpcDialogue(npcDialogueEntry, dialogueUuid)).thenReturn(true);
 
     boolean result = npcRepository.updateDialogue(npcDialogueEntry, dialogueUuid);
 
     assertTrue(result);
-    verify(npcDao).updateNPCDialogue(npcDialogueEntry, dialogueUuid);
+    verify(npcDao).updateNpcDialogue(npcDialogueEntry, dialogueUuid);
   }
 
   @Test
   void updateDialogueReturnsFalseWhenNotUpdated() {
     UUID dialogueUuid = UUID.randomUUID();
-    when(npcDao.updateNPCDialogue(npcDialogueEntry, dialogueUuid)).thenReturn(false);
+    when(npcDao.updateNpcDialogue(npcDialogueEntry, dialogueUuid)).thenReturn(false);
 
     boolean result = npcRepository.updateDialogue(npcDialogueEntry, dialogueUuid);
 
@@ -262,7 +260,7 @@ class NpcRepositoryTest {
   @Test
   void updateDialoguePropagatesDaoException() {
     UUID dialogueUuid = UUID.randomUUID();
-    when(npcDao.updateNPCDialogue(npcDialogueEntry, dialogueUuid)).thenThrow(new RuntimeException("db error"));
+    when(npcDao.updateNpcDialogue(npcDialogueEntry, dialogueUuid)).thenThrow(new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> npcRepository.updateDialogue(npcDialogueEntry, dialogueUuid));
   }
@@ -274,14 +272,14 @@ class NpcRepositoryTest {
 
     npcRepository.deleteDialogueByPosition(npcUuid, listPosition, deletedByPlayerId);
 
-    verify(npcDao).deleteNPCDialogueById(npcUuid, listPosition, deletedByPlayerId);
+    verify(npcDao).deleteNpcDialogueById(npcUuid, listPosition, deletedByPlayerId);
   }
 
   @Test
   void deleteDialogueByPositionPropagatesDaoException() {
     int listPosition = 3;
     int deletedByPlayerId = 99;
-    doThrow(new RuntimeException("db error")).when(npcDao).deleteNPCDialogueById(npcUuid, listPosition, deletedByPlayerId);
+    doThrow(new RuntimeException("db error")).when(npcDao).deleteNpcDialogueById(npcUuid, listPosition, deletedByPlayerId);
 
     assertThrows(RuntimeException.class, () -> npcRepository.deleteDialogueByPosition(npcUuid, listPosition, deletedByPlayerId));
   }
@@ -292,13 +290,13 @@ class NpcRepositoryTest {
 
     npcRepository.deleteAllDialoguesByNpcUuid(npcUuid, deletedByPlayerId);
 
-    verify(npcDao).deleteNPCDialogueByNpcId(npcUuid, deletedByPlayerId);
+    verify(npcDao).deleteNpcDialogueByNpcId(npcUuid, deletedByPlayerId);
   }
 
   @Test
   void deleteAllDialoguesByNpcUuidPropagatesDaoException() {
     int deletedByPlayerId = 99;
-    doThrow(new RuntimeException("db error")).when(npcDao).deleteNPCDialogueByNpcId(npcUuid, deletedByPlayerId);
+    doThrow(new RuntimeException("db error")).when(npcDao).deleteNpcDialogueByNpcId(npcUuid, deletedByPlayerId);
 
     assertThrows(RuntimeException.class, () -> npcRepository.deleteAllDialoguesByNpcUuid(npcUuid, deletedByPlayerId));
   }

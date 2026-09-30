@@ -24,140 +24,130 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class CustomEnchantmentTest {
 
-    @Mock
-    private NamespacedKey namespacedKey;
+  @Mock
+  private NamespacedKey namespacedKey;
 
-    @Mock
-    private Multimap<Attribute, AttributeModifier> attributes;
+  @Mock
+  private Multimap<Attribute, AttributeModifier> attributes;
 
-    private CustomEnchantment customEnchantment;
+  private CustomEnchantment customEnchantment;
 
-    @BeforeEach
-    void setUp() {
-        customEnchantment = new CustomEnchantment(namespacedKey);
-    }
+  @BeforeEach
+  void setUp() {
+    customEnchantment = new CustomEnchantment(namespacedKey);
+  }
 
-    @Test
-    void constructorInitializesKeyCorrectly() {
-        assertAll(
-                () -> assertNotNull(customEnchantment.getKey()),
-                () -> assertEquals(namespacedKey, customEnchantment.getKey())
-        );
-    }
+  @Test
+  void constructorInitializesKeyCorrectly() {
+    assertAll(() -> assertNotNull(customEnchantment.getKey()),
+        () -> assertEquals(namespacedKey, customEnchantment.getKey()));
+  }
 
-    @Test
-    void constructorLeavesOptionalFieldsAsNull() throws Exception {
-        Field loreField = CustomEnchantment.class.getDeclaredField("lore");
-        loreField.setAccessible(true);
+  @Test
+  void constructorLeavesOptionalFieldsAsNull() throws Exception {
+    Field loreField = CustomEnchantment.class.getDeclaredField("lore");
+    loreField.setAccessible(true);
 
-        Field rarityField = CustomEnchantment.class.getDeclaredField("rarity");
-        rarityField.setAccessible(true);
+    Field rarityField = CustomEnchantment.class.getDeclaredField("rarity");
+    rarityField.setAccessible(true);
 
-        Field targetField = CustomEnchantment.class.getDeclaredField("target");
-        targetField.setAccessible(true);
+    Field targetField = CustomEnchantment.class.getDeclaredField("target");
+    targetField.setAccessible(true);
 
-        Field levelField = CustomEnchantment.class.getDeclaredField("level");
-        levelField.setAccessible(true);
+    Field levelField = CustomEnchantment.class.getDeclaredField("level");
+    levelField.setAccessible(true);
 
-        Field enchantNameField = CustomEnchantment.class.getDeclaredField("enchantName");
-        enchantNameField.setAccessible(true);
+    Field enchantNameField = CustomEnchantment.class.getDeclaredField("enchantName");
+    enchantNameField.setAccessible(true);
 
-        Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
-        attributesField.setAccessible(true);
+    Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
+    attributesField.setAccessible(true);
 
-        assertAll(
-                () -> assertNull(loreField.get(customEnchantment)),
-                () -> assertNull(rarityField.get(customEnchantment)),
-                () -> assertNull(targetField.get(customEnchantment)),
-                () -> assertNull(levelField.get(customEnchantment)),
-                () -> assertNull(enchantNameField.get(customEnchantment)),
-                () -> assertNull(attributesField.get(customEnchantment))
-        );
-    }
+    assertAll(() -> assertNull(loreField.get(customEnchantment)), () -> assertNull(rarityField.get(customEnchantment)),
+        () -> assertNull(targetField.get(customEnchantment)), () -> assertNull(levelField.get(customEnchantment)),
+        () -> assertNull(enchantNameField.get(customEnchantment)),
+        () -> assertNull(attributesField.get(customEnchantment)));
+  }
 
-    @Test
-    void constructorInitializesMultiplyAndActualLevelToDefaults() throws Exception {
-        Field multiplyField = CustomEnchantment.class.getDeclaredField("multiply");
-        multiplyField.setAccessible(true);
+  @Test
+  void constructorInitializesMultiplyAndActualLevelToDefaults() throws Exception {
+    Field multiplyField = CustomEnchantment.class.getDeclaredField("multiply");
+    multiplyField.setAccessible(true);
 
-        Field actualLevelField = CustomEnchantment.class.getDeclaredField("actualLevel");
-        actualLevelField.setAccessible(true);
+    Field actualLevelField = CustomEnchantment.class.getDeclaredField("actualLevel");
+    actualLevelField.setAccessible(true);
 
-        assertAll(
-                () -> assertEquals(0.0, (double) multiplyField.get(customEnchantment)),
-                () -> assertEquals(0, (int) actualLevelField.get(customEnchantment))
-        );
-    }
+    assertAll(() -> assertEquals(0.0, (double) multiplyField.get(customEnchantment)),
+        () -> assertEquals(0, (int) actualLevelField.get(customEnchantment)));
+  }
 
-    @Test
-    void getLoreReturnsAssignedLore() throws Exception {
-        Field loreField = CustomEnchantment.class.getDeclaredField("lore");
-        loreField.setAccessible(true);
-        loreField.set(customEnchantment, "Test Lore");
+  @Test
+  void getLoreReturnsAssignedLore() throws Exception {
+    Field loreField = CustomEnchantment.class.getDeclaredField("lore");
+    loreField.setAccessible(true);
+    loreField.set(customEnchantment, "Test Lore");
 
-        assertEquals("Test Lore", customEnchantment.getLore());
-    }
+    assertEquals("Test Lore", customEnchantment.getLore());
+  }
 
-    @Test
-    void getRarityReturnsAssignedRarity() throws Exception {
-        Field rarityField = CustomEnchantment.class.getDeclaredField("rarity");
-        rarityField.setAccessible(true);
-        rarityField.set(customEnchantment, CustomItem.Rarity.COMMON);
+  @Test
+  void getRarityReturnsAssignedRarity() throws Exception {
+    Field rarityField = CustomEnchantment.class.getDeclaredField("rarity");
+    rarityField.setAccessible(true);
+    rarityField.set(customEnchantment, CustomItem.Rarity.COMMON);
 
-        assertEquals(CustomItem.Rarity.COMMON, customEnchantment.getRarity());
-    }
+    assertEquals(CustomItem.Rarity.COMMON, customEnchantment.getRarity());
+  }
 
-    @Test
-    void getAttributesReturnsAssignedAttributes() throws Exception {
-        Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
-        attributesField.setAccessible(true);
-        attributesField.set(customEnchantment, attributes);
+  @Test
+  void getAttributesReturnsAssignedAttributes() throws Exception {
+    Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
+    attributesField.setAccessible(true);
+    attributesField.set(customEnchantment, attributes);
 
-        assertEquals(attributes, customEnchantment.getAttributes());
-    }
+    assertEquals(attributes, customEnchantment.getAttributes());
+  }
 
-    @Test
-    void getKeyReturnsNullWhenConstructedWithNull() {
-        CustomEnchantment enchantmentWithNullKey = new CustomEnchantment(null);
+  @Test
+  void getKeyReturnsNullWhenConstructedWithNull() {
+    CustomEnchantment enchantmentWithNullKey = new CustomEnchantment(null);
 
-        assertNull(enchantmentWithNullKey.getKey());
-    }
+    assertNull(enchantmentWithNullKey.getKey());
+  }
 
-    @Test
-    void constructorWithDifferentKeyStoresCorrectReference() {
-        NamespacedKey anotherKey = mock(NamespacedKey.class);
-        CustomEnchantment anotherEnchantment = new CustomEnchantment(anotherKey);
+  @Test
+  void constructorWithDifferentKeyStoresCorrectReference() {
+    NamespacedKey anotherKey = mock(NamespacedKey.class);
+    CustomEnchantment anotherEnchantment = new CustomEnchantment(anotherKey);
 
-        assertAll(
-                () -> assertEquals(anotherKey, anotherEnchantment.getKey()),
-                () -> assertNotEquals(namespacedKey, anotherEnchantment.getKey())
-        );
-    }
+    assertAll(() -> assertEquals(anotherKey, anotherEnchantment.getKey()),
+        () -> assertNotEquals(namespacedKey, anotherEnchantment.getKey()));
+  }
 
-    @Test
-    void targetFieldCanBeSetAndRetrievedViaReflection() throws Exception {
-        Field targetField = CustomEnchantment.class.getDeclaredField("target");
-        targetField.setAccessible(true);
-        targetField.set(customEnchantment, EnchantmentTarget.WEAPON);
+  @Test
+  void targetFieldCanBeSetAndRetrievedViaReflection() throws Exception {
+    Field targetField = CustomEnchantment.class.getDeclaredField("target");
+    targetField.setAccessible(true);
+    targetField.set(customEnchantment, EnchantmentTarget.WEAPON);
 
-        assertEquals(EnchantmentTarget.WEAPON, targetField.get(customEnchantment));
-    }
+    assertEquals(EnchantmentTarget.WEAPON, targetField.get(customEnchantment));
+  }
 
-    @Test
-    void multiplyFieldCanBeSetAndRetrievedViaReflection() throws Exception {
-        Field multiplyField = CustomEnchantment.class.getDeclaredField("multiply");
-        multiplyField.setAccessible(true);
-        multiplyField.set(customEnchantment, 2.5);
+  @Test
+  void multiplyFieldCanBeSetAndRetrievedViaReflection() throws Exception {
+    Field multiplyField = CustomEnchantment.class.getDeclaredField("multiply");
+    multiplyField.setAccessible(true);
+    multiplyField.set(customEnchantment, 2.5);
 
-        assertEquals(2.5, (double) multiplyField.get(customEnchantment));
-    }
+    assertEquals(2.5, (double) multiplyField.get(customEnchantment));
+  }
 
-    @Test
-    void actualLevelFieldCanBeSetAndRetrievedViaReflection() throws Exception {
-        Field actualLevelField = CustomEnchantment.class.getDeclaredField("actualLevel");
-        actualLevelField.setAccessible(true);
-        actualLevelField.set(customEnchantment, 3);
+  @Test
+  void actualLevelFieldCanBeSetAndRetrievedViaReflection() throws Exception {
+    Field actualLevelField = CustomEnchantment.class.getDeclaredField("actualLevel");
+    actualLevelField.setAccessible(true);
+    actualLevelField.set(customEnchantment, 3);
 
-        assertEquals(3, (int) actualLevelField.get(customEnchantment));
-    }
+    assertEquals(3, (int) actualLevelField.get(customEnchantment));
+  }
 }

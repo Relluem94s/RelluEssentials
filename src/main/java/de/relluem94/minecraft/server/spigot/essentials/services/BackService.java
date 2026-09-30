@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 
 /**
  * Service responsible for managing players' back locations.
+ *
+ * @author rellu
  */
 public class BackService {
 

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,13 +17,13 @@ class TraderTraderNpcEntryTest {
 
   private static final int EXPECTED_SLOT_NAMES_SIZE =
       NpcHelper.INV_SIZE - InventoryHelper.getSkipsSize();
-  private TraderNPCEntry traderNpcEntry;
+  private TraderNpcEntry traderNpcEntry;
   @Mock
   private Profession profession;
 
   @BeforeEach
   void setUp() {
-    traderNpcEntry = new TraderNPCEntry();
+    traderNpcEntry = new TraderNpcEntry();
   }
 
   @Test

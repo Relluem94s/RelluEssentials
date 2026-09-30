@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.repositories;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.TraderNpcDao;
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class TraderNpcRepository {
   /**
    * Loads all trader NPC entries from the data store.
    *
-   * @return a list of all available {@link TraderNPCEntry} records
+   * @return a list of all available {@link TraderNpcEntry} records
    */
-  public List<TraderNPCEntry> loadAll() {
+  public List<TraderNpcEntry> loadAll() {
     return traderNpcDao.findAll();
   }
 }

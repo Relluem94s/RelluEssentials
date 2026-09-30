@@ -2,23 +2,26 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
-import org.bukkit.Bukkit;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for vanishing and revealing players.
+ * Maintains a list of currently vanished players and handles visibility toggling
+ * for both the executing player and specified targets.
+ */
 @CommandName("vanish")
 public class Vanish implements CommandConstruct {
 
@@ -34,61 +37,64 @@ public class Vanish implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
       boolean canSee = !isVanished.contains(p);
 
-      for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+      for (Player onlinePlayer : serviceContext.getServerService().getOnlinePlayers()) {
         if (canSee) {
-          onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
+          onlinePlayer.hidePlayer(serviceContext.getPluginMetadataService().getPlugin(), p);
           isVanished.add(p);
         } else {
-          onlinePlayer.showPlayer(RelluEssentials.getInstance(), p);
+          onlinePlayer.showPlayer(serviceContext.getPluginMetadataService().getPlugin(), p);
           isVanished.remove(p);
         }
       }
 
       p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
-          p.getCustomName()
-      ));
+          p.getCustomName()));
 
       return true;
     }
 
-    Player target = Bukkit.getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
-      p.sendMessage(serviceContext.getTranslationService().get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      p.sendMessage(serviceContext.getTranslationService()
+          .get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
-    target.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
+    target.sendMessage(
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
 
     boolean canSee = false;
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getServerService().getOnlinePlayers()) {
       if (onlinePlayer.canSee(target)) {
-        onlinePlayer.hidePlayer(RelluEssentials.getInstance(), target);
+        onlinePlayer.hidePlayer(serviceContext.getPluginMetadataService().getPlugin(), target);
       } else {
-        onlinePlayer.showPlayer(RelluEssentials.getInstance(), target);
+        onlinePlayer.showPlayer(serviceContext.getPluginMetadataService().getPlugin(), target);
         canSee = true;
       }
     }
 
     p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
         canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
-        target.getCustomName()
-    ));
+        target.getCustomName()));
 
     return true;
   }
@@ -115,8 +121,7 @@ public class Vanish implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

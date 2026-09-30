@@ -4,10 +4,13 @@ import org.bukkit.entity.Player;
 
 /**
  * Represents a sub-command that can be executed by a {@link Player}.
- * <p>
- * Implementations define specific behavior triggered by a particular argument pattern within a
- * parent command.
- * </p>
+ *
+ * <p>Implementations define specific behavior triggered by a particular argument pattern within a
+ * parent command.</p>
+ *
+ * @author rellu
+ * @version 2.0
+ * @since 4.4
  */
 public interface SubCommand {
 
@@ -21,10 +24,9 @@ public interface SubCommand {
 
   /**
    * Determines whether this sub-command matches the given argument pattern.
-   * <p>
-   * Used by the {@link de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry}
-   * to find the correct sub-command for a given input.
-   * </p>
+   *
+   * <p>Used by the {@link de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry}
+   * to find the correct sub-command for a given input.</p>
    *
    * @param args the arguments passed alongside the command
    * @return {@code true} if this sub-command handles the given arguments, {@code false} otherwise

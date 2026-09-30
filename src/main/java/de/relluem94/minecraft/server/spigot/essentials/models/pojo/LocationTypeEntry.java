@@ -1,14 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Represents a location type entry with a unique identifier and a descriptive type name. This model is used to
+ * categorize and reference different kinds of locations in the system.
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LocationTypeEntry {
 
   private int id;

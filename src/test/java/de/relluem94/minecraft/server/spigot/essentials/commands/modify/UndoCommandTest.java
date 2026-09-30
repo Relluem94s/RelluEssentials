@@ -61,7 +61,7 @@ class UndoCommandTest {
   }
 
   @Test
-  void execute_withNoHistory_sendsNoHistoryMessage() {
+  void executeWithNoHistorySendsNoHistoryMessage() {
     when(undoHistoryService.popLastHistory(player)).thenReturn(null);
 
     undoCommand.execute(player, new String[]{"undo"});
@@ -71,7 +71,7 @@ class UndoCommandTest {
   }
 
   @Test
-  void execute_withEmptyHistory_sendsNoHistoryMessage() {
+  void executeWithEmptyHistorySendsNoHistoryMessage() {
     when(undoHistoryService.popLastHistory(player)).thenReturn(List.of());
 
     undoCommand.execute(player, new String[]{"undo"});
@@ -81,7 +81,7 @@ class UndoCommandTest {
   }
 
   @Test
-  void execute_withHistoryEntries_schedulesTaskForEachEntry() {
+  void executeWithHistoryEntriesSchedulesTaskForEachEntry() {
     List<ModifyHistoryEntry> history = List.of(
         buildHistoryEntry(),
         buildHistoryEntry(),
@@ -96,7 +96,7 @@ class UndoCommandTest {
   }
 
   @Test
-  void execute_withMoreEntriesThanBlocksPerTick_incrementsDelay() {
+  void executeWithMoreEntriesThanBlocksPerTickIncrementsDelay() {
     List<ModifyHistoryEntry> history = List.of(
         buildHistoryEntry(),
         buildHistoryEntry(),
@@ -111,7 +111,7 @@ class UndoCommandTest {
   }
 
   @Test
-  void execute_withHistoryEntries_callsUndoWithCorrectEntry() {
+  void executeWithHistoryEntriesCallsUndoWithCorrectEntry() {
     ModifyHistoryEntry entry = buildHistoryEntry();
     List<ModifyHistoryEntry> history = List.of(entry);
     when(undoHistoryService.popLastHistory(player)).thenReturn(history);
@@ -128,17 +128,17 @@ class UndoCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert undoCommand.matches(new String[]{"undo"});
   }
 
   @Test
-  void matches_withWrongCommand_returnsFalse() {
+  void matchesWithWrongCommandReturnsFalse() {
     assert !undoCommand.matches(new String[]{"set"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !undoCommand.matches(new String[]{"undo", "extra"});
   }
 

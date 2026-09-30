@@ -43,7 +43,7 @@ class ReplyRegistryTest {
     assertEquals(playerC, replyRegistry.findReplyTarget(playerA));
     assertEquals(playerA, replyRegistry.findReplyTarget(playerC));
     assertFalse(replyRegistry.hasReplyTarget(playerB), "Player B should have been removed from the relationship");
-    assertEquals(null, replyRegistry.findReplyTarget(playerB));
+    assertNull(replyRegistry.findReplyTarget(playerB));
   }
 
   @Test

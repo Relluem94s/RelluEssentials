@@ -3,13 +3,11 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
@@ -25,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -43,10 +42,10 @@ import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class RelluEssentialsTest {
 
   private RelluEssentials plugin;
-
 
   @BeforeEach
   void setUp() throws Exception {
@@ -60,40 +59,44 @@ class RelluEssentialsTest {
     }
 
     Server server = Mockito.mock(Server.class);
-
-    Mockito.when(server.getLogger()).thenReturn(logger);
+    org.bukkit.command.ConsoleCommandSender consoleSender = Mockito.mock(org.bukkit.command.ConsoleCommandSender.class);
+    Mockito
+        .when(server.getConsoleSender())
+        .thenReturn(consoleSender);
+    Mockito
+        .when(server.getLogger())
+        .thenReturn(logger);
 
     try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getServer).thenReturn(server);
+      bukkit
+          .when(Bukkit::getServer)
+          .thenReturn(server);
 
-      JavaPluginLoader loader = new JavaPluginLoader(server);
-
+      @SuppressWarnings("deprecation") JavaPluginLoader loader = new JavaPluginLoader(server);
       PluginDescriptionFile description = Mockito.mock(PluginDescriptionFile.class);
 
-      plugin = new RelluEssentials(
-          loader,
-          description,
-          new File("target/test-data"),
-          new File("target/test.jar")
-      );
+      plugin = new RelluEssentials(loader, description, new File("target/test-data"), new File("target/test.jar"));
     }
+
+    Field serverField = org.bukkit.plugin.java.JavaPlugin.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(plugin, server);
   }
 
   @AfterEach
   void tearDown() throws Exception {
     plugin = null;
     resetStaticInstance();
+
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   private void resetStaticInstance() throws Exception {
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, null);
-  }
-
-  @Test
-  void constructorShouldSetUnitTestFlag() {
-    assertTrue(plugin.isUnitTest());
   }
 
   @Test
@@ -105,88 +108,143 @@ class RelluEssentialsTest {
   void onEnableShouldInitializePlugin() {
     FileConfiguration configuration = Mockito.mock(FileConfiguration.class);
 
-    Mockito.when(configuration.getString("database.host")).thenReturn("localhost");
-    Mockito.when(configuration.getString("database.user")).thenReturn("test");
-    Mockito.when(configuration.getString("database.password")).thenReturn("test");
-    Mockito.when(configuration.getInt("database.port")).thenReturn(3306);
+    Mockito
+        .when(configuration.getString("database.host"))
+        .thenReturn("localhost");
+    Mockito
+        .when(configuration.getString("database.user"))
+        .thenReturn("test");
+    Mockito
+        .when(configuration.getString("database.password"))
+        .thenReturn("test");
+    Mockito
+        .when(configuration.getInt("database.port"))
+        .thenReturn(3306);
 
     RelluEssentials spyPlugin = Mockito.spy(plugin);
-    Mockito.doReturn(configuration).when(spyPlugin).getConfig();
+    Mockito
+        .doReturn(configuration)
+        .when(spyPlugin)
+        .getConfig();
 
     Server server = Mockito.mock(Server.class);
     org.bukkit.scoreboard.ScoreboardManager scoreboardManager =
         Mockito.mock(org.bukkit.scoreboard.ScoreboardManager.class);
-    Mockito.when(server.getScoreboardManager()).thenReturn(scoreboardManager);
+    Mockito
+        .when(server.getScoreboardManager())
+        .thenReturn(scoreboardManager);
 
-    try (
-        MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class);
-        MockedStatic<ChatHelper> chatHelper = Mockito.mockStatic(ChatHelper.class);
-        MockedStatic<RelluEssentialsRegistry> registry =
-            Mockito.mockStatic(RelluEssentialsRegistry.class);
-        MockedConstruction<ServiceManager> serviceManager =
-            Mockito.mockConstruction(ServiceManager.class);
-        MockedConstruction<ConfigManager> configManager =
-            Mockito.mockConstruction(ConfigManager.class);
-        MockedConstruction<EnchantmentManager> enchantmentManager =
-            Mockito.mockConstruction(EnchantmentManager.class);
-        MockedConstruction<ItemManager> itemManager =
-            Mockito.mockConstruction(ItemManager.class);
-        MockedConstruction<DatabaseManager> databaseManager =
-            Mockito.mockConstruction(DatabaseManager.class);
-        MockedConstruction<CommandManager> commandManager =
-            Mockito.mockConstruction(CommandManager.class);
-        MockedConstruction<SignManager> signManager =
-            Mockito.mockConstruction(SignManager.class);
-        MockedConstruction<SkillManager> skillManager =
-            Mockito.mockConstruction(SkillManager.class);
-        MockedConstruction<RecipeManager> recipeManager =
-            Mockito.mockConstruction(RecipeManager.class);
-        MockedConstruction<BankManager> bankManager =
-            Mockito.mockConstruction(BankManager.class);
-        MockedConstruction<ListenerManager> listenerManager =
-            Mockito.mockConstruction(ListenerManager.class);
-        MockedConstruction<AutoSaveManager> autoSaveManager =
-            Mockito.mockConstruction(AutoSaveManager.class);
-        MockedConstruction<ScoreBoardManager> scoreBoardManager =
-            Mockito.mockConstruction(ScoreBoardManager.class);
-        MockedConstruction<WorldManager> worldManager =
-            Mockito.mockConstruction(WorldManager.class)
-    ) {
-      bukkit.when(Bukkit::getServer).thenReturn(server);
+    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class);
+        MockedStatic<RelluEssentialsRegistry> _ = Mockito.mockStatic(RelluEssentialsRegistry.class);
+        MockedConstruction<ServiceContext> _ = Mockito.mockConstruction(ServiceContext.class, (mock, _) -> {
+          Mockito
+              .when(mock.getTranslationService())
+              .thenReturn(
+                  Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+                      Mockito.RETURNS_DEEP_STUBS));
+          Mockito
+              .when(mock.getSchedulerService())
+              .thenReturn(Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class,
+                  Mockito.RETURNS_DEEP_STUBS));
+        }); MockedConstruction<PersistenceContext> _ = Mockito.mockConstruction(PersistenceContext.class);
+        MockedConstruction<ServiceManager> serviceManager = Mockito.mockConstruction(ServiceManager.class);
+        MockedConstruction<ConfigManager> configManager = Mockito.mockConstruction(ConfigManager.class);
+        MockedConstruction<EnchantmentManager> enchantmentManager = Mockito.mockConstruction(EnchantmentManager.class);
+        MockedConstruction<ItemManager> itemManager = Mockito.mockConstruction(ItemManager.class);
+        MockedConstruction<DatabaseManager> databaseManager = Mockito.mockConstruction(DatabaseManager.class);
+        MockedConstruction<CommandManager> commandManager = Mockito.mockConstruction(CommandManager.class);
+        MockedConstruction<SignManager> signManager = Mockito.mockConstruction(SignManager.class);
+        MockedConstruction<SkillManager> skillManager = Mockito.mockConstruction(SkillManager.class);
+        MockedConstruction<RecipeManager> recipeManager = Mockito.mockConstruction(RecipeManager.class);
+        MockedConstruction<BankManager> bankManager = Mockito.mockConstruction(BankManager.class);
+        MockedConstruction<ListenerManager> listenerManager = Mockito.mockConstruction(ListenerManager.class);
+        MockedConstruction<AutoSaveManager> autoSaveManager = Mockito.mockConstruction(AutoSaveManager.class);
+        MockedConstruction<ScoreBoardManager> scoreBoardManager = Mockito.mockConstruction(ScoreBoardManager.class);
+        MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(BukkitRegistryAdapter.class);
+        MockedConstruction<WorldManager> worldManager = Mockito.mockConstruction(WorldManager.class)) {
+      bukkit
+          .when(Bukkit::getServer)
+          .thenReturn(server);
 
       spyPlugin.onEnable();
 
       assertNotNull(spyPlugin.getServiceContext());
       assertNotNull(spyPlugin.getPersistenceContext());
 
-      assertEquals(1, serviceManager.constructed().size());
-      assertEquals(1, configManager.constructed().size());
-      assertEquals(1, enchantmentManager.constructed().size());
-      assertEquals(1, itemManager.constructed().size());
-      assertEquals(1, databaseManager.constructed().size());
-      assertEquals(1, commandManager.constructed().size());
-      assertEquals(1, signManager.constructed().size());
-      assertEquals(1, skillManager.constructed().size());
-      assertEquals(1, recipeManager.constructed().size());
-      assertEquals(1, bankManager.constructed().size());
-      assertEquals(1, listenerManager.constructed().size());
-      assertEquals(1, autoSaveManager.constructed().size());
-      assertEquals(1, scoreBoardManager.constructed().size());
-      assertEquals(1, worldManager.constructed().size());
+      assertEquals(1, serviceManager
+          .constructed()
+          .size());
+      assertEquals(1, configManager
+          .constructed()
+          .size());
+      assertEquals(1, enchantmentManager
+          .constructed()
+          .size());
+      assertEquals(1, itemManager
+          .constructed()
+          .size());
+      assertEquals(1, databaseManager
+          .constructed()
+          .size());
+      assertEquals(1, commandManager
+          .constructed()
+          .size());
+      assertEquals(1, signManager
+          .constructed()
+          .size());
+      assertEquals(1, skillManager
+          .constructed()
+          .size());
+      assertEquals(1, recipeManager
+          .constructed()
+          .size());
+      assertEquals(1, bankManager
+          .constructed()
+          .size());
+      assertEquals(1, listenerManager
+          .constructed()
+          .size());
+      assertEquals(1, autoSaveManager
+          .constructed()
+          .size());
+      assertEquals(1, scoreBoardManager
+          .constructed()
+          .size());
+      assertEquals(1, worldManager
+          .constructed()
+          .size());
 
-      ServiceManager service = serviceManager.constructed().get(0);
+      ServiceManager service = serviceManager
+          .constructed()
+          .getFirst();
 
-      Mockito.verify(service).preEnable(spyPlugin);
-      Mockito.verify(service).enable(spyPlugin);
+      Mockito
+          .verify(service)
+          .preEnable(spyPlugin);
+      Mockito
+          .verify(service)
+          .enable(spyPlugin);
 
-      ConfigManager config = configManager.constructed().get(0);
-      Mockito.verify(config).enable(spyPlugin);
+      ConfigManager config = configManager
+          .constructed()
+          .getFirst();
+      Mockito
+          .verify(config)
+          .enable(spyPlugin);
 
-      AutoSaveManager autoSave = autoSaveManager.constructed().get(0);
-      Mockito.verify(autoSave).enable(spyPlugin);
+      AutoSaveManager autoSave = autoSaveManager
+          .constructed()
+          .getFirst();
+      Mockito
+          .verify(autoSave)
+          .enable(spyPlugin);
 
-      WorldManager world = worldManager.constructed().get(0);
-      Mockito.verify(world).enable(spyPlugin);
+      WorldManager world = worldManager
+          .constructed()
+          .getFirst();
+      Mockito
+          .verify(world)
+          .enable(spyPlugin);
 
       assertEquals(spyPlugin, RelluEssentials.getInstance());
     }
@@ -194,93 +252,74 @@ class RelluEssentialsTest {
 
   @Test
   void onDisableShouldDisableManagers() {
-    ServiceContext serviceContext =
-        Mockito.mock(ServiceContext.class, Mockito.RETURNS_DEEP_STUBS);
+    ServiceContext serviceContext = Mockito.mock(ServiceContext.class, Mockito.RETURNS_DEEP_STUBS);
 
-    PersistenceContext persistenceContext =
-        Mockito.mock(PersistenceContext.class);
+    PersistenceContext persistenceContext = Mockito.mock(PersistenceContext.class);
 
     RelluEssentials spyPlugin = Mockito.spy(plugin);
 
-    Mockito.doReturn(serviceContext)
+    Mockito
+        .doReturn(serviceContext)
         .when(spyPlugin)
         .getServiceContext();
 
-    Mockito.doReturn(persistenceContext)
+    Mockito
+        .doReturn(persistenceContext)
         .when(spyPlugin)
         .getPersistenceContext();
 
-    try (
-        MockedStatic<ChatHelper> chatHelper = Mockito.mockStatic(ChatHelper.class);
-        MockedConstruction<SudoManager> sudoManager =
-            Mockito.mockConstruction(SudoManager.class);
-        MockedConstruction<AutoSaveManager> autoSaveManager =
-            Mockito.mockConstruction(AutoSaveManager.class);
-        MockedConstruction<WorldManager> worldManager =
-            Mockito.mockConstruction(WorldManager.class);
-        MockedConstruction<ConfigManager> configManager =
-            Mockito.mockConstruction(ConfigManager.class)
-    ) {
-      /*
-       * Die privaten Manager-Felder werden hier gesetzt, damit onDisable()
-       * die tatsächlich erzeugten Mockito-Mocks verwendet.
-       */
-      java.lang.reflect.Field autoSaveField =
-          RelluEssentials.class.getDeclaredField("autoSaveManager");
-      autoSaveField.setAccessible(true);
-      autoSaveField.set(spyPlugin, autoSaveManager.constructed().isEmpty()
-          ? Mockito.mock(AutoSaveManager.class)
-          : autoSaveManager.constructed().get(0));
+    org.bukkit.command.ConsoleCommandSender consoleSender = Mockito.mock(org.bukkit.command.ConsoleCommandSender.class);
 
-      java.lang.reflect.Field worldField =
-          RelluEssentials.class.getDeclaredField("worldManager");
-      worldField.setAccessible(true);
-      worldField.set(spyPlugin, worldManager.constructed().isEmpty()
-          ? Mockito.mock(WorldManager.class)
-          : worldManager.constructed().get(0));
+    Server server = spyPlugin.getServer();
+    Mockito
+        .when(server.getConsoleSender())
+        .thenReturn(consoleSender);
 
-      java.lang.reflect.Field configField =
-          RelluEssentials.class.getDeclaredField("configManager");
-      configField.setAccessible(true);
-      configField.set(spyPlugin, configManager.constructed().isEmpty()
-          ? Mockito.mock(ConfigManager.class)
-          : configManager.constructed().get(0));
-
-      /*
-       * Die Konstruktor-Mocks müssen vor onDisable() erzeugt werden.
-       */
-      SudoManager sudo = Mockito.mock(SudoManager.class);
+    try (MockedConstruction<SudoManager> sudoManager = Mockito.mockConstruction(SudoManager.class);
+        MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(AutoSaveManager.class);
+        MockedConstruction<WorldManager> _ = Mockito.mockConstruction(WorldManager.class);
+        MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(ConfigManager.class)) {
       AutoSaveManager autoSave = Mockito.mock(AutoSaveManager.class);
       WorldManager world = Mockito.mock(WorldManager.class);
       ConfigManager config = Mockito.mock(ConfigManager.class);
 
+      java.lang.reflect.Field autoSaveField = RelluEssentials.class.getDeclaredField("autoSaveManager");
+      autoSaveField.setAccessible(true);
       autoSaveField.set(spyPlugin, autoSave);
+
+      java.lang.reflect.Field worldField = RelluEssentials.class.getDeclaredField("worldManager");
+      worldField.setAccessible(true);
       worldField.set(spyPlugin, world);
+
+      java.lang.reflect.Field configField = RelluEssentials.class.getDeclaredField("configManager");
+      configField.setAccessible(true);
       configField.set(spyPlugin, config);
 
       spyPlugin.onDisable();
 
-      Mockito.verify(sudoManager.constructed().get(0))
+      Mockito
+          .verify(sudoManager
+              .constructed()
+              .getFirst())
           .disable(spyPlugin);
-
-      Mockito.verify(autoSave)
+      Mockito
+          .verify(autoSave)
           .disable(spyPlugin);
-
-      Mockito.verify(world)
+      Mockito
+          .verify(world)
           .disable(spyPlugin);
-
-      Mockito.verify(config)
+      Mockito
+          .verify(config)
           .disable(spyPlugin);
-
-      Mockito.verify(serviceContext.getNpcService())
+      Mockito
+          .verify(serviceContext.getNpcService())
           .despawnAllNpcs();
 
-      chatHelper.verify(() ->
-          ChatHelper.consoleSendMessage(
-              Constants.PLUGIN_NAME_CONSOLE,
-              serviceContext.getTranslationService()
-                  .get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE)
-          ));
+      Mockito
+          .verify(consoleSender)
+          .sendMessage(Constants.PLUGIN_NAME_CONSOLE, serviceContext
+              .getTranslationService()
+              .get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
     } catch (NoSuchFieldException | IllegalAccessException exception) {
       throw new AssertionError(exception);
     }
@@ -290,62 +329,218 @@ class RelluEssentialsTest {
   void instanceShouldBeSetWhenOnEnableStarts() {
     FileConfiguration configuration = Mockito.mock(FileConfiguration.class);
 
-    Mockito.when(configuration.getString("database.host"))
+    Mockito
+        .when(configuration.getString("database.host"))
         .thenReturn("localhost");
-    Mockito.when(configuration.getString("database.user"))
+    Mockito
+        .when(configuration.getString("database.user"))
         .thenReturn("test");
-    Mockito.when(configuration.getString("database.password"))
+    Mockito
+        .when(configuration.getString("database.password"))
         .thenReturn("test");
-    Mockito.when(configuration.getInt("database.port"))
+    Mockito
+        .when(configuration.getInt("database.port"))
         .thenReturn(3306);
 
     RelluEssentials spyPlugin = Mockito.spy(plugin);
-    Mockito.doReturn(configuration)
+    Mockito
+        .doReturn(configuration)
         .when(spyPlugin)
         .getConfig();
 
-    try (
-        MockedStatic<ChatHelper> chatHelper = Mockito.mockStatic(ChatHelper.class);
-        MockedStatic<RelluEssentialsRegistry> registry =
-            Mockito.mockStatic(RelluEssentialsRegistry.class);
-        MockedConstruction<ServiceManager> serviceManager =
-            Mockito.mockConstruction(ServiceManager.class);
-        MockedConstruction<ConfigManager> configManager =
-            Mockito.mockConstruction(ConfigManager.class);
-        MockedConstruction<EnchantmentManager> enchantmentManager =
-            Mockito.mockConstruction(EnchantmentManager.class);
-        MockedConstruction<ItemManager> itemManager =
-            Mockito.mockConstruction(ItemManager.class);
-        MockedConstruction<DatabaseManager> databaseManager =
-            Mockito.mockConstruction(DatabaseManager.class);
-        MockedConstruction<CommandManager> commandManager =
-            Mockito.mockConstruction(CommandManager.class);
-        MockedConstruction<SignManager> signManager =
-            Mockito.mockConstruction(SignManager.class);
-        MockedConstruction<SkillManager> skillManager =
-            Mockito.mockConstruction(SkillManager.class);
-        MockedConstruction<RecipeManager> recipeManager =
-            Mockito.mockConstruction(RecipeManager.class);
-        MockedConstruction<BankManager> bankManager =
-            Mockito.mockConstruction(BankManager.class);
-        MockedConstruction<ListenerManager> listenerManager =
-            Mockito.mockConstruction(ListenerManager.class);
-        MockedConstruction<AutoSaveManager> autoSaveManager =
-            Mockito.mockConstruction(AutoSaveManager.class);
-        MockedConstruction<ScoreBoardManager> scoreBoardManager =
-            Mockito.mockConstruction(ScoreBoardManager.class);
-        MockedConstruction<WorldManager> worldManager =
-            Mockito.mockConstruction(WorldManager.class)
-    ) {
+    try (MockedStatic<RelluEssentialsRegistry> registry = Mockito.mockStatic(RelluEssentialsRegistry.class);
+        MockedConstruction<ServiceContext> _ = Mockito.mockConstruction(ServiceContext.class, (mock, _) -> {
+          Mockito
+              .when(mock.getTranslationService())
+              .thenReturn(
+                  Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+                      Mockito.RETURNS_DEEP_STUBS));
+          Mockito
+              .when(mock.getSchedulerService())
+              .thenReturn(Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class,
+                  Mockito.RETURNS_DEEP_STUBS));
+        }); MockedConstruction<PersistenceContext> _ = Mockito.mockConstruction(PersistenceContext.class);
+        MockedConstruction<ServiceManager> _ = Mockito.mockConstruction(ServiceManager.class);
+        MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(ConfigManager.class);
+        MockedConstruction<EnchantmentManager> _ = Mockito.mockConstruction(EnchantmentManager.class);
+        MockedConstruction<ItemManager> _ = Mockito.mockConstruction(ItemManager.class);
+        MockedConstruction<DatabaseManager> _ = Mockito.mockConstruction(DatabaseManager.class);
+        MockedConstruction<CommandManager> _ = Mockito.mockConstruction(CommandManager.class);
+        MockedConstruction<SignManager> _ = Mockito.mockConstruction(SignManager.class);
+        MockedConstruction<SkillManager> _ = Mockito.mockConstruction(SkillManager.class);
+        MockedConstruction<RecipeManager> _ = Mockito.mockConstruction(RecipeManager.class);
+        MockedConstruction<BankManager> _ = Mockito.mockConstruction(BankManager.class);
+        MockedConstruction<ListenerManager> _ = Mockito.mockConstruction(ListenerManager.class);
+        MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(AutoSaveManager.class);
+        MockedConstruction<ScoreBoardManager> _ = Mockito.mockConstruction(ScoreBoardManager.class);
+        MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(BukkitRegistryAdapter.class);
+        MockedConstruction<WorldManager> _ = Mockito.mockConstruction(WorldManager.class)) {
       spyPlugin.onEnable();
 
       assertEquals(spyPlugin, RelluEssentials.getInstance());
-      assertTrue(spyPlugin.isUnitTest());
 
-      registry.verify(() ->
-          RelluEssentialsRegistry.initialize(
-              spyPlugin.getServiceContext().getTranslationService()
-          ));
+      registry.verify(() -> RelluEssentialsRegistry.initialize(spyPlugin.getServiceContext()));
+    }
+  }
+
+  @Test
+  void onEnableShouldScheduleNpcSpawn() {
+    FileConfiguration configuration = Mockito.mock(FileConfiguration.class);
+    Mockito
+        .when(configuration.getString("database.host"))
+        .thenReturn("localhost");
+    Mockito
+        .when(configuration.getString("database.user"))
+        .thenReturn("test");
+    Mockito
+        .when(configuration.getString("database.password"))
+        .thenReturn("test");
+    Mockito
+        .when(configuration.getInt("database.port"))
+        .thenReturn(3306);
+
+    RelluEssentials spyPlugin = Mockito.spy(plugin);
+    Mockito
+        .doReturn(configuration)
+        .when(spyPlugin)
+        .getConfig();
+
+    Server server = Mockito.mock(Server.class);
+    org.bukkit.scoreboard.ScoreboardManager scoreboardManager =
+        Mockito.mock(org.bukkit.scoreboard.ScoreboardManager.class);
+    Mockito
+        .when(server.getScoreboardManager())
+        .thenReturn(scoreboardManager);
+
+    de.relluem94.minecraft.server.spigot.essentials.services.NpcService npcService =
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class);
+
+    de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService schedulerService =
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class);
+
+    Mockito
+        .doAnswer(invocation -> {
+          Runnable task = invocation.getArgument(0);
+          task.run();
+          return null;
+        })
+        .when(schedulerService)
+        .runTaskLater(Mockito.any(), Mockito.eq(20L));
+
+    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class);
+        MockedStatic<RelluEssentialsRegistry> _ = Mockito.mockStatic(RelluEssentialsRegistry.class);
+        MockedConstruction<ServiceContext> _ = Mockito.mockConstruction(ServiceContext.class, (mock, _) -> {
+          Mockito
+              .when(mock.getTranslationService())
+              .thenReturn(
+                  Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+                      Mockito.RETURNS_DEEP_STUBS));
+          Mockito
+              .when(mock.getSchedulerService())
+              .thenReturn(schedulerService);
+          Mockito
+              .when(mock.getNpcService())
+              .thenReturn(npcService);
+        }); MockedConstruction<PersistenceContext> _ = Mockito.mockConstruction(PersistenceContext.class);
+        MockedConstruction<ServiceManager> _ = Mockito.mockConstruction(ServiceManager.class);
+        MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(ConfigManager.class);
+        MockedConstruction<EnchantmentManager> _ = Mockito.mockConstruction(EnchantmentManager.class);
+        MockedConstruction<ItemManager> _ = Mockito.mockConstruction(ItemManager.class);
+        MockedConstruction<DatabaseManager> _ = Mockito.mockConstruction(DatabaseManager.class);
+        MockedConstruction<CommandManager> _ = Mockito.mockConstruction(CommandManager.class);
+        MockedConstruction<SignManager> _ = Mockito.mockConstruction(SignManager.class);
+        MockedConstruction<SkillManager> _ = Mockito.mockConstruction(SkillManager.class);
+        MockedConstruction<RecipeManager> _ = Mockito.mockConstruction(RecipeManager.class);
+        MockedConstruction<BankManager> _ = Mockito.mockConstruction(BankManager.class);
+        MockedConstruction<ListenerManager> _ = Mockito.mockConstruction(ListenerManager.class);
+        MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(AutoSaveManager.class);
+        MockedConstruction<ScoreBoardManager> _ = Mockito.mockConstruction(ScoreBoardManager.class);
+        MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(BukkitRegistryAdapter.class);
+        MockedConstruction<WorldManager> _ = Mockito.mockConstruction(WorldManager.class)) {
+      bukkit
+          .when(Bukkit::getServer)
+          .thenReturn(server);
+
+      spyPlugin.onEnable();
+
+      Mockito
+          .verify(schedulerService)
+          .runTaskLater(Mockito.any(), Mockito.eq(20L));
+      Mockito
+          .verify(npcService)
+          .loadAndSpawnNpcsInLoadedChunks();
+    }
+  }
+
+  @Test
+  void onDisableShouldSkipNpcDespawnWhenNpcServiceIsNull() {
+    ServiceContext serviceContext = Mockito.mock(ServiceContext.class);
+    Mockito
+        .when(serviceContext.getTranslationService())
+        .thenReturn(Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+            Mockito.RETURNS_DEEP_STUBS));
+    Mockito
+        .when(serviceContext.getNpcService())
+        .thenReturn(null);
+
+    PersistenceContext persistenceContext = Mockito.mock(PersistenceContext.class);
+
+    RelluEssentials spyPlugin = Mockito.spy(plugin);
+    Mockito
+        .doReturn(serviceContext)
+        .when(spyPlugin)
+        .getServiceContext();
+    Mockito
+        .doReturn(persistenceContext)
+        .when(spyPlugin)
+        .getPersistenceContext();
+
+    org.bukkit.command.ConsoleCommandSender consoleSender = Mockito.mock(org.bukkit.command.ConsoleCommandSender.class);
+    Server server = spyPlugin.getServer();
+    Mockito
+        .when(server.getConsoleSender())
+        .thenReturn(consoleSender);
+
+    try (MockedConstruction<SudoManager> _ = Mockito.mockConstruction(SudoManager.class);
+        MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(AutoSaveManager.class);
+        MockedConstruction<WorldManager> _ = Mockito.mockConstruction(WorldManager.class);
+        MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(ConfigManager.class)) {
+      AutoSaveManager autoSave = Mockito.mock(AutoSaveManager.class);
+      WorldManager world = Mockito.mock(WorldManager.class);
+      ConfigManager config = Mockito.mock(ConfigManager.class);
+
+      java.lang.reflect.Field autoSaveField = RelluEssentials.class.getDeclaredField("autoSaveManager");
+      autoSaveField.setAccessible(true);
+      autoSaveField.set(spyPlugin, autoSave);
+
+      java.lang.reflect.Field worldField = RelluEssentials.class.getDeclaredField("worldManager");
+      worldField.setAccessible(true);
+      worldField.set(spyPlugin, world);
+
+      java.lang.reflect.Field configField = RelluEssentials.class.getDeclaredField("configManager");
+      configField.setAccessible(true);
+      configField.set(spyPlugin, config);
+
+      spyPlugin.onDisable();
+
+      Mockito
+          .verify(serviceContext)
+          .getNpcService();
+      Mockito
+          .verify(serviceContext)
+          .getTranslationService();
+      Mockito.verifyNoMoreInteractions(serviceContext);
+      Mockito
+          .verify(autoSave)
+          .disable(spyPlugin);
+      Mockito
+          .verify(world)
+          .disable(spyPlugin);
+      Mockito
+          .verify(config)
+          .disable(spyPlugin);
+    } catch (NoSuchFieldException | IllegalAccessException exception) {
+      throw new AssertionError(exception);
     }
   }
 }

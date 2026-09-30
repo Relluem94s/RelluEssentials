@@ -15,13 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for managing and opening player bags.
+ *
+ * <p>Handles tab completion and command execution for the {@code /bags} command,
+ * allowing players to view their available bags or open a specific bag by name or ID.</p>
+ *
+ * @author rellu
+ */
 @CommandName("bags")
 public class Bags implements CommandConstruct {
 
@@ -49,7 +57,8 @@ public class Bags implements CommandConstruct {
       return tabList;
     }
 
-    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry((Player)commandSender);
+    PlayerEntry playerEntry =
+        serviceContext.getPlayerService().getPlayerEntry((Player) commandSender);
     tabList.addAll(serviceContext.getBagService().getBagTypeNamesForPlayer(playerEntry.getId()));
 
     return tabList;
@@ -65,22 +74,25 @@ public class Bags implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+              MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     boolean bagsEnabled = serviceContext.getWorldGroupService()
         .isSettingActiveForWorld(WorldSetting.COLLECT_BAG, p.getWorld().getName());
 
-    if(!bagsEnabled){
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!bagsEnabled) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+              MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -101,13 +113,16 @@ public class Bags implements CommandConstruct {
     if (bte.isPresent()) {
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       if (serviceContext.getBagService().hasBag(pe.getId(), bte.get().getId())) {
-        p.openInventory(Objects.requireNonNull(serviceContext.getBagService().getBagInventory(bte.get().getId(), pe)));
+        p.openInventory(Objects.requireNonNull(
+            serviceContext.getBagService().getBagInventory(bte.get().getId(), pe)));
       } else {
-        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+            MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
       }
 
     } else {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+          MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
     }
     return true;
   }

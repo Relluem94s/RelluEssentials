@@ -87,7 +87,7 @@ class ProtectionRegistryTest {
     List<ProtectionEntry> ownedEntries = registry.getProtectionEntriesOwnedBy(ownerId);
 
     assertEquals(1, ownedEntries.size());
-    assertEquals(1, ownedEntries.get(0).getId());
+    assertEquals(1, ownedEntries.getFirst().getId());
   }
 
   @Test

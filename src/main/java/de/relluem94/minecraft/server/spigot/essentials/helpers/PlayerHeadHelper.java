@@ -18,6 +18,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
+/**
+ * Utility class for creating and modifying player head {@link ItemStack}s.
+ *
+ * <p>Supports both custom heads via Base64-encoded texture data and player-specific skulls
+ * resolved from offline player profiles.
+ *
+ * @author rellu
+ */
 public class PlayerHeadHelper {
 
   private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);
@@ -47,7 +55,7 @@ public class PlayerHeadHelper {
         String skinUrl = extractSkinUrlFromBase64(jsonString);
 
         if (skinUrl != null) {
-          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUuid());
           PlayerTextures textures = profile.getTextures();
           textures.setSkin(URI.create(skinUrl).toURL());
           profile.setTextures(textures);
@@ -60,6 +68,17 @@ public class PlayerHeadHelper {
     };
   }
 
+  /**
+   * Asynchronously creates a player skull {@link ItemStack} for the given player name.
+   *
+   * <p>Resolves the player's profile and updates it asynchronously. The resulting item is
+   * passed to the callback on the main thread once the profile update completes.
+   * If the player cannot be found or the profile update fails, a fallback skull is used.
+   *
+   * @param name     The name of the player whose skull should be created.
+   * @param plugin   The plugin instance used to schedule the callback on the main thread.
+   * @param callback A consumer that receives the resulting skull {@link ItemStack}.
+   */
   public static void createSkull(String name, org.bukkit.plugin.Plugin plugin,
       java.util.function.Consumer<org.bukkit.inventory.ItemStack> callback) {
     OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
@@ -88,6 +107,18 @@ public class PlayerHeadHelper {
     }));
   }
 
+  /**
+   * Creates and returns a player head {@link ItemStack} with the texture
+   * defined by the given {@link CustomHeads} entry.
+   *
+   * <p>Decodes the Base64 texture data, extracts the skin URL, and applies it to the skull's
+   * {@link org.bukkit.profile.PlayerProfile}. Returns a plain player head if the Base64 value
+   * is empty or the skin URL cannot be extracted.
+   *
+   * @param ch The {@link CustomHeads} entry containing the texture data and display name.
+   * @return An {@link ItemStack} representing the custom skull.
+   * @throws RuntimeException If the extracted skin URL is malformed.
+   */
   public static @NotNull ItemStack getCustomSkull(@NotNull CustomHeads ch) {
     ItemStack ph = PLAYER_HEAD.clone();
     if (ch.getBase64().isEmpty()) {
@@ -104,7 +135,7 @@ public class PlayerHeadHelper {
       String skinUrl = extractSkinUrlFromBase64(jsonString);
 
       if (skinUrl != null) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUuid());
         PlayerTextures textures = profile.getTextures();
         textures.setSkin(URI.create(skinUrl).toURL());
         profile.setTextures(textures);

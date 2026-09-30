@@ -6,10 +6,10 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEnt
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Service responsible for cleaning up outdated or invalid protection entries.
@@ -80,7 +80,7 @@ public class ProtectionCleanUpService {
             processed++;
           }
 
-          int percent = (int) Math.round((index[0] / (double) total) * 100);
+          int percent = total == 0 ? 100 : (int) Math.round((index[0] / (double) total) * 100);
           p.sendMessage(
               serviceContext.getTranslationService().getWithPrefix(
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,

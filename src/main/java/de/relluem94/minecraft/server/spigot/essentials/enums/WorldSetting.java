@@ -1,5 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.enums;
 
+/**
+ * Defines configurable settings that control various gameplay features and behaviors in a world,
+ * such as non-player character availability, ore respawn, entity coin drops, death handling,
+ * scoreboard visibility, transportation usage, and protection notifications.
+ *
+ * @author rellu
+ * @version 2.0
+ * @since 4.4
+ */
 public enum WorldSetting {
   NPC_BANKER,
   NPC_BAGSALESMAN,

@@ -13,7 +13,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,15 +21,36 @@ import java.util.function.Function;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Utility class providing mapping functionality for trader NPC database records.
+ *
+ * <p>Maps {@link java.sql.ResultSet} rows to {@link TraderNpcEntry} instances,
+ * resolving professions and slot configurations from the database fields.
+ */
 public class TraderNpcMapper {
 
   private TraderNpcMapper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull TraderNPCEntry mapNPC(@NonNull ResultSet rs,
+  /**
+   * Maps a single database row from the given {@link java.sql.ResultSet}
+   * to a {@link TraderNpcEntry}.
+   *
+   * <p>Reads all standard audit fields, NPC-specific fields, and up to 28 slot name entries.
+   * The profession string is resolved to a {@link Villager.Profession} using the
+   * provided resolver function.
+   *
+   * @param rs                 the {@link java.sql.ResultSet} positioned at the row to map
+   * @param professionResolver a {@link Function} that resolves a lowercase profession string
+   *                           to the corresponding {@link Villager.Profession}
+   * @return a fully populated {@link TraderNpcEntry} representing the current row
+   * @throws SQLException if a database access error occurs while reading
+   *     the {@link java.sql.ResultSet}
+   */
+  public static @NonNull TraderNpcEntry mapNpc(@NonNull ResultSet rs,
       @NonNull Function<String, Villager.Profession> professionResolver) throws SQLException {
-    TraderNPCEntry traderNpcEntry = new TraderNPCEntry();
+    TraderNpcEntry traderNpcEntry = new TraderNpcEntry();
 
     traderNpcEntry.setId(rs.getInt(FIELD_ID));
     traderNpcEntry.setCreated(rs.getString(FIELD_CREATED));

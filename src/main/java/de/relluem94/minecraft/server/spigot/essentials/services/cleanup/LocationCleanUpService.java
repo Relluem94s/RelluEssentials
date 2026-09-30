@@ -3,8 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.services.cleanup;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.LocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import lombok.NonNull;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Service responsible for cleaning up outdated location data from the repository.

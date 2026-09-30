@@ -21,6 +21,10 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Listener that handles item drops from block break events and applies bag collection,
+ * auto-smelt, replenishment, and telekinesis enchantment logic to the dropped items.
+ */
 @ListenerName("BlockDropItemBags")
 public class BlockDropItemBags implements ListenerConstruct {
 
@@ -34,19 +38,34 @@ public class BlockDropItemBags implements ListenerConstruct {
     this.context = context;
 
     this.autosmelt = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT)).orElse(null);
     this.replenishment = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT)).orElse(null);
     this.telekinesis = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS)).orElse(null);
   }
 
+  /**
+   * Handles the {@link BlockDropItemEvent} by sequentially applying
+   * custom drop amount rules, enchantment effects, and bag collection to all dropped items.
+   *
+   * <p>Processing order:
+   * <ol>
+   *   <li>Resolves custom drop amounts via the block drop service.</li>
+   *   <li>Applies auto-smelt if the player's main-hand item has the auto-smelt enchantment.</li>
+   *   <li>Applies replenishment if the player's main-hand item has the replenishment enchantment,
+   *       replanting the harvested crop and consuming one seed from the drop.</li>
+   *   <li>Collects matching items into the player's bags if the player owns any bags.</li>
+   *   <li>Moves remaining items directly into the player's inventory if the main-hand item
+   *       has the telekinesis enchantment.</li>
+   * </ol>
+   *
+   * @param e the {@link BlockDropItemEvent} triggered when a block
+   *          is broken and items are dropped
+   */
   @EventHandler
   public void onBlockDrop(@NotNull BlockDropItemEvent e) {
     Player p = e.getPlayer();
@@ -62,14 +81,18 @@ public class BlockDropItemBags implements ListenerConstruct {
 
     if (autosmelt != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
         autosmelt)) {
-      if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), autosmelt)) {
-        for (int i = 0; i < e.getItems().size(); i++) {
-          ItemStack is = e.getItems().get(i).getItemStack().clone();
-          if (e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null) {
-            e.getItems().get(i).getItemStack()
-                .setType(ItemHelper.getSmeltedItemStack(is).getType());
-          }
+      for (int i = 0; i < e.getItems().size(); i++) {
+        Item droppedItem = e.getItems().get(i);
+        if (droppedItem == null) {
+          continue;
         }
+        ItemStack is = droppedItem.getItemStack().clone();
+        ItemStack smeltedItemStack = ItemHelper.getSmeltedItemStack(is,
+            context.getPluginMetadataService().getPlugin().getServer().recipeIterator());
+        if (smeltedItemStack == null) {
+          continue;
+        }
+        droppedItem.getItemStack().setType(smeltedItemStack.getType());
       }
     }
 

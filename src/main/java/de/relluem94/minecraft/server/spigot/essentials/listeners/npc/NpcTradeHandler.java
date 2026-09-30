@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -34,7 +33,16 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Handles all trade interactions between players and NPC trader inventories.
+ *
+ * <p>Processes buy and sell actions for regular items, custom heads, and bags.
+ * Delegates to specialized sub-handlers based on the type of clicked item.</p>
+ *
+ * @author rellu
+ */
 public class NpcTradeHandler {
 
   private final CustomItem disabledItem;
@@ -43,6 +51,14 @@ public class NpcTradeHandler {
   private final BuyBackSlotResolver buyBackSlotResolver;
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new {@code NpcTradeHandler} and resolves all required GUI items from the
+   * item service.
+   *
+   * @param serviceContext the service context providing access to all required services
+   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the
+   *     item service
+   */
   public NpcTradeHandler(ServiceContext serviceContext) {
     this.disabledItem = serviceContext.getItemService().find(
         new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
@@ -59,6 +75,20 @@ public class NpcTradeHandler {
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Handles a player interaction with an item inside an NPC trader inventory.
+   *
+   * <p>Delegates to the appropriate handler based on the clicked item type:
+   * close item, disabled item, bag item, custom head item, or regular tradeable item.</p>
+   *
+   * @param clickedItem      the item the player clicked on
+   * @param clickedInventory the inventory in which the click occurred
+   * @param player           the player who performed the interaction
+   * @param playerEntry      the database entry of the interacting player
+   * @param slot             the slot index that was clicked
+   * @param isRightClick     {@code true} if the player used a right-click, {@code false}
+   *                                     for left-click
+   */
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
 
@@ -85,7 +115,6 @@ public class NpcTradeHandler {
     handleItemTrade(clickedItem, clickedInventory, player, playerEntry, slot, isRightClick);
   }
 
-
   private boolean isCustomHeadItem(@NonNull ItemStack item) {
     if (!Material.PLAYER_HEAD.equals(item.getType())) {
       return false;
@@ -98,7 +127,7 @@ public class NpcTradeHandler {
     }
     UUID profileUuid = skullMeta.getOwnerProfile().getUniqueId();
     return Arrays.stream(CustomHeads.values()).filter(ch -> !ch.equals(CustomHeads.BAG))
-        .anyMatch(ch -> ch.getUUID().equals(profileUuid));
+        .anyMatch(ch -> ch.getUuid().equals(profileUuid));
   }
 
   private void handleCustomHeadTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
@@ -147,7 +176,7 @@ public class NpcTradeHandler {
     if (skullMeta.getOwnerProfile() == null) {
       return false;
     }
-    return CustomHeads.BAG.getUUID().equals(skullMeta.getOwnerProfile().getUniqueId());
+    return CustomHeads.BAG.getUuid().equals(skullMeta.getOwnerProfile().getUniqueId());
   }
 
   private void handleBagPurchase(@NonNull ItemStack clickedItem, Player player,
@@ -211,7 +240,7 @@ public class NpcTradeHandler {
     Optional<String> enchantmentName = serviceContext.getEnchantmentService()
         .findByBookItemStack(item)
         .map(enchantment -> enchantment.createEnchantedBook().getItemMeta())
-        .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
+        .filter(ItemMeta::hasDisplayName).map(ItemMeta::getDisplayName);
 
     if (enchantmentName.isPresent()) {
       return enchantmentName.get();
@@ -219,7 +248,7 @@ public class NpcTradeHandler {
 
     Optional<String> registeredItemName = serviceContext.getItemService().findByItemStack(item)
         .map(itemHelper -> itemHelper.toItemStack().getItemMeta())
-        .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
+        .filter(ItemMeta::hasDisplayName).map(ItemMeta::getDisplayName);
 
     if (registeredItemName.isPresent()) {
       return registeredItemName.get();
@@ -249,7 +278,6 @@ public class NpcTradeHandler {
     return registeredItemBuyPrice.orElseGet(() -> ItemPrice.from(item.getType()).getBuyPrice());
 
   }
-
 
   private Integer resolveSellPrice(ItemStack item, @NonNull ItemMeta meta) {
     if (meta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)) {

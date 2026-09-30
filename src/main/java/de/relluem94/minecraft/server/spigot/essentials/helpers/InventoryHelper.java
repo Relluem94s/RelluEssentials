@@ -17,6 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 /**
+ * Utility class providing helper methods for managing Bukkit inventories,
+ * including creation, serialization, deserialization, and manipulation of
+ * inventories and their contents.
  *
  * @author rellu
  */
@@ -27,14 +30,20 @@ public class InventoryHelper {
   private static final List<Integer> INVENTORY_SKIPS = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
       17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53);
 
+  /**
+   * Private constructor to prevent instantiation of this utility class.
+   *
+   * @throws IllegalStateException always, since this class must not be instantiated
+   */
   protected InventoryHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
   /**
+   * Calculates the smallest valid Bukkit inventory size that can hold the given number of items.
    *
-   * @param amount of items in the Inventory
-   * @return int The Size needed for the amount of items.
+   * @param amount the number of items to be stored in the inventory
+   * @return the smallest valid inventory size capable of holding the given amount of items
    */
   public static int inventorySize(int amount) {
 
@@ -59,18 +68,31 @@ public class InventoryHelper {
   }
 
   /**
+   * Creates a new Bukkit inventory with the specified size and display name.
    *
-   * @param size real size of the Inventory
-   * @param name of the Inventory
-   * @return Inventory
+   * @param size the number of slots the inventory should have
+   * @param name the display name of the inventory
+   * @return a new {@link Inventory} with the given size and name
    */
   public static @NotNull Inventory createInventory(int size, String name) {
     return Bukkit.createInventory(null, size, name);
   }
 
   /**
+   * Loads an inventory from a JSON string and applies it to the given player's inventory.
    *
-   * @param sender Updates Inventory for CommandSender / Player
+   * @param json the JSON string representing the inventory contents
+   * @param p    the player whose inventory should be populated
+   */
+  public static void createInventory(String json, @NotNull Player p) {
+    loadInventoryFromJson(p.getInventory(), new JSONObject(json));
+  }
+
+  /**
+   * Forces a client-side inventory update for the given {@link CommandSender} if they are a {@link Player}.
+   *
+   * @param sender the command sender whose inventory should be updated
+   * @deprecated use Bukkit's built-in mechanisms instead
    */
   @Deprecated
   @ApiStatus.Internal
@@ -82,8 +104,9 @@ public class InventoryHelper {
   }
 
   /**
+   * Closes the currently open inventory for the given {@link CommandSender} if they are a {@link Player}.
    *
-   * @param sender Closes Inventory for CommandSender / Player
+   * @param sender the command sender whose inventory should be closed
    */
   public static void closeInventory(CommandSender sender) {
     if (sender instanceof Player p) {
@@ -92,9 +115,10 @@ public class InventoryHelper {
   }
 
   /**
+   * Opens the specified inventory for the given {@link CommandSender} if they are a {@link Player}.
    *
-   * @param sender Opens Inventory for CommandSender / Player
-   * @param inv    Inventory to Open
+   * @param sender the command sender for whom the inventory should be opened
+   * @param inv    the inventory to open
    */
   public static void openInventory(CommandSender sender, Inventory inv) {
     if (TypeHelper.isPlayer(sender)) {
@@ -104,9 +128,11 @@ public class InventoryHelper {
   }
 
   /**
+   * Fills every slot of the given inventory with the specified {@link ItemStack}.
    *
-   * @param inv Inventory to fill
-   * @param is  ItemStack Item to fill with
+   * @param inv the inventory to fill
+   * @param is  the item stack to place in every slot
+   * @return the same inventory instance after being filled
    */
   @Contract("_, _ -> param1")
   public static Inventory fillInventory(@NotNull Inventory inv, ItemStack is) {
@@ -116,10 +142,21 @@ public class InventoryHelper {
     return inv;
   }
 
+  /**
+   * Returns the number of slots that are skipped when navigating a bordered inventory layout.
+   *
+   * @return the count of skipped inventory slots
+   */
   public static int getSkipsSize() {
     return INVENTORY_SKIPS.size();
   }
 
+  /**
+   * Returns the next available non-skipped slot starting from the given slot index.
+   *
+   * @param slot the slot index to start searching from
+   * @return the next valid slot index, or {@code -1} if no valid slot exists beyond the given index
+   */
   public static int getNextSlot(int slot) {
     if (INVENTORY_SKIPS.contains(slot)) {
       for (int i = slot; i <= 54; i++) {
@@ -134,24 +171,26 @@ public class InventoryHelper {
     return -1;
   }
 
-
-  public static void createInventory(String json, @NotNull Player p) {
-    loadInventoryFromJSON(p.getInventory(), new JSONObject(json));
-  }
-
-  public static void loadInventoryFromJSON(Inventory inventory, JSONObject inventoryJSON) {
+  /**
+   * Clears the given inventory and populates it with items deserialized
+   * from the provided {@link JSONObject}.
+   *
+   * @param inventory     the inventory to populate
+   * @param inventoryJson the JSON object containing serialized inventory slot data
+   */
+  public static void loadInventoryFromJson(Inventory inventory, JSONObject inventoryJson) {
     inventory.clear();
 
     try {
       for (int i = inventory.getSize() - 1; i >= 0; i--) {
-        JSONObject slot = inventoryJSON.getJSONObject(i + "");
+        JSONObject slot = inventoryJson.getJSONObject(i + "");
 
         if (slot.has(SLOT_NAME_ITEM_STACK)) {
-          int slotID = slot.getInt(SLOT_NAME_ID);
+          int slotId = slot.getInt(SLOT_NAME_ID);
           ItemStack stack = ItemHelper.itemFrom64(slot.getString(SLOT_NAME_ITEM_STACK));
 
           if (stack != null) {
-            inventory.setItem(slotID, stack);
+            inventory.setItem(slotId, stack);
           }
         }
       }
@@ -160,11 +199,23 @@ public class InventoryHelper {
     }
   }
 
-  public static @NotNull JSONObject saveInventoryToJSON(@NotNull Player p) {
-    return saveInventoryToJSON(p.getInventory());
+  /**
+   * Serializes the inventory of the given player into a {@link JSONObject}.
+   *
+   * @param p the player whose inventory should be serialized
+   * @return a {@link JSONObject} representing the player's inventory contents
+   */
+  public static @NotNull JSONObject saveInventoryToJson(@NotNull Player p) {
+    return saveInventoryToJson(p.getInventory());
   }
 
-  public static @NotNull JSONObject saveInventoryToJSON(@NotNull Inventory inventory) {
+  /**
+   * Serializes the contents of the given inventory into a {@link JSONObject}.
+   *
+   * @param inventory the inventory to serialize
+   * @return a {@link JSONObject} representing the inventory's contents
+   */
+  public static @NotNull JSONObject saveInventoryToJson(@NotNull Inventory inventory) {
     JSONObject inv = new JSONObject();
 
     for (int i = inventory.getSize() - 1; i >= 0; i--) {
@@ -177,10 +228,26 @@ public class InventoryHelper {
     return inv;
   }
 
+  /**
+   * Creates and returns a Bukkit inventory populated with all items from the
+   * given {@link CustomInventory}.
+   *
+   * @param ci the custom inventory definition containing size, title, and items
+   * @return a populated {@link Inventory} containing all custom items
+   */
   public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci) {
     return getCustomItemInventory(ci, null);
   }
 
+  /**
+   * Creates and returns a Bukkit inventory populated with items from the
+   * given {@link CustomInventory},
+   * optionally filtered by the specified {@link CustomItem.Type}.
+   *
+   * @param ci       the custom inventory definition containing size, title, and items
+   * @param itemType the item type to filter by, or {@code null} to include all items
+   * @return a populated {@link Inventory} containing the matching custom items
+   */
   public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci,
       CustomItem.Type itemType) {
     Inventory inv = Bukkit.createInventory(null, ci.getSize(), ci.getTitleGui());

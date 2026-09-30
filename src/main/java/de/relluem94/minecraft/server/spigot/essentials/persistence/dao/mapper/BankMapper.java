@@ -23,12 +23,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Utility class providing static mapping methods to convert {@link java.sql.ResultSet} rows
+ * into bank-related POJO instances.
+ *
+ * @author rellu
+ */
 public class BankMapper {
 
   private BankMapper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
+  /**
+   * Maps a single {@link java.sql.ResultSet} row to a {@link BankAccountEntry}.
+   *
+   * @param rs the {@link java.sql.ResultSet} positioned at the row to map
+   * @return a fully populated {@link BankAccountEntry}
+   * @throws java.sql.SQLException if a database access error occurs or a column label is invalid
+   */
   public static @NonNull BankAccountEntry mapBankAccount(@NonNull ResultSet rs)
       throws SQLException {
     BankAccountEntry bankAccountEntry = new BankAccountEntry();
@@ -44,6 +57,13 @@ public class BankMapper {
     return bankAccountEntry;
   }
 
+  /**
+   * Maps a single {@link java.sql.ResultSet} row to a {@link BankTransactionEntry}.
+   *
+   * @param rs the {@link java.sql.ResultSet} positioned at the row to map
+   * @return a fully populated {@link BankTransactionEntry}
+   * @throws java.sql.SQLException if a database access error occurs or a column label is invalid
+   */
   public static @NonNull BankTransactionEntry mapBankTransaction(@NonNull ResultSet rs)
       throws SQLException {
     BankTransactionEntry bankTransactionEntry = new BankTransactionEntry();
@@ -59,6 +79,13 @@ public class BankMapper {
     return bankTransactionEntry;
   }
 
+  /**
+   * Maps a single {@link java.sql.ResultSet} row to a {@link BankTierEntry}.
+   *
+   * @param rs the {@link java.sql.ResultSet} positioned at the row to map
+   * @return a fully populated {@link BankTierEntry}
+   * @throws java.sql.SQLException if a database access error occurs or a column label is invalid
+   */
   public static @NonNull BankTierEntry mapBankTier(@NonNull ResultSet rs) throws SQLException {
     BankTierEntry bankTierEntry = new BankTierEntry();
     bankTierEntry.setId(rs.getInt(FIELD_ID));

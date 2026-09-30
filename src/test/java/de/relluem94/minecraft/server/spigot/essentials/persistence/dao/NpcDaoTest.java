@@ -36,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -58,8 +59,8 @@ class NpcDaoTest {
   @Test
   void findAllReturnsListFromQueryExecutor() {
     List<NpcEntry> expectedList = List.of(new NpcEntry());
-    when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenReturn(Collections.singletonList(expectedList.getFirst()));
+    when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        Collections.singletonList(expectedList.getFirst()));
 
     List<NpcEntry> result = npcDao.findAll();
 
@@ -68,36 +69,39 @@ class NpcDaoTest {
 
   @Test
   void findAllUsesNpcMapper() throws SQLException {
-    ResultSet resultSet = mock(ResultSet.class);
     UUID uuid = UUID.randomUUID();
-    when(resultSet.getInt(anyString())).thenReturn(1);
-    when(resultSet.getString(FIELD_UUID)).thenReturn(uuid.toString());
-    when(resultSet.getString(FIELD_PROFILE_NAME)).thenReturn("TestProfile");
-    when(resultSet.getString(FIELD_INVENTORY)).thenReturn(null);
-    when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
-    when(resultSet.getDouble(anyString())).thenReturn(0.0);
-    when(resultSet.getFloat(anyString())).thenReturn(0.0f);
-    when(resultSet.getString(FIELD_ENTITY_UUID)).thenReturn(null);
-    when(resultSet.getString(FIELD_UPDATEDBY)).thenReturn(null);
 
-    when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenAnswer(invocation -> {
-          StatementConfigurer configurer = invocation.getArgument(1);
-          configurer.configure(preparedStatement);
-          RowMapper<NpcEntry> mapper = invocation.getArgument(2);
-          return List.of(mapper.map(resultSet));
-        });
+    try (ResultSet resultSet = mock(ResultSet.class)) {
+      when(resultSet.getInt(anyString())).thenReturn(1);
+      when(resultSet.getString(FIELD_UUID)).thenReturn(uuid.toString());
+      when(resultSet.getString(FIELD_PROFILE_NAME)).thenReturn("TestProfile");
+      when(resultSet.getString(FIELD_INVENTORY)).thenReturn(null);
+      when(resultSet.getString(FIELD_WORLD)).thenReturn("world");
+      when(resultSet.getDouble(anyString())).thenReturn(0.0);
+      when(resultSet.getFloat(anyString())).thenReturn(0.0f);
+      when(resultSet.getString(FIELD_ENTITY_UUID)).thenReturn(null);
+      when(resultSet.getString(FIELD_UPDATEDBY)).thenReturn(null);
 
-    List<NpcEntry> result = npcDao.findAll();
+      when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any())).thenAnswer(
+          invocation -> {
+            StatementConfigurer configurer = invocation.getArgument(1);
+            configurer.configure(preparedStatement);
+            RowMapper<NpcEntry> mapper = invocation.getArgument(2);
+            return List.of(mapper.map(resultSet));
+          });
 
-    assertEquals(uuid, result.getFirst().getUuid());
+      List<NpcEntry> result = npcDao.findAll();
+
+      assertEquals(uuid, result
+          .getFirst()
+          .getUuid());
+    }
   }
-
 
   @Test
   void findAllPropagatesExceptionFromQueryExecutor() {
-    when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.queryList(eq("getCustomNPCs.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> npcDao.findAll());
   }
@@ -106,8 +110,8 @@ class NpcDaoTest {
   void findByUuidReturnsSingleNpcEntry() {
     UUID uuid = UUID.randomUUID();
     NpcEntry expected = new NpcEntry();
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenReturn(expected);
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        expected);
 
     NpcEntry result = npcDao.findByUuid(uuid);
 
@@ -118,20 +122,21 @@ class NpcDaoTest {
   void findByUuidSetsUuidStringOnPreparedStatement() throws SQLException {
     UUID uuid = UUID.randomUUID();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), captor.capture(), any(RowMapper.class)))
-        .thenReturn(null);
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), captor.capture(), any())).thenReturn(null);
 
     npcDao.findByUuid(uuid);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(1, uuid.toString());
   }
 
   @Test
   void findByUuidPropagatesExceptionFromQueryExecutor() {
     UUID uuid = UUID.randomUUID();
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> npcDao.findByUuid(uuid));
   }
@@ -139,8 +144,8 @@ class NpcDaoTest {
   @Test
   void findDialoguesByNpcIdReturnsDialogueList() {
     List<NpcDialogueEntry> expected = List.of(new NpcDialogueEntry());
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenReturn(expected);
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class),
+        ArgumentMatchers.<RowMapper<NpcDialogueEntry>>any())).thenReturn(expected);
 
     List<NpcDialogueEntry> result = npcDao.findDialoguesByNpcId(42);
 
@@ -150,359 +155,390 @@ class NpcDaoTest {
   @Test
   void findDialoguesByNpcIdSetsNpcIdOnPreparedStatement() throws SQLException {
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), captor.capture(), any(RowMapper.class)))
-        .thenReturn(List.of());
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), captor.capture(), any())).thenReturn(
+        List.of());
 
     npcDao.findDialoguesByNpcId(42);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, 42);
   }
 
   @Test
   void findDialoguesByNpcIdPropagatesException() {
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class),
+        any())).thenThrow(new RuntimeException("db error"));
 
     assertThrows(RuntimeException.class, () -> npcDao.findDialoguesByNpcId(1));
   }
 
   @Test
-  void getNPCReturnsSingleNpcEntry() {
+  void getNpcReturnsSingleNpcEntry() {
     UUID uuid = UUID.randomUUID();
     NpcEntry expected = new NpcEntry();
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenReturn(expected);
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any())).thenReturn(
+        expected);
 
-    NpcEntry result = npcDao.getNPC(uuid);
+    NpcEntry result = npcDao.findByUuid(uuid);
 
     assertEquals(expected, result);
   }
 
   @Test
-  void getNPCSetsUuidStringOnPreparedStatement() throws SQLException {
+  void getNpcSetsUuidStringOnPreparedStatement() throws SQLException {
     UUID uuid = UUID.randomUUID();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), captor.capture(), any(RowMapper.class)))
-        .thenReturn(null);
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), captor.capture(), any())).thenReturn(null);
 
-    npcDao.getNPC(uuid);
+    npcDao.findByUuid(uuid);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(1, uuid.toString());
   }
 
   @Test
-  void getNPCPropagatesException() {
+  void getNpcPropagatesException() {
     UUID uuid = UUID.randomUUID();
-    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.querySingle(eq("getCustomNPCByUuid.sql"), any(StatementConfigurer.class), any())).thenThrow(
+        new RuntimeException("db error"));
 
-    assertThrows(RuntimeException.class, () -> npcDao.getNPC(uuid));
+    assertThrows(RuntimeException.class, () -> npcDao.findByUuid(uuid));
   }
 
   @Test
-  void insertNPCReturnsGeneratedKey() {
+  void insertNpcReturnsGeneratedKey() {
     NpcEntry npcEntry = buildFullNpcEntry();
-    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), any(StatementConfigurer.class)))
-        .thenReturn(99);
+    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"),
+        any(StatementConfigurer.class))).thenReturn(99);
 
-    int result = npcDao.insertNPC(npcEntry);
+    int result = npcDao.insertNpc(npcEntry);
 
     assertEquals(99, result);
   }
 
   @Test
-  void insertNPCSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void insertNpcSetsAllFieldsOnPreparedStatement() throws SQLException {
     NpcEntry npcEntry = buildFullNpcEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), captor.capture()))
-        .thenReturn(1);
+    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), captor.capture())).thenReturn(1);
 
-    npcDao.insertNPC(npcEntry);
+    npcDao.insertNpc(npcEntry);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setString(1, npcEntry.getUuid().toString()),
-        () -> verify(preparedStatement).setString(2, npcEntry.getProfileName()),
-        () -> verify(preparedStatement).setString(3, npcEntry.getInventory().toString()),
-        () -> verify(preparedStatement).setString(4, npcEntry.getWorld()),
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setString(1, npcEntry
+            .getUuid()
+            .toString()), () -> verify(preparedStatement).setString(2, npcEntry.getProfileName()),
+        () -> verify(preparedStatement).setString(3, npcEntry
+            .getInventory()
+            .toString()), () -> verify(preparedStatement).setString(4, npcEntry.getWorld()),
         () -> verify(preparedStatement).setDouble(5, npcEntry.getX()),
         () -> verify(preparedStatement).setDouble(6, npcEntry.getY()),
         () -> verify(preparedStatement).setDouble(7, npcEntry.getZ()),
         () -> verify(preparedStatement).setFloat(8, npcEntry.getYaw()),
         () -> verify(preparedStatement).setFloat(9, npcEntry.getPitch()),
-        () -> verify(preparedStatement).setInt(10, npcEntry.getCreatedBy())
-    );
+        () -> verify(preparedStatement).setInt(10, npcEntry.getCreatedBy()));
   }
 
   @Test
-  void insertNPCSetsNullInventoryWhenInventoryIsNull() throws SQLException {
+  void insertNpcSetsNullInventoryWhenInventoryIsNull() throws SQLException {
     NpcEntry npcEntry = buildFullNpcEntry();
     npcEntry.setInventory(null);
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), captor.capture()))
-        .thenReturn(1);
+    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), captor.capture())).thenReturn(1);
 
-    npcDao.insertNPC(npcEntry);
+    npcDao.insertNpc(npcEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(3, null);
   }
 
   @Test
-  void insertNPCPropagatesException() {
+  void insertNpcPropagatesException() {
     NpcEntry npcEntry = buildFullNpcEntry();
-    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"), any(StatementConfigurer.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.executeInsertWithGeneratedKey(eq("insertCustomNPC.sql"),
+        any(StatementConfigurer.class))).thenThrow(new RuntimeException("db error"));
 
-    assertThrows(RuntimeException.class, () -> npcDao.insertNPC(npcEntry));
+    assertThrows(RuntimeException.class, () -> npcDao.insertNpc(npcEntry));
   }
 
   @Test
-  void updateNPCSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void updateNpcSetsAllFieldsOnPreparedStatement() throws SQLException {
     NpcEntry npcEntry = buildFullNpcEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
 
-    npcDao.updateNPC(npcEntry);
+    npcDao.updateNpc(npcEntry);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setString(1, npcEntry.getEntityUuid().toString()),
-        () -> verify(preparedStatement).setString(2, npcEntry.getProfileName()),
-        () -> verify(preparedStatement).setString(3, npcEntry.getInventory().toString()),
-        () -> verify(preparedStatement).setString(4, npcEntry.getWorld()),
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setString(1, npcEntry
+            .getEntityUuid()
+            .toString()), () -> verify(preparedStatement).setString(2, npcEntry.getProfileName()),
+        () -> verify(preparedStatement).setString(3, npcEntry
+            .getInventory()
+            .toString()), () -> verify(preparedStatement).setString(4, npcEntry.getWorld()),
         () -> verify(preparedStatement).setDouble(5, npcEntry.getX()),
         () -> verify(preparedStatement).setDouble(6, npcEntry.getY()),
         () -> verify(preparedStatement).setDouble(7, npcEntry.getZ()),
         () -> verify(preparedStatement).setFloat(8, npcEntry.getYaw()),
         () -> verify(preparedStatement).setFloat(9, npcEntry.getPitch()),
         () -> verify(preparedStatement).setInt(10, npcEntry.getUpdatedBy()),
-        () -> verify(preparedStatement).setInt(11, npcEntry.getId())
-    );
+        () -> verify(preparedStatement).setInt(11, npcEntry.getId()));
   }
 
   @Test
-  void updateNPCSetsNullEntityUuidWhenEntityUuidIsNull() throws SQLException {
+  void updateNpcSetsNullEntityUuidWhenEntityUuidIsNull() throws SQLException {
     NpcEntry npcEntry = buildFullNpcEntry();
     npcEntry.setEntityUuid(null);
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
 
-    npcDao.updateNPC(npcEntry);
+    npcDao.updateNpc(npcEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(1, null);
   }
 
   @Test
-  void updateNPCSetsNullInventoryWhenInventoryIsNull() throws SQLException {
+  void updateNpcSetsNullInventoryWhenInventoryIsNull() throws SQLException {
     NpcEntry npcEntry = buildFullNpcEntry();
     npcEntry.setInventory(null);
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("updateCustomNPC.sql"), captor.capture());
 
-    npcDao.updateNPC(npcEntry);
+    npcDao.updateNpc(npcEntry);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setString(3, null);
   }
 
   @Test
-  void updateNPCPropagatesException() {
+  void updateNpcPropagatesException() {
     NpcEntry npcEntry = buildFullNpcEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("updateCustomNPC.sql"), any(StatementConfigurer.class));
 
-    assertThrows(RuntimeException.class, () -> npcDao.updateNPC(npcEntry));
+    assertThrows(RuntimeException.class, () -> npcDao.updateNpc(npcEntry));
   }
 
   @Test
-  void deleteNPCSetsPlayerIdAndUuidOnPreparedStatement() throws SQLException {
+  void deleteNpcSetsPlayerIdAndUuidOnPreparedStatement() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
     int deletedByPlayerId = 7;
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("deleteCustomNPC.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("deleteCustomNPC.sql"), captor.capture());
 
-    npcDao.deleteNPC(npcUuid, deletedByPlayerId);
+    npcDao.deleteNpc(npcUuid, deletedByPlayerId);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setInt(1, deletedByPlayerId),
-        () -> verify(preparedStatement).setString(2, npcUuid.toString())
-    );
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setInt(1, deletedByPlayerId),
+        () -> verify(preparedStatement).setString(2, npcUuid.toString()));
   }
 
   @Test
-  void deleteNPCPropagatesException() {
+  void deleteNpcPropagatesException() {
     UUID npcUuid = UUID.randomUUID();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("deleteCustomNPC.sql"), any(StatementConfigurer.class));
 
-    assertThrows(RuntimeException.class, () -> npcDao.deleteNPC(npcUuid, 1));
+    assertThrows(RuntimeException.class, () -> npcDao.deleteNpc(npcUuid, 1));
   }
 
   @Test
-  void insertNPCDialogueSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void insertNpcDialogueSetsAllFieldsOnPreparedStatement() throws SQLException {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("insertCustomNPCDialogue.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("insertCustomNPCDialogue.sql"), captor.capture());
 
-    npcDao.insertNPCDialogue(entry);
+    npcDao.insertNpcDialogue(entry);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setInt(1, entry.getCreatedBy()),
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setInt(1, entry.getCreatedBy()),
         () -> verify(preparedStatement).setInt(2, entry.getListPosition()),
         () -> verify(preparedStatement).setString(3, entry.getText()),
-        () -> verify(preparedStatement).setInt(4, entry.getNpcFk())
-    );
+        () -> verify(preparedStatement).setInt(4, entry.getNpcFk()));
   }
 
   @Test
-  void insertNPCDialoguePropagatesException() {
+  void insertNpcDialoguePropagatesException() {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("insertCustomNPCDialogue.sql"), any(StatementConfigurer.class));
 
-    assertThrows(RuntimeException.class, () -> npcDao.insertNPCDialogue(entry));
+    assertThrows(RuntimeException.class, () -> npcDao.insertNpcDialogue(entry));
   }
 
   @Test
-  void updateNPCDialogueReturnsTrueWhenRowsAffected() {
+  void updateNpcDialogueReturnsTrueWhenRowsAffected() {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
     UUID uuid = UUID.randomUUID();
-    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"), any(StatementConfigurer.class)))
-        .thenReturn(1);
+    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"),
+        any(StatementConfigurer.class))).thenReturn(1);
 
-    boolean result = npcDao.updateNPCDialogue(entry, uuid);
+    boolean result = npcDao.updateNpcDialogue(entry, uuid);
 
     assertTrue(result);
   }
 
   @Test
-  void updateNPCDialogueReturnsFalseWhenNoRowsAffected() {
+  void updateNpcDialogueReturnsFalseWhenNoRowsAffected() {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
     UUID uuid = UUID.randomUUID();
-    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"), any(StatementConfigurer.class)))
-        .thenReturn(0);
+    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"),
+        any(StatementConfigurer.class))).thenReturn(0);
 
-    boolean result = npcDao.updateNPCDialogue(entry, uuid);
+    boolean result = npcDao.updateNpcDialogue(entry, uuid);
 
     assertFalse(result);
   }
 
   @Test
-  void updateNPCDialogueSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void updateNpcDialogueSetsAllFieldsOnPreparedStatement() throws SQLException {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
     UUID uuid = UUID.randomUUID();
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"), captor.capture()))
-        .thenReturn(1);
+    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"), captor.capture())).thenReturn(1);
 
-    npcDao.updateNPCDialogue(entry, uuid);
+    npcDao.updateNpcDialogue(entry, uuid);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setInt(1, entry.getUpdatedBy()),
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setInt(1, entry.getUpdatedBy()),
         () -> verify(preparedStatement).setString(2, entry.getText()),
         () -> verify(preparedStatement).setString(3, uuid.toString()),
-        () -> verify(preparedStatement).setInt(4, entry.getListPosition())
-    );
+        () -> verify(preparedStatement).setInt(4, entry.getListPosition()));
   }
 
   @Test
-  void updateNPCDialoguePropagatesException() {
+  void updateNpcDialoguePropagatesException() {
     NpcDialogueEntry entry = buildFullNpcDialogueEntry();
     UUID uuid = UUID.randomUUID();
-    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"), any(StatementConfigurer.class)))
-        .thenThrow(new RuntimeException("db error"));
+    when(queryExecutor.executeUpdateWithCount(eq("updateCustomNPCDialogue.sql"),
+        any(StatementConfigurer.class))).thenThrow(new RuntimeException("db error"));
 
-    assertThrows(RuntimeException.class, () -> npcDao.updateNPCDialogue(entry, uuid));
+    assertThrows(RuntimeException.class, () -> npcDao.updateNpcDialogue(entry, uuid));
   }
 
   @Test
-  void deleteNPCDialogueByIdSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void deleteNpcDialogueByIdSetsAllFieldsOnPreparedStatement() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
     int listPosition = 3;
     int deletedByPlayerId = 5;
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("deleteCustomNPCDialogueById.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("deleteCustomNPCDialogueById.sql"), captor.capture());
 
-    npcDao.deleteNPCDialogueById(npcUuid, listPosition, deletedByPlayerId);
+    npcDao.deleteNpcDialogueById(npcUuid, listPosition, deletedByPlayerId);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setInt(1, deletedByPlayerId),
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setInt(1, deletedByPlayerId),
         () -> verify(preparedStatement).setString(2, npcUuid.toString()),
-        () -> verify(preparedStatement).setInt(3, listPosition)
-    );
+        () -> verify(preparedStatement).setInt(3, listPosition));
   }
 
   @Test
-  void deleteNPCDialogueByIdPropagatesException() {
+  void deleteNpcDialogueByIdPropagatesException() {
     UUID npcUuid = UUID.randomUUID();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("deleteCustomNPCDialogueById.sql"), any(StatementConfigurer.class));
 
-    assertThrows(RuntimeException.class, () -> npcDao.deleteNPCDialogueById(npcUuid, 1, 1));
+    assertThrows(RuntimeException.class, () -> npcDao.deleteNpcDialogueById(npcUuid, 1, 1));
   }
 
   @Test
-  void deleteNPCDialogueByNpcIdSetsAllFieldsOnPreparedStatement() throws SQLException {
+  void deleteNpcDialogueByNpcIdSetsAllFieldsOnPreparedStatement() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
     int deletedByPlayerId = 8;
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    doNothing().when(queryExecutor).executeUpdate(eq("deleteCustomNPCDialogueByNpcId.sql"), captor.capture());
+    doNothing()
+        .when(queryExecutor)
+        .executeUpdate(eq("deleteCustomNPCDialogueByNpcId.sql"), captor.capture());
 
-    npcDao.deleteNPCDialogueByNpcId(npcUuid, deletedByPlayerId);
+    npcDao.deleteNpcDialogueByNpcId(npcUuid, deletedByPlayerId);
 
-    captor.getValue().configure(preparedStatement);
-    assertAll(
-        () -> verify(preparedStatement).setInt(1, deletedByPlayerId),
-        () -> verify(preparedStatement).setString(2, npcUuid.toString())
-    );
+    captor
+        .getValue()
+        .configure(preparedStatement);
+    assertAll(() -> verify(preparedStatement).setInt(1, deletedByPlayerId),
+        () -> verify(preparedStatement).setString(2, npcUuid.toString()));
   }
 
   @Test
-  void deleteNPCDialogueByNpcIdPropagatesException() {
+  void deleteNpcDialogueByNpcIdPropagatesException() {
     UUID npcUuid = UUID.randomUUID();
-    doThrow(new RuntimeException("db error")).when(queryExecutor)
+    doThrow(new RuntimeException("db error"))
+        .when(queryExecutor)
         .executeUpdate(eq("deleteCustomNPCDialogueByNpcId.sql"), any(StatementConfigurer.class));
 
-    assertThrows(RuntimeException.class, () -> npcDao.deleteNPCDialogueByNpcId(npcUuid, 1));
+    assertThrows(RuntimeException.class, () -> npcDao.deleteNpcDialogueByNpcId(npcUuid, 1));
   }
 
   @Test
-  void getNPCDialoguesReturnsDialogueList() {
+  void getNpcDialoguesReturnsDialogueList() {
     List<NpcDialogueEntry> expected = List.of(new NpcDialogueEntry());
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenReturn(expected);
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class),
+        ArgumentMatchers.<RowMapper<NpcDialogueEntry>>any())).thenReturn(expected);
 
-    List<NpcDialogueEntry> result = npcDao.getNPCDialogues(10);
+    List<NpcDialogueEntry> result = npcDao.findDialoguesByNpcId(10);
 
     assertEquals(expected, result);
   }
 
   @Test
-  void getNPCDialoguesSetsNpcIdOnPreparedStatement() throws SQLException {
+  void getNpcDialoguesSetsNpcIdOnPreparedStatement() throws SQLException {
     ArgumentCaptor<StatementConfigurer> captor = ArgumentCaptor.forClass(StatementConfigurer.class);
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), captor.capture(), any(RowMapper.class)))
-        .thenReturn(List.of());
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), captor.capture(), any())).thenReturn(
+        List.of());
 
-    npcDao.getNPCDialogues(10);
+    npcDao.findDialoguesByNpcId(10);
 
-    captor.getValue().configure(preparedStatement);
+    captor
+        .getValue()
+        .configure(preparedStatement);
     verify(preparedStatement).setInt(1, 10);
   }
 
   @Test
-  void getNPCDialoguesPropagatesException() {
-    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class), any(RowMapper.class)))
-        .thenThrow(new RuntimeException("db error"));
+  void getNpcDialoguesPropagatesException() {
+    when(queryExecutor.queryList(eq("getCustomNPCDialoguesByNpcId.sql"), any(StatementConfigurer.class),
+        any())).thenThrow(new RuntimeException("db error"));
 
-    assertThrows(RuntimeException.class, () -> npcDao.getNPCDialogues(1));
+    assertThrows(RuntimeException.class, () -> npcDao.findDialoguesByNpcId(1));
   }
 
   private NpcEntry buildFullNpcEntry() {

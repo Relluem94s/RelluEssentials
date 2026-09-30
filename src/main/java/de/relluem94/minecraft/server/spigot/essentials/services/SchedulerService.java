@@ -9,9 +9,9 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 
 /**
- * Service wrapper around {@link BukkitScheduler} that automatically binds all task
- * scheduling operations to the owning {@link Plugin} instance, reducing boilerplate
- * and centralizing scheduler access.
+ * Service wrapper around {@link BukkitScheduler} that automatically binds all task scheduling
+ * operations to the owning {@link Plugin} instance, reducing boilerplate and centralizing scheduler
+ * access.
  */
 public class SchedulerService {
 
@@ -85,20 +85,25 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules a repeating task to run asynchronously at a fixed interval.
+   * Schedules a repeating task to run on the main thread, passing the {@link BukkitTask} to the
+   * consumer on each execution so the task can cancel itself if needed.
    *
-   * @param task   the runnable to execute asynchronously
+   * @param task   the consumer receiving the task reference on each execution
    * @param delay  the delay in ticks before the first execution
    * @param period the interval in ticks between subsequent executions
    * @return the {@link BukkitTask} representing the scheduled task
    */
-  public BukkitTask runTaskTimerAsynchronously(Runnable task, long delay, long period) {
-    return scheduler().runTaskTimerAsynchronously(plugin, task, delay, period);
+  public BukkitTask runTaskTimer(Consumer<BukkitTask> task, long delay, long period) {
+    AtomicReference<BukkitTask> taskReference = new AtomicReference<>();
+    BukkitTask bukkitTask = scheduler().runTaskTimer(plugin,
+        selfCancellingRunnable(task, taskReference), delay, period);
+    taskReference.set(bukkitTask);
+    return bukkitTask;
   }
 
   /**
-   * Schedules a synchronous delayed task using the legacy task ID API.
-   * The task is executed on the main thread on the next available tick.
+   * Schedules a synchronous delayed task using the legacy task ID API. The task is executed on the
+   * main thread on the next available tick.
    *
    * @param task the runnable to execute
    * @return the task ID assigned to the scheduled task
@@ -108,8 +113,8 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules a synchronous delayed task using the legacy task ID API.
-   * The task is executed on the main thread after the specified delay.
+   * Schedules a synchronous delayed task using the legacy task ID API. The task is executed on the
+   * main thread after the specified delay.
    *
    * @param task  the runnable to execute
    * @param delay the delay in ticks before the task is executed
@@ -120,8 +125,8 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules a repeating synchronous task using the legacy task ID API.
-   * The task is executed on the main thread at a fixed interval.
+   * Schedules a repeating synchronous task using the legacy task ID API. The task is executed on
+   * the main thread at a fixed interval.
    *
    * @param task   the runnable to execute
    * @param delay  the delay in ticks before the first execution
@@ -133,8 +138,8 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules an asynchronous delayed task using the legacy task ID API.
-   * The task is executed on a separate thread on the next available opportunity.
+   * Schedules an asynchronous delayed task using the legacy task ID API. The task is executed on a
+   * separate thread on the next available opportunity.
    *
    * @param task the runnable to execute asynchronously
    * @return the task ID assigned to the scheduled task
@@ -144,8 +149,8 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules an asynchronous delayed task using the legacy task ID API.
-   * The task is executed on a separate thread after the specified delay.
+   * Schedules an asynchronous delayed task using the legacy task ID API. The task is executed on a
+   * separate thread after the specified delay.
    *
    * @param task  the runnable to execute asynchronously
    * @param delay the delay in ticks before the task is executed
@@ -156,8 +161,8 @@ public class SchedulerService {
   }
 
   /**
-   * Schedules a repeating asynchronous task using the legacy task ID API.
-   * The task is executed on a separate thread at a fixed interval.
+   * Schedules a repeating asynchronous task using the legacy task ID API. The task is executed on a
+   * separate thread at a fixed interval.
    *
    * @param task   the runnable to execute asynchronously
    * @param delay  the delay in ticks before the first execution
@@ -168,18 +173,43 @@ public class SchedulerService {
     return scheduler().scheduleAsyncRepeatingTask(plugin, task, delay, period);
   }
 
-  public BukkitTask runTaskTimer(Consumer<BukkitTask> task, long delay, long period) {
+  /**
+   * Schedules a repeating task to run asynchronously, passing the {@link BukkitTask} to the
+   * consumer on each execution so the task can cancel itself if needed.
+   *
+   * @param task   the consumer receiving the task reference on each execution
+   * @param delay  the delay in ticks before the first execution
+   * @param period the interval in ticks between subsequent executions
+   * @return the {@link BukkitTask} representing the scheduled task
+   */
+  public BukkitTask runTaskTimerAsynchronously(Consumer<BukkitTask> task, long delay, long period) {
     AtomicReference<BukkitTask> taskReference = new AtomicReference<>();
-    BukkitTask bukkitTask = scheduler().runTaskTimer(plugin, () -> task.accept(taskReference.get()), delay, period);
+    BukkitTask bukkitTask = scheduler().runTaskTimerAsynchronously(plugin,
+        selfCancellingRunnable(task, taskReference), delay, period);
     taskReference.set(bukkitTask);
     return bukkitTask;
   }
 
-  public BukkitTask runTaskTimerAsynchronously(Consumer<BukkitTask> task, long delay, long period) {
-    AtomicReference<BukkitTask> taskReference = new AtomicReference<>();
-    BukkitTask bukkitTask = scheduler().runTaskTimerAsynchronously(plugin, () -> task.accept(taskReference.get()), delay, period);
-    taskReference.set(bukkitTask);
-    return bukkitTask;
+  /**
+   * Schedules a repeating task to run asynchronously at a fixed interval.
+   *
+   * @param task   the runnable to execute asynchronously
+   * @param delay  the delay in ticks before the first execution
+   * @param period the interval in ticks between subsequent executions
+   * @return the {@link BukkitTask} representing the scheduled task
+   */
+  public BukkitTask runTaskTimerAsynchronously(Runnable task, long delay, long period) {
+    return scheduler().runTaskTimerAsynchronously(plugin, task, delay, period);
+  }
+
+  private Runnable selfCancellingRunnable(Consumer<BukkitTask> task,
+      AtomicReference<BukkitTask> taskReference) {
+    return () -> {
+      BukkitTask resolvedTask = taskReference.get();
+      if (resolvedTask != null) {
+        task.accept(resolvedTask);
+      }
+    };
   }
 
   /**
@@ -237,17 +267,14 @@ public class SchedulerService {
   }
 
   /**
-   * Retrieves a pending {@link BukkitTask} by its task ID.
-   * Returns {@code null} if no pending task with the given ID exists.
+   * Retrieves a pending {@link BukkitTask} by its task ID. Returns {@code null} if no pending task
+   * with the given ID exists.
    *
    * @param taskId the ID of the task to look up
    * @return the matching {@link BukkitTask}, or {@code null} if not found
    */
   public BukkitTask getTask(int taskId) {
-    return scheduler().getPendingTasks()
-        .stream()
-        .filter(task -> task.getTaskId() == taskId)
-        .findFirst()
-        .orElse(null);
+    return scheduler().getPendingTasks().stream().filter(task -> task.getTaskId() == taskId)
+        .findFirst().orElse(null);
   }
 }
