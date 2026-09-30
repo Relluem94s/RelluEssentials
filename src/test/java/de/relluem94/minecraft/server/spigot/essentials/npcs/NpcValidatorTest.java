@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator.ValidationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("ValidName1");
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -36,7 +37,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName(null);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name must not be empty.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_EMPTY, result.messageKey())
     );
   }
 
@@ -45,7 +46,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("   ");
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name must not be empty.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_EMPTY, result.messageKey())
     );
   }
 
@@ -54,7 +55,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("");
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name must not be empty.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_EMPTY, result.messageKey())
     );
   }
 
@@ -63,7 +64,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("ab");
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name must be between 3 and 16 characters.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_LENGTH, result.messageKey())
     );
   }
 
@@ -72,7 +73,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("ThisNameIsWayTooLong");
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name must be between 3 and 16 characters.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_LENGTH, result.messageKey())
     );
   }
 
@@ -81,7 +82,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("abc");
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -90,7 +91,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("ValidName1234567".substring(0, 16));
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -99,7 +100,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("Invalid-Name!");
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Profile name may only contain letters, digits, and underscores.", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS, result.messageKey())
     );
   }
 
@@ -108,7 +109,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateProfileName("Valid_Name_1");
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -117,61 +118,61 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateCoordinates(0, 64, 0);
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForXBelowMinimum() {
+  void validateCoordinatesReturnsFailureForXaxisBelowMinimum() {
     ValidationResult result = npcValidator.validateCoordinates(-30_000_001, 64, 0);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("X coordinate is out of bounds (-3.0E7 to 3.0E7).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForXAboveMaximum() {
+  void validateCoordinatesReturnsFailureForXaxisAboveMaximum() {
     ValidationResult result = npcValidator.validateCoordinates(30_000_001, 64, 0);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("X coordinate is out of bounds (-3.0E7 to 3.0E7).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForYBelowMinimum() {
+  void validateCoordinatesReturnsFailureForYaxisBelowMinimum() {
     ValidationResult result = npcValidator.validateCoordinates(0, -2049, 0);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Y coordinate is out of bounds (-2048.0 to 2048.0).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_Y_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForYAboveMaximum() {
+  void validateCoordinatesReturnsFailureForYaxisAboveMaximum() {
     ValidationResult result = npcValidator.validateCoordinates(0, 2049, 0);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Y coordinate is out of bounds (-2048.0 to 2048.0).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_Y_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForZBelowMinimum() {
+  void validateCoordinatesReturnsFailureForZaxisBelowMinimum() {
     ValidationResult result = npcValidator.validateCoordinates(0, 64, -30_000_001);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Z coordinate is out of bounds (-3.0E7 to 3.0E7).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_Z_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
   @Test
-  void validateCoordinatesReturnsFailureForZAboveMaximum() {
+  void validateCoordinatesReturnsFailureForZaxisAboveMaximum() {
     ValidationResult result = npcValidator.validateCoordinates(0, 64, 30_000_001);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Z coordinate is out of bounds (-3.0E7 to 3.0E7).", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_Z_COORDINATE_OUT_OF_BOUNDS, result.messageKey())
     );
   }
 
@@ -180,7 +181,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateCoordinates(-30_000_000, -2048, -30_000_000);
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -189,7 +190,7 @@ class NpcValidatorTest {
     ValidationResult result = npcValidator.validateCoordinates(30_000_000, 2048, 30_000_000);
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
@@ -198,16 +199,16 @@ class NpcValidatorTest {
     ValidationResult result = ValidationResult.success();
     assertAll(
         () -> assertTrue(result.valid()),
-        () -> assertNull(result.errorMessage())
+        () -> assertNull(result.messageKey())
     );
   }
 
   @Test
   void validationResultFailureReturnsValidFalseAndErrorMessage() {
-    ValidationResult result = ValidationResult.failure("Some error");
+    ValidationResult result = ValidationResult.failure(MessageKey.PLUGIN_FOLDER_MKDIR_ERROR);
     assertAll(
         () -> assertFalse(result.valid()),
-        () -> assertEquals("Some error", result.errorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_FOLDER_MKDIR_ERROR, result.messageKey())
     );
   }
 }

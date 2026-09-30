@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator.ValidationResult;
 import org.junit.jupiter.api.Test;
 
 class NpcOperationResultTest {
@@ -18,17 +20,17 @@ class NpcOperationResultTest {
 
     assertTrue(result.isSuccessful());
     assertEquals(npc, result.getNpc());
-    assertNull(result.getErrorMessage());
+    assertNull(result.getValidationResult());
   }
 
   @Test
-  void failureResultIsNotSuccessfulAndContainsErrorMessage() {
-    String errorMessage = "Something went wrong";
+  void failureResultIsNotSuccessfulAndContainsValidationResult() {
+    ValidationResult validationResult = ValidationResult.failure(MessageKey.PLUGIN_FOLDER_MKDIR_ERROR);
 
-    NpcOperationResult result = NpcOperationResult.failure(errorMessage);
+    NpcOperationResult result = NpcOperationResult.failure(validationResult);
 
     assertFalse(result.isSuccessful());
-    assertEquals(errorMessage, result.getErrorMessage());
+    assertEquals(validationResult, result.getValidationResult());
     assertNull(result.getNpc());
   }
 
@@ -41,10 +43,10 @@ class NpcOperationResultTest {
   }
 
   @Test
-  void failureResultWithNullErrorMessageHasNoMessage() {
+  void failureResultWithNullValidationResultHasNoValidationResult() {
     NpcOperationResult result = NpcOperationResult.failure(null);
 
     assertFalse(result.isSuccessful());
-    assertNull(result.getErrorMessage());
+    assertNull(result.getValidationResult());
   }
 }
