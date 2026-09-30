@@ -28,6 +28,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import java.io.File;
 import java.util.Calendar;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,6 +38,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
  * Main plugin class for RelluEssentials. Extends {@link JavaPlugin} to integrate with the Spigot
  * plugin lifecycle.
  */
+@NoArgsConstructor
 public class RelluEssentials extends JavaPlugin {
 
   private static RelluEssentials instance;

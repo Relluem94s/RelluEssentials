@@ -19,6 +19,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
@@ -80,9 +81,9 @@ class NpcServiceTest {
     UUID entityUuid = UUID.randomUUID();
 
     when(npcValidator.validateProfileName(anyString()))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcValidator.validateCoordinates(anyDouble(), anyDouble(), anyDouble()))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(entityUuid));
 
     npcService.createNpc("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
@@ -100,9 +101,9 @@ class NpcServiceTest {
     UUID entityUuid = UUID.randomUUID();
 
     when(npcValidator.validateProfileName("TestProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcValidator.validateCoordinates(1.0, 64.0, 1.0))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(entityUuid));
 
     NpcOperationResult result = npcService.createNpc("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
@@ -123,28 +124,28 @@ class NpcServiceTest {
   @Test
   void createNpcReturnsFailureWhenProfileNameInvalid() {
     when(npcValidator.validateProfileName("bad"))
-        .thenReturn(new NpcValidator.ValidationResult(false, "Invalid profile name."));
+        .thenReturn(new NpcValidator.ValidationResult(false, MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS, null));
 
     NpcOperationResult result = npcService.createNpc("bad", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
 
     assertAll(
         () -> assertFalse(result.isSuccessful()),
-        () -> assertEquals("Invalid profile name.", result.getErrorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS, result.getValidationResult().messageKey())
     );
   }
 
   @Test
   void createNpcReturnsFailureWhenCoordinatesInvalid() {
     when(npcValidator.validateProfileName("TestProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcValidator.validateCoordinates(Double.NaN, 0, 0))
-        .thenReturn(new NpcValidator.ValidationResult(false, "Invalid coordinates."));
+        .thenReturn(new NpcValidator.ValidationResult(false, MessageKey.PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS, null));
 
     NpcOperationResult result = npcService.createNpc("TestProfile", Double.NaN, 0, 0, 0f, 0f, "world", 1);
 
     assertAll(
         () -> assertFalse(result.isSuccessful()),
-        () -> assertEquals("Invalid coordinates.", result.getErrorMessage())
+        () -> assertEquals(MessageKey.PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS, result.getValidationResult().messageKey())
     );
   }
 
@@ -160,7 +161,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class);
@@ -198,7 +199,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("bad"))
-        .thenReturn(new NpcValidator.ValidationResult(false, "Invalid profile name."));
+        .thenReturn(new NpcValidator.ValidationResult(false, MessageKey.PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS, null));
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "bad", 1);
 
@@ -215,7 +216,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateCoordinates(10.0, 65.0, 10.0))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
@@ -247,7 +248,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateCoordinates(Double.NaN, 0, 0))
-        .thenReturn(new NpcValidator.ValidationResult(false, "Invalid coordinates."));
+        .thenReturn(new NpcValidator.ValidationResult(false, MessageKey.PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS, null));
 
     NpcOperationResult result = npcService.updateNpcPosition(npcId, Double.NaN, 0, 0, 0, 0, 1);
 
@@ -581,7 +582,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -626,7 +627,7 @@ class NpcServiceTest {
     UUID newEntityUuid = UUID.randomUUID();
 
     when(npcValidator.validateCoordinates(10.0, 65.0, 10.0))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
@@ -645,7 +646,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -664,7 +665,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateCoordinates(10.0, 65.0, 10.0))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
@@ -683,7 +684,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -704,7 +705,7 @@ class NpcServiceTest {
     npc.setEntityUuid(oldEntityUuid);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -725,7 +726,7 @@ class NpcServiceTest {
     npc.setEntityUuid(null);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -745,7 +746,7 @@ class NpcServiceTest {
     loadNpcIntoService(npc);
 
     when(npcValidator.validateProfileName("NewProfile"))
-        .thenReturn(new NpcValidator.ValidationResult(true, null));
+        .thenReturn(new NpcValidator.ValidationResult(true, null, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUuid));
 
     NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);

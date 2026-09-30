@@ -384,7 +384,14 @@ public enum MessageKey {
   PLUGIN_EVENT_POSITION_AXE_FIRST_RESET("plugin.event.position_axe.first_reset"),
   PLUGIN_EVENT_POSITION_AXE_SECOND_RESET("plugin.event.position_axe.second_reset"),
   PLUGIN_EVENT_POSITION_AXE_FIRST_SET("plugin.event.position_axe.first_set"),
-  PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set");
+  PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_EMPTY("plugin.npc.validation.profile_name_empty"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_LENGTH("plugin.npc.validation.profile_name_length"),
+  PLUGIN_NPC_VALIDATION_PROFILE_NAME_INVALID_CHARACTERS("plugin.npc.validation.profile_name_invalid_characters"),
+  PLUGIN_NPC_VALIDATION_NPC_X_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_x_coordinate_out_of_bounds"),
+  PLUGIN_NPC_VALIDATION_NPC_Y_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_y_coordinate_out_of_bounds"),
+  PLUGIN_NPC_VALIDATION_NPC_Z_COORDINATE_OUT_OF_BOUNDS("plugin.npc.validation.npc_z_coordinate_out_of_bounds"),
+  PLUGIN_NPC_ERROR_NPC_NOT_FOUND("plugin.npc.error.npc_not_found");
 
   private final String key;
 

@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Sub-command implementation that handles updating existing NPC entries.
- * Supports updating the NPC's profile name or its position in the world.
+ * Sub-command implementation that handles updating existing NPC entries. Supports updating the NPC's profile name or
+ * its position in the world.
  *
  * @author rellu
  */
@@ -36,8 +36,7 @@ public class NpcUpdateCommand implements SubCommand {
   /**
    * Creates a new NpcUpdateCommand with the given service context.
    *
-   * @param context the service context providing access to group, translation,
-   *                player and NPC services
+   * @param context the service context providing access to group, translation, player and NPC services
    */
   public NpcUpdateCommand(ServiceContext context) {
     this.serviceContext = context;
@@ -45,14 +44,18 @@ public class NpcUpdateCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
-      player.sendMessage(serviceContext.getTranslationService()
+    if (!serviceContext
+        .getGroupService()
+        .isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_PROFILE_LENGTH) {
-      player.sendMessage(serviceContext.getTranslationService()
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
@@ -61,8 +64,9 @@ public class NpcUpdateCommand implements SubCommand {
     try {
       npcId = UUID.fromString(args[ARGS_ID_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
+      player.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
 
@@ -73,29 +77,33 @@ public class NpcUpdateCommand implements SubCommand {
     } else if ("position".equalsIgnoreCase(field)) {
       handlePositionUpdate(player, npcId, args);
     } else {
-      player.sendMessage(serviceContext.getTranslationService()
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
     }
   }
 
   private void handleProfileUpdate(Player player, UUID npcId, String[] args) {
     if (args.length < REQUIRED_ARGS_PROFILE_LENGTH) {
-      player.sendMessage(serviceContext.getTranslationService()
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
     String newProfile = args[ARGS_PROFILE_VALUE_INDEX];
-    PlayerEntry playerEntry = serviceContext.getPlayerService()
+    PlayerEntry playerEntry = serviceContext
+        .getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = serviceContext.getNpcService()
+    NpcOperationResult result = serviceContext
+        .getNpcService()
         .updateNpcProfile(npcId, newProfile, playerEntry.getId());
-    sendOperationFeedback(player, result
-    );
+    sendOperationFeedback(player, result);
   }
 
   private void handlePositionUpdate(Player player, UUID npcId, String[] args) {
     if (args.length < REQUIRED_ARGS_POSITION_LENGTH) {
-      player.sendMessage(serviceContext.getTranslationService()
+      player.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
@@ -111,34 +119,43 @@ public class NpcUpdateCommand implements SubCommand {
       yaw = Float.parseFloat(args[ARGS_YAW_INDEX]);
       pitch = Float.parseFloat(args[ARGS_PITCH_INDEX]);
     } catch (NumberFormatException e) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
+      player.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
       return;
     }
 
-    PlayerEntry playerEntry = serviceContext.getPlayerService()
+    PlayerEntry playerEntry = serviceContext
+        .getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = serviceContext.getNpcService()
+    NpcOperationResult result = serviceContext
+        .getNpcService()
         .updateNpcPosition(npcId, x, y, z, yaw, pitch, playerEntry.getId());
     sendOperationFeedback(player, result);
   }
 
   private void sendOperationFeedback(Player player, NpcOperationResult result) {
     if (!result.isSuccessful()) {
-      player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(
-              MessageKey.COMMAND_NPC_OPERATION_FAILED) + " " + result.getErrorMessage());
+      player.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_OPERATION_FAILED) + " " + serviceContext
+          .getTranslationService()
+          .get(result
+              .getValidationResult()
+              .messageKey(), result
+              .getValidationResult()
+              .params()));
       return;
     }
-    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(
-        MessageKey.COMMAND_NPC_UPDATED));
+    player.sendMessage(serviceContext
+        .getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_NPC_UPDATED));
   }
 
   @Override
   public boolean matches(String @NonNull [] args) {
-    return args.length >= 2
-        && Admin.Commands.NPC.getName().equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX])
-        && "update".equalsIgnoreCase(args[ARGS_ACTION_INDEX]);
+    return args.length >= 2 && Admin.Commands.NPC
+        .getName()
+        .equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX]) && "update".equalsIgnoreCase(args[ARGS_ACTION_INDEX]);
   }
 }

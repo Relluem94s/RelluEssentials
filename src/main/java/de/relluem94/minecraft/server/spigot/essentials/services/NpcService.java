@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
@@ -7,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEn
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator.ValidationResult;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -76,12 +78,12 @@ public class NpcService {
       float yaw, float pitch, String worldName, int actorPlayerId) {
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(profileName);
     if (!profileValidation.valid()) {
-      return NpcOperationResult.failure(profileValidation.errorMessage());
+      return NpcOperationResult.failure(profileValidation);
     }
 
     NpcValidator.ValidationResult coordinateValidation = npcValidator.validateCoordinates(x, y, z);
     if (!coordinateValidation.valid()) {
-      return NpcOperationResult.failure(coordinateValidation.errorMessage());
+      return NpcOperationResult.failure(coordinateValidation);
     }
 
     Npc npc = new Npc(-1, UUID.randomUUID(), profileName, x, y, z, yaw, pitch, worldName);
@@ -107,13 +109,13 @@ public class NpcService {
   public NpcOperationResult updateNpcProfile(UUID npcId, String newProfileName, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(
         newProfileName);
     if (!profileValidation.valid()) {
-      return NpcOperationResult.failure(profileValidation.errorMessage());
+      return NpcOperationResult.failure(profileValidation);
     }
 
     if (npc.getEntityUuid() != null) {
@@ -148,12 +150,12 @@ public class NpcService {
       float yaw, float pitch, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
     NpcValidator.ValidationResult coordinateValidation = npcValidator.validateCoordinates(x, y, z);
     if (!coordinateValidation.valid()) {
-      return NpcOperationResult.failure(coordinateValidation.errorMessage());
+      return NpcOperationResult.failure(coordinateValidation);
     }
 
     if (npc.getEntityUuid() != null) {
@@ -197,7 +199,7 @@ public class NpcService {
   public NpcOperationResult deleteNpc(UUID npcId, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
     if (npc.getEntityUuid() != null) {
