@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services.migration;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
@@ -11,9 +10,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.ApiStatus;
@@ -23,11 +22,25 @@ import org.jetbrains.annotations.NotNull;
  * Service responsible for migrating legacy configuration files to the new data format.
  */
 @ApiStatus.Internal
-@RequiredArgsConstructor
 public class ConfigMigrationService {
 
   private final File dataFolder;
   private final ServiceContext serviceContext;
+  private final ConsoleCommandSender consoleCommandSender;
+
+  /**
+   * Creates a new {@link ConfigMigrationService} instance.
+   *
+   * @param dataFolder     The plugin's data folder containing the legacy configuration files.
+   * @param serviceContext The service context providing access to required services.
+   */
+  public ConfigMigrationService(File dataFolder, ServiceContext serviceContext) {
+    this.dataFolder = dataFolder;
+    this.serviceContext = serviceContext;
+    consoleCommandSender = serviceContext
+        .getServerService()
+        .getConsoleSender();
+  }
 
   /**
    * Checks if a legacy configuration file exists for the given name.
@@ -50,21 +63,28 @@ public class ConfigMigrationService {
     List<PlayerEntry> list = new ArrayList<>();
     ConfigurationSection cs = config.getConfigurationSection("player");
 
-    for (String uuid : Objects.requireNonNull(cs).getKeys(false)) {
+    for (String uuid : Objects
+        .requireNonNull(cs)
+        .getKeys(false)) {
       ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-      String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group"))
+      String groupName = Objects
+          .requireNonNull(Objects
+              .requireNonNull(player)
+              .getString("group"))
           .toLowerCase();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
 
-      consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly
+      consoleCommandSender.sendMessage(
+          PLUGIN_NAME_CONSOLE + "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly
               + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
-      p.setGroup(serviceContext.getGroupService().resolveGroupWithFallback(groupName));
+      p.setGroup(serviceContext
+          .getGroupService()
+          .resolveGroupWithFallback(groupName));
       p.setAfk(afk);
       p.setFlying(fly);
       p.setCreatedBy(1);
@@ -77,8 +97,7 @@ public class ConfigMigrationService {
   }
 
   /**
-   * Retrieves the list of homes for a specific player from the specified legacy configuration
-   * file.
+   * Retrieves the list of homes for a specific player from the specified legacy configuration file.
    *
    * @param name The name of the configuration file.
    * @param p    The player whose homes are being retrieved.
@@ -100,9 +119,7 @@ public class ConfigMigrationService {
       }
 
       String worldName = homeSection.getString("world");
-      World world =
-          worldName != null ? serviceContext.getPluginMetadataService().getPlugin().getServer()
-              .getWorld(worldName) : null;
+      World world = worldName != null ? serviceContext.getServerService().getWorld(worldName) : null;
 
       if (world == null) {
         continue;
@@ -114,9 +131,9 @@ public class ConfigMigrationService {
       float yaw = (float) homeSection.getDouble("yaw");
       float pitch = (float) homeSection.getDouble("pitch");
 
-      consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:"
-              + pitch + " world:" + world);
+      consoleCommandSender.sendMessage(
+          PLUGIN_NAME_CONSOLE + "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw
+              + " pitch:" + pitch + " world:" + world);
 
       LocationEntry locationEntry = new LocationEntry();
       locationEntry.setLocation(new Location(world, x, y, z, yaw, pitch));
