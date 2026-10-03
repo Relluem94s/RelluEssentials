@@ -52,8 +52,7 @@ public class WorldManager implements Enable, Disable {
     Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService()
         .getWorldsMap();
     serviceContext.getPluginMetadataService().getPlugin().getServer().getConsoleSender()
-        .sendMessage(PLUGIN_NAME_CONSOLE,
-            PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
+        .sendMessage(PLUGIN_NAME_CONSOLE + PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
 
     for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {

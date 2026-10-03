@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.PLUGIN_INVENTORY_ADMIN_TOOLS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS;
@@ -305,12 +306,12 @@ public class ItemManager implements Enable {
     int itemCount = itemService.getAll().size();
     ConsoleCommandSender sender = serviceContext.getServerService().getConsoleSender();
 
-    sender.sendMessage(translationService.getWithPrefix(
+    sender.sendMessage(PLUGIN_NAME_CONSOLE + translationService.get(
         MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 
     int inventoryCount = serviceContext.getInventoryService()
         .getAllByNamespace(serviceContext.getPluginMetadataService().getName()).size();
-    sender.sendMessage(translationService.getWithPrefix(
+    sender.sendMessage(PLUGIN_NAME_CONSOLE + translationService.get(
         MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }
 

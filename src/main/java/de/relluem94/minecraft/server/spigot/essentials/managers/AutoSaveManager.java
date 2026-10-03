@@ -13,8 +13,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Manages the automatic saving of player data, inventories and bag updates at a fixed interval.
- * Retries initialization until the admin group is available or the retry limit is reached.
+ * Manages the automatic saving of player data, inventories and bag updates at a fixed interval. Retries initialization
+ * until the admin group is available or the retry limit is reached.
  *
  * @author rellu
  */
@@ -30,45 +30,63 @@ public class AutoSaveManager implements Enable, Disable {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     context = relluEssentialsPlugin.getServiceContext();
 
-    Optional<GroupEntry> adminGroup = context.getGroupService()
+    Optional<GroupEntry> adminGroup = context
+        .getGroupService()
         .findGroupByName("admin");
 
     if (adminGroup.isEmpty() && count <= MAX_RETRIES) {
       count++;
-      context.getSchedulerService().runTaskLater(() -> enable(plugin), 100);
+      context
+          .getSchedulerService()
+          .runTaskLater(() -> enable(plugin), 100);
       return;
     }
 
-    ConsoleCommandSender consoleCommandSender = context.getServerService().getConsoleSender();
-    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE,
-        context.getTranslationService().get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
+    ConsoleCommandSender consoleCommandSender = context
+        .getServerService()
+        .getConsoleSender();
+    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE + context
+        .getTranslationService()
+        .get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
 
-    context.getSchedulerService().runTaskTimer(() ->
-            adminGroup.ifPresent(context.getBagService()::savePendingBagUpdates),
-        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    context
+        .getSchedulerService()
+        .runTaskTimer(() -> adminGroup.ifPresent(context.getBagService()::savePendingBagUpdates), 0L,
+            20 * 60 * AUTO_SAVE_MINUTES);
 
-    context.getSchedulerService().runTaskTimer(
-        () -> adminGroup.ifPresent(context.getPlayerService()::savePlayers),
-        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    context
+        .getSchedulerService()
+        .runTaskTimer(() -> adminGroup.ifPresent(context.getPlayerService()::savePlayers), 0L,
+            20 * 60 * AUTO_SAVE_MINUTES);
 
-    context.getSchedulerService().runTaskTimer(
-        () -> adminGroup.ifPresent(context.getPlayerService()::savePlayersInv),
-        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    context
+        .getSchedulerService()
+        .runTaskTimer(() -> adminGroup.ifPresent(context.getPlayerService()::savePlayersInv), 0L,
+            20 * 60 * AUTO_SAVE_MINUTES);
 
-    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE,
-        context.getTranslationService().get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
+    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE + context
+        .getTranslationService()
+        .get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
   }
 
   @Override
   public void disable(Plugin plugin) {
-    Optional<GroupEntry> adminGroup = context.getGroupService().findGroupByName("admin");
+    Optional<GroupEntry> adminGroup = context
+        .getGroupService()
+        .findGroupByName("admin");
 
     if (adminGroup.isEmpty()) {
       return;
     }
 
-    context.getBagService().savePendingBagUpdates(adminGroup.get());
-    context.getPlayerService().savePlayers(adminGroup.get());
-    context.getPlayerService().savePlayersInv(adminGroup.get());
+    context
+        .getBagService()
+        .savePendingBagUpdates(adminGroup.get());
+    context
+        .getPlayerService()
+        .savePlayers(adminGroup.get());
+    context
+        .getPlayerService()
+        .savePlayersInv(adminGroup.get());
   }
 }
