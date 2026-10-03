@@ -45,7 +45,7 @@ public class ListenerManager implements Enable {
         .getConsoleSender();
 
     consoleCommandSender.sendMessage(
-        PLUGIN_NAME_CONSOLE + translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
+        PLUGIN_NAME_CONSOLE + translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENT_LISTENERS));
     List<ListenerWrapper> listenerWrapperList = AnnotatedClassLoader
         .loadListeners("de.relluem94.minecraft.server.spigot.essentials.listeners", getClass().getClassLoader())
         .stream()
@@ -55,6 +55,6 @@ public class ListenerManager implements Enable {
     listenerWrapperList.forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, serviceContext));
 
     consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE
-        + translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED, listenerWrapperList.size()));
+        + translationService.get(MessageKey.PLUGIN_MANAGER_EVENT_LISTENERS_REGISTERED, listenerWrapperList.size()));
   }
 }
