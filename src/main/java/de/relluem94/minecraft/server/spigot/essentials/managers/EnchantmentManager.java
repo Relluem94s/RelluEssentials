@@ -75,6 +75,7 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1), EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_LORE, Rarity.LEGENDARY,
             AttributeHelper.addAttribute(), 250000));
 
+    // noinspection UnstableApiUsage
     enchantmentService.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
         new EnchantmentHelper(new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME), EnchantmentTarget.WEAPON,
@@ -86,8 +87,8 @@ public class EnchantmentManager implements Enable {
     ConsoleCommandSender consoleCommandSender = serviceContext
         .getServerService()
         .getConsoleSender();
-    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE +
-        translationService.get(MessageKey.PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED, relluEssentialsPlugin
+    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE
+        + translationService.get(MessageKey.PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED, relluEssentialsPlugin
             .getServiceContext()
             .getEnchantmentService()
             .count()));
