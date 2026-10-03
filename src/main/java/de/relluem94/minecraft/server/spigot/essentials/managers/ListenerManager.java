@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -11,21 +10,19 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.registration.ListenerWrapper;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
  * Manages the registration and initialization of all plugin event listeners.
  *
  * <p>Scans the listeners package for annotated listener classes, wraps them in
- * {@link ListenerWrapper} instances, and initializes them with the plugin and its
- * {@link ServiceContext}.
+ * {@link ListenerWrapper} instances, and initializes them with the plugin and its {@link ServiceContext}.
  * </p>
  *
  * @author relluem94
  */
 public class ListenerManager implements Enable {
-
-  private ServiceContext serviceContext;
 
   /**
    * Enables the listener manager by discovering, initializing, and registering all listeners.
@@ -34,29 +31,30 @@ public class ListenerManager implements Enable {
    * {@link ListenerWrapper}, and initializes them with the plugin and its {@link ServiceContext}.
    * </p>
    *
-   * @param plugin the plugin instance used to access the {@link ServiceContext} and to register all
-   *               discovered listeners against the Bukkit event system
+   * @param plugin the plugin instance used to access the {@link ServiceContext} and to register all discovered
+   *               listeners against the Bukkit event system
    */
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    this.serviceContext = relluEssentialsPlugin.getServiceContext();
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
 
     TranslationService translationService = serviceContext.getTranslationService();
+    ConsoleCommandSender consoleCommandSender = serviceContext
+        .getServerService()
+        .getConsoleSender();
 
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
-    List<ListenerWrapper> listenerWrapperList = AnnotatedClassLoader.loadListeners(
-            "de.relluem94.minecraft.server.spigot.essentials.listeners",
-            getClass().getClassLoader()
-        )
-        .stream().map(ListenerWrapper::new).toList();
+    consoleCommandSender.sendMessage(
+        PLUGIN_NAME_CONSOLE + translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
+    List<ListenerWrapper> listenerWrapperList = AnnotatedClassLoader
+        .loadListeners("de.relluem94.minecraft.server.spigot.essentials.listeners", getClass().getClassLoader())
+        .stream()
+        .map(ListenerWrapper::new)
+        .toList();
 
-    listenerWrapperList.forEach(
-        listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, serviceContext));
+    listenerWrapperList.forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, serviceContext));
 
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
-            listenerWrapperList.size()));
+    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE
+        + translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED, listenerWrapperList.size()));
   }
 }
