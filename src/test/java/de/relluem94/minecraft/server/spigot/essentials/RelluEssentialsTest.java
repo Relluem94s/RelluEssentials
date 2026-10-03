@@ -317,7 +317,7 @@ class RelluEssentialsTest {
 
       Mockito
           .verify(consoleSender)
-          .sendMessage(Constants.PLUGIN_NAME_CONSOLE, serviceContext
+          .sendMessage(Constants.PLUGIN_NAME_CONSOLE + serviceContext
               .getTranslationService()
               .get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
     } catch (NoSuchFieldException | IllegalAccessException exception) {

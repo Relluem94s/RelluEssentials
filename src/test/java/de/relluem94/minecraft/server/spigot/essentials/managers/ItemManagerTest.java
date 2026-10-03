@@ -163,21 +163,20 @@ class ItemManagerTest {
 
       itemManager.enable(plugin);
 
-      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED),
-          any());
+      verify(translationService).get(eq(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED), anyInt());
     }
   }
 
   @Test
   void enableLogsInventoryRegistrationCount() {
     try (MockedStatic<PlayerHeadHelper> playerHeadHelperMock = mockStatic(PlayerHeadHelper.class)) {
-      playerHeadHelperMock.when(() -> PlayerHeadHelper.customHeadModifier(any()))
+      playerHeadHelperMock
+          .when(() -> PlayerHeadHelper.customHeadModifier(any()))
           .thenReturn(mock(Consumer.class));
 
       itemManager.enable(plugin);
 
-      verify(translationService).getWithPrefix(eq(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED),
-          any());
+      verify(translationService).get(eq(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED), anyInt());
     }
   }
 

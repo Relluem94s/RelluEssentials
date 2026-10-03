@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
@@ -109,7 +108,7 @@ class AutoSaveManagerTest {
     autoSaveManager.enable(plugin);
 
     verify(translationService).get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE);
-    verify(consoleCommandSender, times(2)).sendMessage(eq(PLUGIN_NAME_CONSOLE), any(String.class));
+    verify(consoleCommandSender, times(2)).sendMessage(any(String.class));
   }
 
   @Test

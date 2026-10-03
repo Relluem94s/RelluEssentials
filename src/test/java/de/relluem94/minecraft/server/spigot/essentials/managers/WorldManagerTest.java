@@ -118,7 +118,7 @@ class WorldManagerTest {
 
     worldManager.enable(plugin);
 
-    verify(consoleCommandSender).sendMessage(anyString(), anyString());
+    verify(consoleCommandSender).sendMessage(anyString());
   }
 
   @Test
