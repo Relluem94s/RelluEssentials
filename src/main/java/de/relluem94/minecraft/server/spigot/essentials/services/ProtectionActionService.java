@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.getLocationFromBlockAlternateForDoor;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
@@ -30,8 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Service responsible for handling protection-related actions such as protecting blocks,
- * removing protections, and managing access rights.
+ * Service responsible for handling protection-related actions such as protecting blocks, removing
+ * protections, and managing access rights.
  */
 public class ProtectionActionService {
 
@@ -51,13 +51,13 @@ public class ProtectionActionService {
    *
    * @param p the player attempting to remove the protection
    * @param b the block from which protection should be removed
-   * @return true if the removal was disallowed (e.g., not the owner),
-   *     false if successful or if no protection existed.
+   * @return true if the removal was disallowed (e.g., not the owner), false if successful or if no
+   *     protection existed.
    */
   public boolean removeProtectionFromBlock(Player p, Block b) {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
-      Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+      Location l = getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry bpe = serviceContext.getProtectionService().getProtectionEntry(l);
       if (bpe != null && bpe.getLocationEntry() != null) {
         if (bpe.getLocationEntry().getPlayerId() != pe.getId()) {
@@ -95,11 +95,12 @@ public class ProtectionActionService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
-    } else {
+    } else if (bpe != null && bpe.getLocationEntry() != null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
       return true;
     }
+    return false;
   }
 
   private boolean removeProtectionForBlockAttachedAbove(Player p, Block b, PlayerEntry pe) {
@@ -111,12 +112,10 @@ public class ProtectionActionService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
-    } else {
-      if (bpe != null && bpe.getLocationEntry() != null) {
-        p.sendMessage(serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-        return true;
-      }
+    } else if (bpe != null && bpe.getLocationEntry() != null) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+      return true;
     }
     return false;
   }
@@ -195,8 +194,8 @@ public class ProtectionActionService {
       }
     };
 
-    if (isNeighbourChestProtectedByOther(leftNeighbour, cd, p)
-        || isNeighbourChestProtectedByOther(rightNeighbour, cd, p)) {
+    if (isNeighbourChestProtectedByOther(leftNeighbour, cd, p) || isNeighbourChestProtectedByOther(
+        rightNeighbour, cd, p)) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
       p.sendMessage(serviceContext.getTranslationService()
@@ -209,7 +208,7 @@ public class ProtectionActionService {
   private boolean isNeighbourChestProtectedByOther(Block neighbour, Chest originalChest, Player p) {
     if (neighbour.getBlockData() instanceof Chest neighbourChest) {
       if (neighbourChest.getFacing().equals(originalChest.getFacing())) {
-        return ProtectionHelper.hasPermission(neighbour, p);
+        return hasPermission(neighbour, p);
       }
     }
     return false;
@@ -218,9 +217,11 @@ public class ProtectionActionService {
   private JSONObject buildRightsJson(PlayerEntry pe) {
     int partnerPlayerId = resolvePartnerPlayerId(pe);
 
-    int[] rightHolderIds = partnerPlayerId != -1
-        ? new int[]{pe.getId(), partnerPlayerId}
-        : new int[]{pe.getId()};
+    JSONArray rightHolderIds = new JSONArray();
+    rightHolderIds.put(pe.getId());
+    if (partnerPlayerId != -1) {
+      rightHolderIds.put(partnerPlayerId);
+    }
 
     JSONObject rights = new JSONObject();
     rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, rightHolderIds);
@@ -231,8 +232,7 @@ public class ProtectionActionService {
     if (pe.getPartner() == null) {
       return -1;
     }
-    return pe.getId() != pe.getPartner().getFirstPartnerId()
-        ? pe.getPartner().getFirstPartnerId()
+    return pe.getId() != pe.getPartner().getFirstPartnerId() ? pe.getPartner().getFirstPartnerId()
         : pe.getPartner().getSecondPartnerId();
   }
 
@@ -249,13 +249,12 @@ public class ProtectionActionService {
   /**
    * Adds a new user ID to the protection rights of a protection entry.
    *
-   * @param p       the player performing the action
-   * @param pre     the protection entry to modify
-   * @param id      the ID of the player to add to the rights
-   * @param silent  if true, no messages will be sent to the player
+   * @param p      the player performing the action
+   * @param pre    the protection entry to modify
+   * @param id     the ID of the player to add to the rights
+   * @param silent if true, no messages will be sent to the player
    */
   public void addRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
-    Location l = pre.getLocationEntry().getLocation();
     if (!pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
       return;
     }
@@ -265,10 +264,11 @@ public class ProtectionActionService {
 
     if (!list.contains(id)) {
       list.add(id);
+      Location location = pre.getLocationEntry().getLocation();
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
       serviceContext.getProtectionService().updateProtectionRights(pre);
-      serviceContext.getProtectionService().removeProtectionEntry(l);
-      serviceContext.getProtectionService().putProtectionEntry(l, pre);
+      serviceContext.getProtectionService().removeProtectionEntry(location);
+      serviceContext.getProtectionService().putProtectionEntry(location, pre);
       if (!silent) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
@@ -284,10 +284,10 @@ public class ProtectionActionService {
   /**
    * Removes a user ID from the protection rights of a protection entry.
    *
-   * @param p       the player performing the action
-   * @param pre     the protection entry to modify
-   * @param id      the ID of the player to remove from the rights
-   * @param silent  if true, no messages will be sent to the player
+   * @param p      the player performing the action
+   * @param pre    the protection entry to modify
+   * @param id     the ID of the player to remove from the rights
+   * @param silent if true, no messages will be sent to the player
    */
   public void removeRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
     Location l = pre.getLocationEntry().getLocation();
@@ -326,6 +326,10 @@ public class ProtectionActionService {
     removeRight(null, pre, id, true);
   }
 
+  @SuppressWarnings("DuplicateBranchesInSwitch")
+  /* JaCoCo incorrectly reports missing branch coverage when Sign and Door
+   are merged into a single branch, despite both being covered by tests.
+   Keeping them as separate branches ensures accurate coverage reporting. */
   private boolean isAttachedToBlock(@NotNull Block b, BlockFace face) {
     Block attachedBlock = b.getRelative(face);
     BlockData bd = attachedBlock.getBlockData();
@@ -339,8 +343,27 @@ public class ProtectionActionService {
         WallSign sign = (WallSign) attachedBlock.getBlockData();
         yield attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
       }
-      case Sign _, Door _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+      case Sign _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+      case Door _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
       default -> false;
     };
+  }
+
+  /**
+   * Use this Method to check if Player has Permission for that Block.
+   *
+   * @param b Block
+   * @param p Player
+   * @return boolean
+   */
+  private boolean hasPermission(Block b, Player p) {
+    Location l = getLocationFromBlockAlternateForDoor(b);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+    ProtectionEntry pre = serviceContext.getProtectionService().getProtectionEntry(l);
+    if (pre != null) {
+      return pre.getLocationEntry().getPlayerId() != pe.getId();
+    } else {
+      return false;
+    }
   }
 }

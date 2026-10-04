@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseConstants.PLUGIN_DATABASE_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BagDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BankDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
@@ -101,7 +101,8 @@ public class DatabaseManager implements Enable {
     persistenceContext.setSettingPlayerDao(new SettingPlayerDao(queryExecutor, serviceContext));
     persistenceContext.setBagDao(new BagDao(queryExecutor));
     persistenceContext.setBankDao(new BankDao(queryExecutor));
-    persistenceContext.setTraderNpcDao(new TraderNpcDao(dataSource, sqlResourceLoader));
+    persistenceContext.setTraderNpcDao(new TraderNpcDao(queryExecutor,
+        new BukkitRegistryAdapter()));
     persistenceContext.setGroupDao(new GroupDao(queryExecutor));
 
     PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
@@ -130,7 +131,7 @@ public class DatabaseManager implements Enable {
     WorldGroupRegistry worldGroupRegistry = new WorldGroupRegistry();
     WorldGroupRepository worldGroupRepository = new WorldGroupRepository(
         persistenceContext.getWorldGroupDao());
-    WorldGroupService worldGroupService = new WorldGroupService(worldGroupRegistry,
+    WorldGroupService worldGroupService = new WorldGroupService(serviceContext, worldGroupRegistry,
         worldGroupRepository);
     worldGroupService.loadAll();
     serviceContext.setWorldGroupService(worldGroupService);
@@ -138,8 +139,8 @@ public class DatabaseManager implements Enable {
     worldGroupService.getWorldsMap().entries().forEach(entry -> {
       WorldGroupEntry worldGroupEntry = entry.getKey();
       WorldEntry worldEntry = entry.getValue();
-      consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          serviceContext.getTranslationService()
+      serviceContext.getServerService().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE
+          + serviceContext.getTranslationService()
               .get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, worldGroupEntry.getName(),
                   worldEntry.getName(),
                   worldGroupEntry.getSettings().size()));

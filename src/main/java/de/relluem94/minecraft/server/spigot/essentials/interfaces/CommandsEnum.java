@@ -2,10 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.interfaces;
 
 /**
  * Represents a command entry within the plugin's command system.
- * <p>
- * Implementations of this interface are typically enums that define the available commands and
- * their associated sub-command labels.
- * </p>
+ *
+ * <p>Implementations of this interface are typically enums that define the available commands and
+ * their associated sub-command labels.</p>
+ *
+ * @author rellu
+ * @version 2.0
+ * @since 4.3.2
  */
 public interface CommandsEnum {
 

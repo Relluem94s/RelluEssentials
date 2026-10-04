@@ -7,34 +7,34 @@ import org.junit.jupiter.api.Test;
 
 class SkillsEntryTest {
 
-    private SkillsEntry skillsEntry;
+  private SkillsEntry skillsEntry;
 
-    @BeforeEach
-    void setUp() {
-        skillsEntry = new SkillsEntry();
-    }
+  @BeforeEach
+  void setUp() {
+    skillsEntry = new SkillsEntry();
+  }
 
-    @Test
-    void shouldSetAndGetId() {
-        skillsEntry.setId(1);
-        assertEquals(1, skillsEntry.getId());
-    }
+  @Test
+  void shouldSetAndGetId() {
+    skillsEntry.setId(1);
+    assertEquals(1, skillsEntry.getId());
+  }
 
-    @Test
-    void shouldSetAndGetName() {
-        skillsEntry.setName("mining");
-        assertEquals("mining", skillsEntry.getName());
-    }
+  @Test
+  void shouldSetAndGetName() {
+    skillsEntry.setName("mining");
+    assertEquals("mining", skillsEntry.getName());
+  }
 
-    @Test
-    void shouldSetAndGetDisplayName() {
-        skillsEntry.setDisplayName("Mining");
-        assertEquals("Mining", skillsEntry.getDisplayName());
-    }
+  @Test
+  void shouldSetAndGetDisplayName() {
+    skillsEntry.setDisplayName("Mining");
+    assertEquals("Mining", skillsEntry.getDisplayName());
+  }
 
-    @Test
-    void shouldSetAndGetMaxLevel() {
-        skillsEntry.setMaxLevel(100);
-        assertEquals(100, skillsEntry.getMaxLevel());
-    }
+  @Test
+  void shouldSetAndGetMaxLevel() {
+    skillsEntry.setMaxLevel(100);
+    assertEquals(100, skillsEntry.getMaxLevel());
+  }
 }

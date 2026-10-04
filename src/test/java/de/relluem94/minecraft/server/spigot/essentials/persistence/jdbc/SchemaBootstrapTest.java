@@ -39,7 +39,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void schemaExists_returnsTrue_whenSchemaIsFound() throws Exception {
+  void schemaExistsReturnsTrueWhenSchemaIsFound() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection connection = mock(Connection.class);
       Statement statement = mock(Statement.class);
@@ -56,7 +56,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void schemaExists_returnsFalse_whenSchemaIsNotFound() throws Exception {
+  void schemaExistsReturnsFalseWhenSchemaIsNotFound() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection connection = mock(Connection.class);
       Statement statement = mock(Statement.class);
@@ -73,7 +73,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void schemaExists_returnsFalse_whenConnectionFails() {
+  void schemaExistsReturnsFalseWhenConnectionFails() {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       driverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
           .thenThrow(new RuntimeException("Connection refused"));
@@ -83,7 +83,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void createSchema_executesCreateDatabaseStatement() throws Exception {
+  void createSchemaExecutesCreateDatabaseStatement() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection connection = mock(Connection.class);
       Statement statement = mock(Statement.class);
@@ -99,7 +99,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void createSchema_throwsRuntimeException_whenExecuteFails() throws Exception {
+  void createSchemaThrowsRuntimeExceptionWhenExecuteFails() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection connection = mock(Connection.class);
       Statement statement = mock(Statement.class);
@@ -116,7 +116,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void ensureSchemaExists_createsSchema_whenSchemaDoesNotExist() throws Exception {
+  void ensureSchemaExistsCreatesSchemaWhenSchemaDoesNotExist() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection checkConnection = mock(Connection.class);
       Statement checkStatement = mock(Statement.class);
@@ -142,7 +142,7 @@ class SchemaBootstrapTest {
   }
 
   @Test
-  void ensureSchemaExists_skipsCreation_whenSchemaAlreadyExists() throws Exception {
+  void ensureSchemaExistsSkipsCreationWhenSchemaAlreadyExists() throws Exception {
     try (MockedStatic<DriverManager> driverManager = mockStatic(DriverManager.class)) {
       Connection connection = mock(Connection.class);
       Statement statement = mock(Statement.class);

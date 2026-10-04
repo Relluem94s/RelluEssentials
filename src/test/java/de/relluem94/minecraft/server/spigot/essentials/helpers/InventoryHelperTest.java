@@ -1,101 +1,72 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.utils.TestLogHandler;
+import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+class InventoryHelperTest {
 
-public class InventoryHelperTest {
+  @BeforeEach
+  protected void setUp() throws NoSuchFieldException, IllegalAccessException {
+    Server server = Mockito.mock(Server.class);
+    ItemFactory itemFactory = Mockito.mock(ItemFactory.class);
 
+    Mockito.when(server.getItemFactory()).thenReturn(itemFactory);
 
-    @BeforeEach
-    protected void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Server server = Mockito.mock(Server.class);
-        ItemFactory itemFactory = Mockito.mock(ItemFactory.class);
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, server);
+  }
 
-        Mockito.when(server.getItemFactory()).thenReturn(itemFactory);
+  @AfterEach
+  void tearDown() throws ReflectiveOperationException {
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
+  }
 
-        Field serverField = Bukkit.class.getDeclaredField("server");
-        serverField.setAccessible(true);
-        serverField.set(null, server);
-    }
+  @Test
+  void checkForUtilityClass() {
+    Assertions.assertThrows(IllegalStateException.class, InventoryHelper::new);
+  }
 
-    @AfterEach
-    protected void tearDown() {
+  @Test
+  public void testItemHelperAssignableCheck() throws Exception {
+    Field dummyField = DummyNotItemHelper.class.getDeclaredField("dummyField");
+    boolean result = ItemHelper.class.isAssignableFrom(dummyField.getType());
+    Assertions.assertFalse(result);
+  }
 
-    }
+  @Test
+  public void testGetNextSlot() {
+    Assertions.assertEquals(10, InventoryHelper.getNextSlot(9));
+  }
 
-    @Test
-    void checkForUtilityClass(){
-        Assertions.assertThrows(IllegalStateException.class, InventoryHelper::new);
-    }
+  @Test
+  public void testGetSkipsSize() {
+    Assertions.assertEquals(26, InventoryHelper.getSkipsSize());
+  }
 
-    public static class DummyNotItemHelper {
-        public String dummyField = "test";
-    }
+  @Test
+  public void testInventorySize() {
+    Assertions.assertEquals(9, InventoryHelper.inventorySize(5));
+    Assertions.assertEquals(9, InventoryHelper.inventorySize(8));
+    Assertions.assertEquals(9, InventoryHelper.inventorySize(9));
+    Assertions.assertEquals(18, InventoryHelper.inventorySize(10));
+    Assertions.assertEquals(18, InventoryHelper.inventorySize(16));
+    Assertions.assertEquals(27, InventoryHelper.inventorySize(25));
+    Assertions.assertEquals(27, InventoryHelper.inventorySize(27));
+    Assertions.assertEquals(36, InventoryHelper.inventorySize(28));
+  }
 
-    @Test
-    public void testItemHelperAssignableCheck() throws Exception {
-        Field dummyField = DummyNotItemHelper.class.getDeclaredField("dummyField");
-        boolean result = ItemHelper.class.isAssignableFrom(dummyField.getType());
-        Assertions.assertFalse(result);
-    }
+  public static class DummyNotItemHelper {
 
-    public static class DummyItemHelper extends ItemHelper {
-        public DummyItemHelper() {
-            super(Material.STONE, 1, "dummy", Type.NONE, Rarity.COMMON);
-        }
-    }
-
-    @Test
-    public void testIllegalAccessExceptionLogging() throws Exception {
-        Logger logger = Logger.getLogger(de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper.class.getName());
-        TestLogHandler handler = new TestLogHandler();
-        logger.addHandler(handler);
-        logger.setUseParentHandlers(false);
-
-        Field field = String.class.getDeclaredField("value");
-        field.setAccessible(false);
-
-        ItemHelper dummy = new DummyItemHelper();
-        try {
-            @SuppressWarnings("unused")
-            Object o = field.get(dummy);
-        }
-        catch (IllegalAccessException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-
-        Assertions.assertFalse(handler.records.isEmpty());
-        Assertions.assertTrue(handler.records.stream().anyMatch(r -> r.getLevel().equals(Level.SEVERE)));
-    }
-
-    @Test
-    public void testGetNextSlot() {
-        Assertions.assertEquals(10, InventoryHelper.getNextSlot(9));
-    }
-
-    @Test
-    public void testGetSkipsSize() {
-        Assertions.assertEquals(26, InventoryHelper.getSkipsSize());
-    }
-
-    @Test
-    public void testInventorySize() {
-        Assertions.assertEquals(9, InventoryHelper.inventorySize(5));
-        Assertions.assertEquals(9, InventoryHelper.inventorySize(8));
-        Assertions.assertEquals(9, InventoryHelper.inventorySize(9));
-        Assertions.assertEquals(18, InventoryHelper.inventorySize(10));
-        Assertions.assertEquals(18, InventoryHelper.inventorySize(16));
-        Assertions.assertEquals(27, InventoryHelper.inventorySize(25));
-        Assertions.assertEquals(27, InventoryHelper.inventorySize(27));
-        Assertions.assertEquals(36, InventoryHelper.inventorySize(28));
-    }
+    public final String dummyField = "test";
+  }
 }

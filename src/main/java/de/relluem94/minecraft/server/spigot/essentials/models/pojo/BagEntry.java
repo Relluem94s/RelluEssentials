@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import lombok.Getter;
-import lombok.Setter;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
+
+import lombok.Data;
 
 /**
+ * Represents a bag entry stored in the database, holding metadata, ownership information,
+ * and the slot values of a player's bag.
  *
  * @author rellu
  */
-
-@Setter
-@Getter
+@Data
 public class BagEntry {
 
   private int id;
@@ -26,14 +26,29 @@ public class BagEntry {
   private BagTypeEntry bagType;
   private boolean hasToBeUpdated = false;
 
+  /**
+   * Creates a new BagEntry and initializes the slot values array with the default bag size.
+   */
   public BagEntry() {
-    slotValues = new int[BagHelper.BAG_SIZE];
+    slotValues = new int[BAG_SIZE];
   }
 
+  /**
+   * Sets the value of a specific slot in the bag.
+   *
+   * @param slot  the index of the slot to update
+   * @param value the value to assign to the slot
+   */
   public void setSlotValue(int slot, int value) {
     this.slotValues[slot] = value;
   }
 
+  /**
+   * Returns the value of a specific slot in the bag.
+   *
+   * @param slot the index of the slot to retrieve
+   * @return the value stored at the given slot index
+   */
   public int getSlotValue(int slot) {
     return slotValues[slot];
   }

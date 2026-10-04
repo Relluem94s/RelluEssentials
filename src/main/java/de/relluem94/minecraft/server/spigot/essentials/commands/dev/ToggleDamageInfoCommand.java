@@ -10,7 +10,7 @@ import org.jspecify.annotations.NonNull;
 
 public class ToggleDamageInfoCommand implements SubCommand {
 
-  private ServiceContext serviceContext;
+  private final ServiceContext serviceContext;
 
   public ToggleDamageInfoCommand(ServiceContext context) {
     serviceContext = context;

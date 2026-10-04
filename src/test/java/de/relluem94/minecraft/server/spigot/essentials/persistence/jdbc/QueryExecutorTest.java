@@ -57,6 +57,7 @@ class QueryExecutorTest {
     silentLogger.setLevel(Level.OFF);
     queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader, silentLogger);
   }
+
   @Test
   void queryForEachConsumesAllRows() throws Exception {
     when(dataSource.getConnection()).thenReturn(connection);
@@ -107,7 +108,7 @@ class QueryExecutorTest {
 
     assertAll(
         () -> assertEquals(2, results.size()),
-        () -> assertEquals("row1", results.get(0)),
+        () -> assertEquals("row1", results.getFirst()),
         () -> assertEquals("row2", results.get(1))
     );
   }

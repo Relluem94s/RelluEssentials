@@ -23,7 +23,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void register_ShouldStoreAndReturnInventory() {
+  void registerShouldStoreAndReturnInventory() {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
     String title = "Test Inventory";
     int size = 27;
@@ -38,7 +38,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void register_ShouldThrowException_WhenKeyAlreadyExists() {
+  void registerShouldThrowExceptionWhenKeyAlreadyExists() {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
     inventoryRegistry.register(key, "First", 9, CustomItem.Type.GADGET);
 
@@ -47,7 +47,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void find_ShouldReturnOptionalWithInventory_WhenKeyExists() {
+  void findShouldReturnOptionalWithInventoryWhenKeyExists() {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
     inventoryRegistry.register(key, "Test", 9, CustomItem.Type.GADGET);
 
@@ -58,7 +58,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void find_ShouldReturnEmptyOptional_WhenKeyDoesNotExist() {
+  void findShouldReturnEmptyOptionalWhenKeyDoesNotExist() {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("non", "existent");
 
     Optional<RegisteredInventory> result = inventoryRegistry.find(key);
@@ -67,7 +67,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void findAllByNamespace_ShouldReturnOnlyInventoriesInNamespace() {
+  void findAllByNamespaceShouldReturnOnlyInventoriesInNamespace() {
     inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv1"), "Inv 1", 9,
         CustomItem.Type.GADGET);
     inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv2"), "Inv 2", 9,
@@ -81,7 +81,7 @@ class InventoryRegistryTest {
   }
 
   @Test
-  void findAllByNamespace_ShouldReturnEmptyList_WhenNamespaceDoesNotExist() {
+  void findAllByNamespaceShouldReturnEmptyListWhenNamespaceDoesNotExist() {
     inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv1"), "Inv 1", 9,
         CustomItem.Type.GADGET);
 

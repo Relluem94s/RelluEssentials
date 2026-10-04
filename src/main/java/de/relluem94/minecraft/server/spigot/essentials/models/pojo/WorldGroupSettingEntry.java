@@ -1,15 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Represents a configuration value of a specific setting for a given world group. Stores the boolean value as well as
+ * audit information and foreign keys to the related {@link SettingEntry} and {@link WorldGroupEntry}.
  *
  * @author rellu
  */
-
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class WorldGroupSettingEntry {
 
   private int id;

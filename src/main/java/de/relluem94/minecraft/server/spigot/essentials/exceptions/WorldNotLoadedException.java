@@ -5,8 +5,8 @@ package de.relluem94.minecraft.server.spigot.essentials.exceptions;
  * on the server.
  *
  * @author rellu
- * @version 1.0
- * @since 1.0
+ * @version 2.0
+ * @since 1.26
  */
 public class WorldNotLoadedException extends Exception {
 

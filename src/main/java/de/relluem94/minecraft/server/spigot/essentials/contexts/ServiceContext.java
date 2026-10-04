@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.CoinItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.EnchantmentService;
@@ -28,6 +29,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
@@ -36,6 +38,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
 import lombok.Getter;
@@ -50,8 +53,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ServiceContext {
-
-  /* Services */
+  private ServerService serverService;
   private TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;
@@ -89,4 +91,6 @@ public class ServiceContext {
   private ItemService itemService;
   private InventoryService inventoryService;
   private EnchantmentService enchantmentService;
+  private CoinItemService coinItemService;
+  private WorldMenuService worldMenuService;
 }

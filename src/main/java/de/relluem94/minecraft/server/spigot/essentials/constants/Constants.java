@@ -1,5 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+/**
+ * Defines shared constants for plugin names, colors, messages, and formatting.
+ *
+ * @author rellu
+ */
 public class Constants {
 
   private Constants() {

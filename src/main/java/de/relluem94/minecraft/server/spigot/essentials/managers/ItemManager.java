@@ -77,7 +77,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SHIELD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SWORD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_WORLDSELECTOR;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilder;
@@ -99,6 +98,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -304,13 +304,15 @@ public class ItemManager implements Enable {
     TranslationService translationService = serviceContext.getTranslationService();
 
     int itemCount = itemService.getAll().size();
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
+    ConsoleCommandSender sender = serviceContext.getServerService().getConsoleSender();
+
+    sender.sendMessage(PLUGIN_NAME_CONSOLE + translationService.get(
+        MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 
     int inventoryCount = serviceContext.getInventoryService()
         .getAllByNamespace(serviceContext.getPluginMetadataService().getName()).size();
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
+    sender.sendMessage(PLUGIN_NAME_CONSOLE + translationService.get(
+        MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }
 
   private void registerBankItems(ServiceContext serviceContext, ItemService itemService) {

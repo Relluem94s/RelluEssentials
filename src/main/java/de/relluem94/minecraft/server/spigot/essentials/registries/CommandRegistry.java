@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
-import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.registration.CommandWrapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

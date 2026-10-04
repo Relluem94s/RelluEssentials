@@ -39,11 +39,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Listener that handles inventory click events specifically for NPC-related GUIs.
@@ -164,7 +164,7 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (depositItem != null && depositItem.toItemStack().getType().equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
-          .getDepositGUI(playerEntry.getPurse()));
+          .getDepositGui(playerEntry.getPurse()));
     } else if (totalBalanceItem != null && totalBalanceItem.toItemStack().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
@@ -175,12 +175,12 @@ public class InventoryClickNpc implements ListenerConstruct {
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc().getBalanceGUI());
+          serviceContext.getTraderNpcService().getBankerNpc().getBalanceGui());
     } else if (withdrawItem != null && withdrawItem.toItemStack().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
-          .getWithdrawGUI(bankAccount.getValue()));
+          .getWithdrawGui(bankAccount.getValue()));
     } else if (BankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       serviceContext.getBankService().upgradeAccount(clickedItem, player, playerEntry, bankAccount);
     } else if (transactionsItem != null && transactionsItem.toItemStack().getType()
@@ -190,7 +190,7 @@ public class InventoryClickNpc implements ListenerConstruct {
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
+          serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGui());
     } else if (customItemClose.toItemStack().isSimilar(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {

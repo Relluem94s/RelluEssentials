@@ -14,12 +14,26 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.profile.PlayerProfile;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Handles the spawning and despawning of NPC mannequins in the world.
+ * Ensures that each NPC is uniquely identified via persistent data and applies
+ * the appropriate visual attributes upon spawning or reloading.
+ *
+ * @author rellu
+ */
 public class NpcSpawner {
 
   private final Server server;
   private final NamespacedKey npcIdKey;
   private final NpcMannequinAttributeApplier npcMannequinAttributeApplier;
 
+  /**
+   * Creates a new NpcSpawner with the required dependencies.
+   *
+   * @param server the Bukkit server instance used to access worlds and entities
+   * @param npcIdKey the namespaced key used to store and retrieve the NPC ID in persistent data
+   * @param npcMannequinAttributeApplier the applier responsible for configuring mannequin attributes
+   */
   public NpcSpawner(Server server, NamespacedKey npcIdKey,
       NpcMannequinAttributeApplier npcMannequinAttributeApplier) {
     this.server = server;
@@ -27,6 +41,15 @@ public class NpcSpawner {
     this.npcMannequinAttributeApplier = npcMannequinAttributeApplier;
   }
 
+  /**
+   * Spawns a mannequin entity for the given NPC in the appropriate world.
+   * If a mannequin tagged with the NPC's ID already exists in the world,
+   * its attributes are reapplied and its UUID is returned instead of spawning a new one.
+   *
+   * @param npc the NPC data used to determine spawn location, profile, and identity
+   * @return an {@link Optional} containing the UUID of the spawned or existing mannequin,
+   *         or an empty {@link Optional} if the world does not exist or spawning failed
+   */
   public Optional<UUID> spawnMannequin(@NonNull Npc npc) {
     World world = server.getWorld(npc.getWorldName());
     if (world == null) {
@@ -80,6 +103,12 @@ public class NpcSpawner {
         .findFirst();
   }
 
+  /**
+   * Removes the mannequin entity with the given UUID from the world.
+   * Does nothing if no entity with the given UUID exists.
+   *
+   * @param entityUuid the UUID of the mannequin entity to remove
+   */
   public void despawnMannequin(UUID entityUuid) {
     Entity entity = server.getEntity(entityUuid);
     if (entity != null) {

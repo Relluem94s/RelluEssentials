@@ -35,7 +35,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void register_ShouldSaveEntry_WhenEntryIsNotPresent() {
+  void registerShouldSaveEntryWhenEntryIsNotPresent() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of());
 
@@ -45,7 +45,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void register_ShouldThrowException_WhenEntryIsAlreadyRegistered() {
+  void registerShouldThrowExceptionWhenEntryIsAlreadyRegistered() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of(entry));
 
@@ -54,7 +54,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void unregister_ShouldDeleteEntry_WhenEntryIsRegistered() {
+  void unregisterShouldDeleteEntryWhenEntryIsRegistered() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of(entry));
 
@@ -64,7 +64,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void unregister_ShouldThrowException_WhenEntryIsNotRegistered() {
+  void unregisterShouldThrowExceptionWhenEntryIsNotRegistered() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of());
 
@@ -73,7 +73,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void contains_ShouldReturnTrue_WhenEntryExists() {
+  void containsShouldReturnTrueWhenEntryExists() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of(entry));
 
@@ -81,7 +81,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void contains_ShouldReturnFalse_WhenEntryDoesNotExist() {
+  void containsShouldReturnFalseWhenEntryDoesNotExist() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findAll()).thenReturn(List.of());
 
@@ -89,21 +89,21 @@ class GroupRegistryTest {
   }
 
   @Test
-  void containsByName_ShouldReturnTrue_WhenNameExists() {
+  void containsByNameShouldReturnTrueWhenNameExists() {
     when(groupRepository.findByName("admin")).thenReturn(Optional.of(new GroupEntry(1, "admin", "&cAdmin")));
 
     assertTrue(groupRegistry.containsByName("admin"));
   }
 
   @Test
-  void containsByName_ShouldReturnFalse_WhenNameDoesNotExist() {
+  void containsByNameShouldReturnFalseWhenNameDoesNotExist() {
     when(groupRepository.findByName("nonexistent")).thenReturn(Optional.empty());
 
     assertFalse(groupRegistry.containsByName("nonexistent"));
   }
 
   @Test
-  void getAll_ShouldReturnAllEntries() {
+  void getAllShouldReturnAllEntries() {
     List<GroupEntry> entries = List.of(new GroupEntry(1, "admin", "&cAdmin"), new GroupEntry(2, "user", "&fUser"));
     when(groupRepository.findAll()).thenReturn(entries);
 
@@ -111,7 +111,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void findById_ShouldReturnEntry_WhenIdExists() {
+  void findByIdShouldReturnEntryWhenIdExists() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findById(1)).thenReturn(Optional.of(entry));
 
@@ -122,7 +122,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void findById_ShouldReturnEmpty_WhenIdDoesNotExist() {
+  void findByIdShouldReturnEmptyWhenIdDoesNotExist() {
     when(groupRepository.findById(99)).thenReturn(Optional.empty());
 
     Optional<GroupEntry> result = groupRegistry.findById(99);
@@ -131,7 +131,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void findByName_ShouldReturnEntry_WhenNameExists() {
+  void findByNameShouldReturnEntryWhenNameExists() {
     GroupEntry entry = new GroupEntry(1, "admin", "&cAdmin");
     when(groupRepository.findByName("admin")).thenReturn(Optional.of(entry));
 
@@ -142,7 +142,7 @@ class GroupRegistryTest {
   }
 
   @Test
-  void findByName_ShouldReturnEmpty_WhenNameDoesNotExist() {
+  void findByNameShouldReturnEmptyWhenNameDoesNotExist() {
     when(groupRepository.findByName("nonexistent")).thenReturn(Optional.empty());
 
     Optional<GroupEntry> result = groupRegistry.findByName("nonexistent");

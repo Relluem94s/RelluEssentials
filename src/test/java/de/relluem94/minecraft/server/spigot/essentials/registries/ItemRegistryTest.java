@@ -44,7 +44,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void register_ShouldAddItemsToMap() {
+  void registerShouldAddItemsToMap() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     Optional<CustomItem> found = itemRegistry.findByIdentifier("test_key");
@@ -53,7 +53,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void register_ShouldThrowException_WhenKeyAlreadyExists() {
+  void registerShouldThrowExceptionWhenKeyAlreadyExists() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertThrows(IllegalArgumentException.class,
@@ -61,7 +61,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void find_ShouldReturnEmpty_WhenKeyDoesNotExist() {
+  void findShouldReturnEmptyWhenKeyDoesNotExist() {
     RelluEssentialsNamespacedKey unknownKey = mock(RelluEssentialsNamespacedKey.class);
     when(unknownKey.toString()).thenReturn("unknown");
 
@@ -71,7 +71,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByIdentifier_ShouldReturnCorrectItem() {
+  void findByIdentifierShouldReturnCorrectItem() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     Optional<CustomItem> result = itemRegistry.findByIdentifier("test_key");
@@ -81,7 +81,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void getAll_ShouldReturnAllRegisteredItems() {
+  void getAllShouldReturnAllRegisteredItems() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertEquals(1, itemRegistry.getAll().size());
@@ -89,7 +89,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void getAllByType_ShouldFilterItemsCorrectly() {
+  void getAllByTypeShouldFilterItemsCorrectly() {
     CustomItem typeAItem = mock(CustomItem.class);
     CustomItem typeBItem = mock(CustomItem.class);
     RelluEssentialsNamespacedKey keyA = mock(RelluEssentialsNamespacedKey.class);
@@ -110,7 +110,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByItemStack_ShouldReturnItem_WhenMatchFound() {
+  void findByItemStackShouldReturnItemWhenMatchFound() {
     ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
     ItemStack itemStackFromCustomItem = mock(org.bukkit.inventory.ItemStack.class);
 
@@ -126,7 +126,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByItemStack_ShouldReturnEmpty_WhenNoMatchFound() {
+  void findByItemStackShouldReturnEmptyWhenNoMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
     org.bukkit.inventory.ItemStack itemStackFromCustomItem = mock(
         org.bukkit.inventory.ItemStack.class);
@@ -139,5 +139,45 @@ class ItemRegistryTest {
     Optional<CustomItem> result = itemRegistry.findByItemStack(mockItemStack);
 
     assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void getAllByTypeAndNamespaceShouldFilterItemsByTypeAndNamespace() {
+    CustomItem matchingItem = mock(CustomItem.class);
+    CustomItem wrongTypeItem = mock(CustomItem.class);
+    CustomItem wrongNamespaceItem = mock(CustomItem.class);
+
+    RelluEssentialsNamespacedKey matchingKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongTypeKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongNamespaceKey = mock(RelluEssentialsNamespacedKey.class);
+
+    RelluEssentialsNamespacedKey matchingItemKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongTypeItemKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongNamespaceItemKey = mock(RelluEssentialsNamespacedKey.class);
+
+    when(matchingKey.toString()).thenReturn("namespace_a:gadget_item");
+    when(wrongTypeKey.toString()).thenReturn("namespace_a:tool_item");
+    when(wrongNamespaceKey.toString()).thenReturn("namespace_b:gadget_item");
+
+    when(matchingItem.type()).thenReturn(CustomItem.Type.GADGET);
+    when(matchingItem.relluEssentialsNamespacedKey()).thenReturn(matchingItemKey);
+    when(matchingItemKey.getNamespace()).thenReturn("namespace_a");
+
+    when(wrongTypeItem.type()).thenReturn(CustomItem.Type.TOOL);
+    when(wrongTypeItem.relluEssentialsNamespacedKey()).thenReturn(wrongTypeItemKey);
+    when(wrongTypeItemKey.getNamespace()).thenReturn("namespace_a");
+
+    when(wrongNamespaceItem.type()).thenReturn(CustomItem.Type.GADGET);
+    when(wrongNamespaceItem.relluEssentialsNamespacedKey()).thenReturn(wrongNamespaceItemKey);
+    when(wrongNamespaceItemKey.getNamespace()).thenReturn("namespace_b");
+
+    itemRegistry.register(matchingKey, matchingItem);
+    itemRegistry.register(wrongTypeKey, wrongTypeItem);
+    itemRegistry.register(wrongNamespaceKey, wrongNamespaceItem);
+
+    var results = itemRegistry.getAllByTypeAndNamespace(CustomItem.Type.GADGET, "namespace_a");
+
+    assertEquals(1, results.size());
+    assertEquals(matchingItem, results.getFirst());
   }
 }

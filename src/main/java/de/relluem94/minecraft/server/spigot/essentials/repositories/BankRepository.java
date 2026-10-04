@@ -15,6 +15,8 @@ public class BankRepository {
   private final BankDao bankDao;
 
   /**
+   * Creates a new BankRepository with the given DAO.
+   *
    * @param bankDao the DAO used to access bank data
    */
   public BankRepository(BankDao bankDao) {
@@ -43,11 +45,11 @@ public class BankRepository {
   /**
    * Returns the bank account for the given player.
    *
-   * @param playerFK the internal player id
+   * @param playerFk the internal player id
    * @return the {@link BankAccountEntry} with its tier populated, or {@code null} if not found
    */
-  public BankAccountEntry findBankAccountByPlayerId(int playerFK) {
-    return bankDao.findBankAccountByPlayerId(playerFK);
+  public BankAccountEntry findBankAccountByPlayerId(int playerFk) {
+    return bankDao.findBankAccountByPlayerId(playerFk);
   }
 
   /**
@@ -62,38 +64,38 @@ public class BankRepository {
   /**
    * Records a transaction and updates the account balance.
    *
-   * @param playerFK         the internal player id
-   * @param bankAccountFK    the bank account id
+   * @param playerFk         the internal player id
+   * @param bankAccountFk    the bank account id
    * @param transactionValue the signed transaction amount
    * @param currentBalance   the balance before the transaction
    * @param tierId           the current tier id of the account
    */
-  public void addTransactionToBank(int playerFK, int bankAccountFK, double transactionValue,
+  public void addTransactionToBank(int playerFk, int bankAccountFk, double transactionValue,
       double currentBalance, int tierId) {
-    bankDao.insertBankTransaction(playerFK, bankAccountFK, transactionValue);
-    bankDao.updateBankAccount(playerFK, currentBalance + transactionValue, tierId);
+    bankDao.insertBankTransaction(playerFk, bankAccountFk, transactionValue);
+    bankDao.updateBankAccount(playerFk, currentBalance + transactionValue, tierId);
   }
 
   /**
    * Updates the bank account balance and tier without recording a transaction.
    *
-   * @param playerFK       the internal player id
+   * @param playerFk       the internal player id
    * @param transactionValue the value to add to the current balance
    * @param currentBalance   the balance before the update
    * @param tierId           the tier id to set
    */
-  public void updateBankAccount(int playerFK, double transactionValue, double currentBalance,
+  public void updateBankAccount(int playerFk, double transactionValue, double currentBalance,
       int tierId) {
-    bankDao.updateBankAccount(playerFK, currentBalance + transactionValue, tierId);
+    bankDao.updateBankAccount(playerFk, currentBalance + transactionValue, tierId);
   }
 
   /**
    * Returns all transactions for the given bank account.
    *
-   * @param bankAccountFK the bank account id
+   * @param bankAccountFk the bank account id
    * @return list of {@link BankTransactionEntry} records
    */
-  public List<BankTransactionEntry> findTransactionsByBankAccountId(int bankAccountFK) {
-    return bankDao.findTransactionsByBankAccountId(bankAccountFK);
+  public List<BankTransactionEntry> findTransactionsByBankAccountId(int bankAccountFk) {
+    return bankDao.findTransactionsByBankAccountId(bankAccountFk);
   }
 }

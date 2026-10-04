@@ -12,16 +12,34 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExe
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Data Access Object for managing world groups, their associated worlds,
+ * settings, and player inventories within the persistence layer.
+ *
+ * @author rellu
+ */
 public class WorldGroupDao {
 
   private final QueryExecutor queryExecutor;
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new {@code WorldGroupDao} with the required dependencies for
+   * query execution and service access.
+   *
+   * @param queryExecutor  the executor used to run SQL queries against the database
+   * @param serviceContext the context providing access to application-level services
+   */
   public WorldGroupDao(QueryExecutor queryExecutor, ServiceContext serviceContext) {
     this.queryExecutor = queryExecutor;
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Retrieves all world group settings from the database.
+   *
+   * @return a list of {@link WorldGroupSettingEntry} representing all stored world group settings
+   */
   public List<WorldGroupSettingEntry> findAllWorldGroupSettings() {
     return queryExecutor.queryList(
         "getAllWorldGroupSettings.sql",
@@ -30,6 +48,11 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Retrieves all world groups from the database, each enriched with their associated settings.
+   *
+   * @return a list of {@link WorldGroupEntry} representing all stored world groups
+   */
   public List<WorldGroupEntry> findAllWorldGroups() {
     List<WorldGroupSettingEntry> allSettings = findAllWorldGroupSettings();
     return queryExecutor.queryList(
@@ -39,6 +62,12 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Retrieves all worlds belonging to the given world group.
+   *
+   * @param worldGroupEntry the world group whose worlds are to be retrieved
+   * @return a list of {@link WorldEntry} associated with the given world group
+   */
   public List<WorldEntry> findWorldsByGroup(@NotNull WorldGroupEntry worldGroupEntry) {
     return queryExecutor.queryList(
         "getWorldByGroup.sql",
@@ -51,6 +80,14 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Retrieves the inventory entry for a specific player within a specific world group.
+   *
+   * @param playerEntry     the player whose inventory is to be retrieved
+   * @param worldGroupEntry the world group in which the inventory is stored
+   * @return the {@link WorldGroupInventoryEntry} for the given player and world group,
+   *         or {@code null} if no entry exists
+   */
   public WorldGroupInventoryEntry findInventoryByGroupAndPlayer(
       @NotNull PlayerEntry playerEntry, @NotNull WorldGroupEntry worldGroupEntry) {
     return queryExecutor.querySingle(
@@ -67,6 +104,12 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Persists a new inventory entry for a player within a world group.
+   *
+   * @param inventoryEntry the inventory entry to insert, containing player, world group,
+   *                       inventory contents, health, food level, and experience data
+   */
   public void insertInventory(@NotNull WorldGroupInventoryEntry inventoryEntry) {
     queryExecutor.executeUpdate(
         "insertWorldInventoryByGroupAndPlayer.sql",
@@ -82,6 +125,12 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Updates an existing inventory entry for a player within a world group.
+   *
+   * @param inventoryEntry the inventory entry containing the updated inventory contents,
+   *                       health, food level, experience, and the identifier of the updating player
+   */
   public void updateInventory(@NotNull WorldGroupInventoryEntry inventoryEntry) {
     queryExecutor.executeUpdate(
         "updateWorldInventoryByGroupAndPlayer.sql",
@@ -97,6 +146,11 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Persists a new world group to the database.
+   *
+   * @param worldGroupEntry the world group entry to insert, containing the creator and group name
+   */
   public void insertWorldGroup(@NotNull WorldGroupEntry worldGroupEntry) {
     queryExecutor.executeUpdate(
         "insertWorldGroup.sql",
@@ -107,6 +161,13 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Retrieves a world group by its name, enriched with all associated settings.
+   *
+   * @param name the name of the world group to look up
+   * @return the matching {@link WorldGroupEntry}, or {@code null} if no world group
+   *     with the given name exists
+   */
   public WorldGroupEntry findWorldGroupByName(String name) {
     List<WorldGroupSettingEntry> allSettings = findAllWorldGroupSettings();
     return queryExecutor.querySingle(
@@ -116,6 +177,13 @@ public class WorldGroupDao {
     );
   }
 
+  /**
+   * Persists a new world entry to the database, associating it with a world
+   * group and a permission group.
+   *
+   * @param worldEntry the world entry to insert, containing the creator, world name,
+   *                   associated world group, and permission group
+   */
   public void insertWorld(@NotNull WorldEntry worldEntry) {
     queryExecutor.executeUpdate(
         "insertWorld.sql",

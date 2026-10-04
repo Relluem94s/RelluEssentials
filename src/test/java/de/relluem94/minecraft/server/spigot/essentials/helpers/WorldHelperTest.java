@@ -1,7 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -17,234 +26,238 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class WorldHelperTest {
 
+  @Mock
+  private Player player;
+
+  @Mock
+  private World world;
+
+  private MockedStatic<Bukkit> mockedBukkit;
+
+  @BeforeEach
+  void setUp() {
+    mockedBukkit = mockStatic(Bukkit.class);
+  }
+
+  @AfterEach
+  void tearDown() {
+    mockedBukkit.close();
+  }
+
+  @Nested
+  class IsInWorldWithPlayerAndWorldName {
+
+    @Test
+    void returnsTrueWhenPlayerIsInGivenWorld() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("world");
+
+      assertTrue(WorldHelper.isInWorld(player, "world"));
+    }
+
+    @Test
+    void returnsTrueWhenPlayerIsInGivenWorldCaseInsensitive() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("World");
+
+      assertTrue(WorldHelper.isInWorld(player, "world"));
+    }
+
+    @Test
+    void returnsFalseWhenPlayerIsNotInGivenWorld() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("other_world");
+
+      assertFalse(WorldHelper.isInWorld(player, "world"));
+    }
+  }
+
+  @Nested
+  class IsInWorldWithCommandSenderAndWorldName {
+
     @Mock
-    private Player player;
+    private CommandSender nonPlayerSender;
+
+    @Test
+    void returnsTrueWhenSenderIsNotaPlayer() {
+      assertTrue(WorldHelper.isInWorld(nonPlayerSender, "world"));
+    }
+
+    @Test
+    void returnsTrueWhenSenderIsPlayerInGivenWorld() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("world");
+
+      assertTrue(WorldHelper.isInWorld((CommandSender) player, "world"));
+    }
+
+    @Test
+    void returnsFalseWhenSenderIsPlayerNotInGivenWorld() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("other_world");
+
+      assertFalse(WorldHelper.isInWorld((CommandSender) player, "world"));
+    }
+  }
+
+  @Nested
+  class IsInWorldWithPlayerAndWorldList {
+
+    @Test
+    void returnsTrueWhenPlayerWorldIsInList() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("world");
+
+      assertTrue(WorldHelper.isInWorld(player, List.of("world", "world_nether")));
+    }
+
+    @Test
+    void returnsFalseWhenPlayerWorldIsNotInList() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("other_world");
+
+      assertFalse(WorldHelper.isInWorld(player, List.of("world", "world_nether")));
+    }
+
+    @Test
+    void returnsFalseWhenListIsEmpty() {
+      when(player.getWorld()).thenReturn(world);
+      when(world.getName()).thenReturn("world");
+
+      assertFalse(WorldHelper.isInWorld(player, List.of()));
+    }
+  }
+
+  @Nested
+  class IsInWorldWithCommandSenderAndWorld {
 
     @Mock
-    private World world;
+    private CommandSender nonPlayerSender;
 
-    private MockedStatic<Bukkit> mockedBukkit;
-
-    @BeforeEach
-    void setUp() {
-        mockedBukkit = mockStatic(Bukkit.class);
+    @Test
+    void returnsTrueWhenSenderIsNotaPlayer() {
+      assertTrue(WorldHelper.isInWorld(nonPlayerSender, world));
     }
 
-    @AfterEach
-    void tearDown() {
-        mockedBukkit.close();
+    @Test
+    void returnsTrueWhenSenderIsPlayerInGivenWorld() {
+      when(player.getWorld()).thenReturn(world);
+
+      assertTrue(WorldHelper.isInWorld((CommandSender) player, world));
     }
 
-    @Nested
-    class IsInWorldWithPlayerAndWorldName {
+    @Test
+    void returnsFalseWhenSenderIsPlayerNotInGivenWorld() {
+      World otherWorld = mock(World.class);
+      when(player.getWorld()).thenReturn(otherWorld);
 
-        @Test
-        void returnsTrueWhenPlayerIsInGivenWorld() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("world");
+      assertFalse(WorldHelper.isInWorld((CommandSender) player, world));
+    }
+  }
 
-            assertTrue(WorldHelper.isInWorld(player, "world"));
-        }
+  @Nested
+  class IsInWorldWithBlock {
 
-        @Test
-        void returnsTrueWhenPlayerIsInGivenWorldCaseInsensitive() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("World");
+    @Mock
+    private Block block;
 
-            assertTrue(WorldHelper.isInWorld(player, "world"));
-        }
+    @Test
+    void returnsTrueWhenBlockIsInGivenWorld() {
+      when(block.getWorld()).thenReturn(world);
 
-        @Test
-        void returnsFalseWhenPlayerIsNotInGivenWorld() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("other_world");
-
-            assertFalse(WorldHelper.isInWorld(player, "world"));
-        }
+      assertTrue(WorldHelper.isInWorld(block, world));
     }
 
-    @Nested
-    class IsInWorldWithCommandSenderAndWorldName {
+    @Test
+    void returnsFalseWhenBlockIsNotInGivenWorld() {
+      World otherWorld = mock(World.class);
+      when(block.getWorld()).thenReturn(otherWorld);
 
-        @Mock
-        private CommandSender nonPlayerSender;
+      assertFalse(WorldHelper.isInWorld(block, world));
+    }
+  }
 
-        @Test
-        void returnsTrueWhenSenderIsNotAPlayer() {
-            assertTrue(WorldHelper.isInWorld(nonPlayerSender, "world"));
-        }
+  @Nested
+  class IsInWorldWithEntity {
 
-        @Test
-        void returnsTrueWhenSenderIsPlayerInGivenWorld() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("world");
+    @Mock
+    private Entity entity;
 
-            assertTrue(WorldHelper.isInWorld((CommandSender) player, "world"));
-        }
+    @Test
+    void returnsTrueWhenEntityIsInGivenWorld() {
+      when(entity.getWorld()).thenReturn(world);
 
-        @Test
-        void returnsFalseWhenSenderIsPlayerNotInGivenWorld() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("other_world");
-
-            assertFalse(WorldHelper.isInWorld((CommandSender) player, "world"));
-        }
+      assertTrue(WorldHelper.isInWorld(entity, world));
     }
 
-    @Nested
-    class IsInWorldWithPlayerAndWorldList {
+    @Test
+    void returnsFalseWhenEntityIsNotInGivenWorld() {
+      World otherWorld = mock(World.class);
+      when(entity.getWorld()).thenReturn(otherWorld);
 
-        @Test
-        void returnsTrueWhenPlayerWorldIsInList() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("world");
+      assertFalse(WorldHelper.isInWorld(entity, world));
+    }
+  }
 
-            assertTrue(WorldHelper.isInWorld(player, List.of("world", "world_nether")));
-        }
+  @Nested
+  class UnloadWorld {
 
-        @Test
-        void returnsFalseWhenPlayerWorldIsNotInList() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("other_world");
+    @Test
+    void unloadsWorldSuccessfullyWhenWorldIsLoaded() throws WorldNotLoadedException {
+      mockedBukkit
+          .when(() -> Bukkit.getWorld("world"))
+          .thenReturn(world);
 
-            assertFalse(WorldHelper.isInWorld(player, List.of("world", "world_nether")));
-        }
+      WorldHelper.unloadWorld("world", true);
 
-        @Test
-        void returnsFalseWhenListIsEmpty() {
-            when(player.getWorld()).thenReturn(world);
-            when(world.getName()).thenReturn("world");
-
-            assertFalse(WorldHelper.isInWorld(player, List.of()));
-        }
+      mockedBukkit.verify(() -> Bukkit.unloadWorld("world", true));
     }
 
-    @Nested
-    class IsInWorldWithCommandSenderAndWorld {
+    @Test
+    void throwsWorldNotLoadedExceptionWhenWorldIsNotLoaded() {
+      mockedBukkit
+          .when(() -> Bukkit.getWorld("unknown_world"))
+          .thenReturn(null);
 
-        @Mock
-        private CommandSender nonPlayerSender;
-
-        @Test
-        void returnsTrueWhenSenderIsNotAPlayer() {
-            assertTrue(WorldHelper.isInWorld(nonPlayerSender, world));
-        }
-
-        @Test
-        void returnsTrueWhenSenderIsPlayerInGivenWorld() {
-            when(player.getWorld()).thenReturn(world);
-
-            assertTrue(WorldHelper.isInWorld((CommandSender) player, world));
-        }
-
-        @Test
-        void returnsFalseWhenSenderIsPlayerNotInGivenWorld() {
-            World otherWorld = mock(World.class);
-            when(player.getWorld()).thenReturn(otherWorld);
-
-            assertFalse(WorldHelper.isInWorld((CommandSender) player, world));
-        }
+      assertThrows(WorldNotLoadedException.class, () -> WorldHelper.unloadWorld("unknown_world", true));
     }
 
-    @Nested
-    class IsInWorldWithBlock {
+    @Test
+    void unloadsWorldWithoutSavingWhenSaveIsFalse() throws WorldNotLoadedException {
+      mockedBukkit
+          .when(() -> Bukkit.getWorld("world"))
+          .thenReturn(world);
 
-        @Mock
-        private Block block;
+      WorldHelper.unloadWorld("world", false);
 
-        @Test
-        void returnsTrueWhenBlockIsInGivenWorld() {
-            when(block.getWorld()).thenReturn(world);
+      mockedBukkit.verify(() -> Bukkit.unloadWorld("world", false));
+    }
+  }
 
-            assertTrue(WorldHelper.isInWorld(block, world));
-        }
+  @Nested
+  class CloneWorld {
 
-        @Test
-        void returnsFalseWhenBlockIsNotInGivenWorld() {
-            World otherWorld = mock(World.class);
-            when(block.getWorld()).thenReturn(otherWorld);
+    @Test
+    void throwsWorldNotFoundExceptionWhenOriginalWorldIsNotLoaded() {
+      mockedBukkit
+          .when(() -> Bukkit.getWorld("nonexistent_world"))
+          .thenReturn(null);
 
-            assertFalse(WorldHelper.isInWorld(block, world));
-        }
+      assertThrows(WorldNotFoundException.class, () -> WorldHelper.cloneWorld("cloned_world", "nonexistent_world"));
     }
 
-    @Nested
-    class IsInWorldWithEntity {
+    @Test
+    void createsClonedWorldWhenOriginalWorldExists() throws WorldNotFoundException {
+      mockedBukkit
+          .when(() -> Bukkit.getWorld("original_world"))
+          .thenReturn(world);
 
-        @Mock
-        private Entity entity;
+      WorldHelper.cloneWorld("cloned_world", "original_world");
 
-        @Test
-        void returnsTrueWhenEntityIsInGivenWorld() {
-            when(entity.getWorld()).thenReturn(world);
-
-            assertTrue(WorldHelper.isInWorld(entity, world));
-        }
-
-        @Test
-        void returnsFalseWhenEntityIsNotInGivenWorld() {
-            World otherWorld = mock(World.class);
-            when(entity.getWorld()).thenReturn(otherWorld);
-
-            assertFalse(WorldHelper.isInWorld(entity, world));
-        }
+      mockedBukkit.verify(() -> Bukkit.createWorld(any()));
     }
-
-    @Nested
-    class UnloadWorld {
-
-        @Test
-        void unloadsWorldSuccessfullyWhenWorldIsLoaded() throws WorldNotLoadedException {
-            mockedBukkit.when(() -> Bukkit.getWorld("world")).thenReturn(world);
-
-            WorldHelper.unloadWorld("world", true);
-
-            mockedBukkit.verify(() -> Bukkit.unloadWorld("world", true));
-        }
-
-        @Test
-        void throwsWorldNotLoadedExceptionWhenWorldIsNotLoaded() {
-            mockedBukkit.when(() -> Bukkit.getWorld("unknown_world")).thenReturn(null);
-
-            assertThrows(WorldNotLoadedException.class, () -> WorldHelper.unloadWorld("unknown_world", true));
-        }
-
-        @Test
-        void unloadsWorldWithoutSavingWhenSaveIsFalse() throws WorldNotLoadedException {
-            mockedBukkit.when(() -> Bukkit.getWorld("world")).thenReturn(world);
-
-            WorldHelper.unloadWorld("world", false);
-
-            mockedBukkit.verify(() -> Bukkit.unloadWorld("world", false));
-        }
-    }
-
-    @Nested
-    class CloneWorld {
-
-        @Test
-        void throwsWorldNotFoundExceptionWhenOriginalWorldIsNotLoaded() {
-            mockedBukkit.when(() -> Bukkit.getWorld("nonexistent_world")).thenReturn(null);
-
-            assertThrows(WorldNotFoundException.class,
-                    () -> WorldHelper.cloneWorld("cloned_world", "nonexistent_world"));
-        }
-
-        @Test
-        void createsClonedWorldWhenOriginalWorldExists() throws WorldNotFoundException {
-            mockedBukkit.when(() -> Bukkit.getWorld("original_world")).thenReturn(world);
-
-            WorldHelper.cloneWorld("cloned_world", "original_world");
-
-            mockedBukkit.verify(() -> Bukkit.createWorld(any()));
-        }
-    }
+  }
 }

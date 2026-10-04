@@ -2,22 +2,31 @@
 <project version="4">
   <component name="CheckStyle-IDEA" serialisationVersion="2">
     <checkstyleVersion>13.8.0</checkstyleVersion>
-    <scanScope>JavaOnly</scanScope>
+    <scanScope>JavaOnlyWithTests</scanScope>
     <suppressErrors>true</suppressErrors>
     <importSettingsFromMaven>true</importSettingsFromMaven>
     <option name="thirdPartyClasspath" />
     <option name="activeLocationIds">
-      <option value="bundled-google-checks" />
+      <option value="40de4ff6-9ff7-42db-ae7e-298623d22916" />
     </option>
     <option name="locations">
       <list>
-        <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">bundled-sun-checks</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">
-          (bundled)
+          bundled-google-checks
           <option name="properties">
             <map>
               <entry key="org.checkstyle.google.severity" value="warning" />
               <entry key="org.checkstyle.google.suppressionfilter.config" value="checkstyle-suppressions.xml" />
+              <entry key="org.checkstyle.google.suppressionxpathfilter.config" value="checkstyle-xpath-suppressions.xml" />
+            </map>
+          </option>
+        </ConfigurationLocation>
+        <ConfigurationLocation id="40de4ff6-9ff7-42db-ae7e-298623d22916" type="LOCAL_FILE" scope="All" description="GithubPipeline">
+          $PROJECT_DIR$/.github/checkstyle/checkstyle.xml
+          <option name="properties">
+            <map>
+              <entry key="org.checkstyle.google.severity" value="warning" />
               <entry key="org.checkstyle.google.suppressionxpathfilter.config" value="checkstyle-xpath-suppressions.xml" />
             </map>
           </option>

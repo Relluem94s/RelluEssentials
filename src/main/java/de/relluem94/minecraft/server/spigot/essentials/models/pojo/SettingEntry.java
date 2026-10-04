@@ -2,13 +2,15 @@ package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-
-@Getter
-@Setter
+/**
+ * Represents a single configuration setting entry with audit information.
+ *
+ * @author rellu
+ */
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingEntry {

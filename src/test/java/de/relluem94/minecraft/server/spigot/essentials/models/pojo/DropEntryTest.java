@@ -8,34 +8,34 @@ import org.junit.jupiter.api.Test;
 
 class DropEntryTest {
 
-    private DropEntry dropEntry;
+  private DropEntry dropEntry;
 
-    @BeforeEach
-    void setUp() {
-        dropEntry = new DropEntry();
-    }
+  @BeforeEach
+  void setUp() {
+    dropEntry = new DropEntry();
+  }
 
-    @Test
-    void shouldSetAndGetId() {
-        dropEntry.setId(1);
-        assertEquals(1, dropEntry.getId());
-    }
+  @Test
+  void shouldSetAndGetId() {
+    dropEntry.setId(1);
+    assertEquals(1, dropEntry.getId());
+  }
 
-    @Test
-    void shouldSetAndGetMaterial() {
-        dropEntry.setMaterial(Material.DIAMOND);
-        assertEquals(Material.DIAMOND, dropEntry.getMaterial());
-    }
+  @Test
+  void shouldSetAndGetMaterial() {
+    dropEntry.setMaterial(Material.DIAMOND);
+    assertEquals(Material.DIAMOND, dropEntry.getMaterial());
+  }
 
-    @Test
-    void shouldSetAndGetMin() {
-        dropEntry.setMin(5);
-        assertEquals(5, dropEntry.getMin());
-    }
+  @Test
+  void shouldSetAndGetMin() {
+    dropEntry.setMin(5);
+    assertEquals(5, dropEntry.getMin());
+  }
 
-    @Test
-    void shouldSetAndGetMax() {
-        dropEntry.setMax(10);
-        assertEquals(10, dropEntry.getMax());
-    }
+  @Test
+  void shouldSetAndGetMax() {
+    dropEntry.setMax(10);
+    assertEquals(10, dropEntry.getMax());
+  }
 }

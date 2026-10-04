@@ -4,196 +4,611 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.structure.StructureRotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class ModifyHelperTest {
 
-    @ParameterizedTest
-    @CsvSource({
-            "0.0, 0.0",
-            "90.0, 90.0",
-            "180.0, 180.0",
-            "270.0, 270.0",
-            "360.0, 0.0",
-            "45.0, 90.0",
-            "44.0, 0.0",
-            "-90.0, 270.0",
-            "-180.0, 180.0",
-            "450.0, 90.0",
-            "720.0, 0.0",
-    })
-    void normalizeYaw_returnsNearestCardinalDirection(float input, float expected) {
-        assertEquals(expected, ModifyHelper.normalizeYaw(input));
-    }
+  @ParameterizedTest
+  @CsvSource({"0.0, 0.0", "90.0, 90.0", "180.0, 180.0", "270.0, 270.0", "360.0, 0.0", "45.0, 90.0", "44.0, 0.0",
+      "-90.0, 270.0", "-180.0, 180.0", "450.0, 90.0", "720.0, 0.0", })
+  void normalizeYawReturnsNearestCardinalDirection(float input, float expected) {
+    assertEquals(expected, ModifyHelper.normalizeYaw(input));
+  }
 
-    @ParameterizedTest
-    @CsvSource({
-            "1, 0, 0,   1,  0",
-            "1, 0, 90,  0,  -1",
-            "1, 0, 180, -1, 0",
-            "1, 0, 270, 0, 1",
-            "0, 1, 0,   0,  1",
-            "0, -1, 90, -1,  0",
-            "0, 1, 180, 0, -1",
-            "0, -1, 270, 1,  0",
-    })
-    void worldToLocal_transformsCoordinatesBasedOnYaw(int dx, int dz, float yaw, int expectedX, int expectedZ) {
-        int[] result = ModifyHelper.worldToLocal(dx, dz, yaw);
+  @ParameterizedTest
+  @CsvSource({"1, 0, 0,   1,  0", "1, 0, 90,  0,  -1", "1, 0, 180, -1, 0", "1, 0, 270, 0, 1", "0, 1, 0,   0,  1",
+      "0, -1, 90, -1,  0", "0, 1, 180, 0, -1", "0, -1, 270, 1,  0", })
+  void worldToLocalTransformsCoordinatesBasedOnYaw(int dx, int dz, float yaw, int expectedX, int expectedZ) {
+    int[] result = ModifyHelper.worldToLocal(dx, dz, yaw);
 
-        assertEquals(expectedX, result[0]);
-        assertEquals(expectedZ, result[1]);
-    }
+    assertEquals(expectedX, result[0]);
+    assertEquals(expectedZ, result[1]);
+  }
 
-    @Test
-    void worldToLocal_returnsArrayOfLengthTwo() {
-        int[] result = ModifyHelper.worldToLocal(1, 1, 0);
-        assertEquals(2, result.length);
-    }
+  @Test
+  void worldToLocalReturnsArrayOfLengthTwo() {
+    int[] result = ModifyHelper.worldToLocal(1, 1, 0);
+    assertEquals(2, result.length);
+  }
 
-    @ParameterizedTest
-    @CsvSource({
-            "1, 0, 0,   1,  0",
-            "1, 0, 90,  0,  1",
-            "1, 0, 180, -1, 0",
-            "1, 0, 270, 0, -1",
-            "0, 1, 0,   0,  1",
-            "0, 1, 90, -1,  0",
-            "0, 1, 180, 0, -1",
-            "0, 1, 270, 1,  0",
-    })
-    void relativeToWorld_transformsCoordinatesBasedOnYaw(int relX, int relZ, float yaw, int expectedX, int expectedZ) {
-        int[] result = ModifyHelper.relativeToWorld(relX, relZ, yaw);
+  @ParameterizedTest
+  @CsvSource({"1, 0, 0,   1,  0", "1, 0, 90,  0,  1", "1, 0, 180, -1, 0", "1, 0, 270, 0, -1", "0, 1, 0,   0,  1",
+      "0, 1, 90, -1,  0", "0, 1, 180, 0, -1", "0, 1, 270, 1,  0", })
+  void relativeToWorldTransformsCoordinatesBasedOnYaw(int relX, int relZ, float yaw, int expectedX, int expectedZ) {
+    int[] result = ModifyHelper.relativeToWorld(relX, relZ, yaw);
 
-        assertEquals(expectedX, result[0]);
-        assertEquals(expectedZ, result[1]);
-    }
+    assertEquals(expectedX, result[0]);
+    assertEquals(expectedZ, result[1]);
+  }
 
-    @Test
-    void relativeToWorld_returnsArrayOfLengthTwo() {
-        int[] result = ModifyHelper.relativeToWorld(1, 1, 0);
-        assertEquals(2, result.length);
-    }
+  @Test
+  void relativeToWorldReturnsArrayOfLengthTwo() {
+    int[] result = ModifyHelper.relativeToWorld(1, 1, 0);
+    assertEquals(2, result.length);
+  }
 
-    @Test
-    void rotate_returnsRotatedEntriesWithCorrectCoordinates() {
-        World world = mock(World.class);
+  // -------------------------------------------------------------------------
+  // rotateBlockData
+  // -------------------------------------------------------------------------
 
-        BlockData blockData = mock(BlockData.class);
-        Location locationAt1_0 = new Location(world, 1, 0, 0);
-        Location locationAt0_0 = new Location(world, 0, 0, 1);
+  @Test
+  void rotateBlockDatWwithYaw0ReturnsCloneWithoutRotation() {
+    BlockData original = mock(BlockData.class);
+    BlockData cloned = mock(BlockData.class);
+    when(original.clone()).thenReturn(cloned);
 
-        List<ModifyClipboardEntry> entries = List.of(
-                new ModifyClipboardEntry(locationAt1_0, Material.STONE, blockData),
-                new ModifyClipboardEntry(locationAt0_0, Material.DIRT, blockData)
-        );
+    BlockData result = ModifyHelper.rotateBlockData(original, 0f);
 
-        Location selectionPos1 = new Location(world, 0, 0, 0);
-        Location selectionPos2 = new Location(world, 1, 5, 1);
-        Selection selection = new Selection(selectionPos1, selectionPos2);
+    assertEquals(cloned, result);
+    verify(original).clone();
+  }
 
-        DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+  @Test
+  void rotateBlockDataWithYaw90AppliesClockwise90Rotation() {
+    BlockData original = mock(BlockData.class);
+    BlockData cloned = mock(BlockData.class);
+    when(original.clone()).thenReturn(cloned);
 
-        assertNotNull(result);
-        assertNotNull(result.getValue());
-        assertNotNull(result.getSecondValue());
-        assertEquals(entries.size(), result.getSecondValue().size());
-    }
+    BlockData result = ModifyHelper.rotateBlockData(original, 90f);
 
-    @Test
-    void rotate_preservesYBounds() {
-        World world = mock(World.class);
-        BlockData blockData = mock(BlockData.class);
+    assertEquals(cloned, result);
+    verify(cloned).rotate(StructureRotation.CLOCKWISE_90);
+  }
 
-        List<ModifyClipboardEntry> entries = List.of(
-                new ModifyClipboardEntry(new Location(world, 1, 2, 3), Material.STONE, blockData)
-        );
+  @Test
+  void rotateBlockDataWithYaw180AppliesClockwise180Rotation() {
+    BlockData original = mock(BlockData.class);
+    BlockData cloned = mock(BlockData.class);
+    when(original.clone()).thenReturn(cloned);
 
-        Location selectionPos1 = new Location(world, 0, 10, 0);
-        Location selectionPos2 = new Location(world, 5, 20, 5);
-        Selection selection = new Selection(selectionPos1, selectionPos2);
+    BlockData result = ModifyHelper.rotateBlockData(original, 180f);
 
-        DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+    assertEquals(cloned, result);
+    verify(cloned).rotate(StructureRotation.CLOCKWISE_180);
+  }
 
-        assertEquals(selection.getMinY(), result.getValue().getMinY());
-        assertEquals(selection.getMaxY(), result.getValue().getMaxY());
-    }
+  @Test
+  void rotateBlockDataWithYaw270AppliesCounterclockwise90Rotation() {
+    BlockData original = mock(BlockData.class);
+    BlockData cloned = mock(BlockData.class);
+    when(original.clone()).thenReturn(cloned);
 
-    @Test
-    void rotate_rotatesCoordinatesCorrectly() {
-        World world = mock(World.class);
-        BlockData blockData = mock(BlockData.class);
+    BlockData result = ModifyHelper.rotateBlockData(original, 270f);
 
-        Location originalLocation = new Location(world, 2, 0, 3);
-        List<ModifyClipboardEntry> entries = List.of(
-                new ModifyClipboardEntry(originalLocation, Material.STONE, blockData)
-        );
+    assertEquals(cloned, result);
+    verify(cloned).rotate(StructureRotation.COUNTERCLOCKWISE_90);
+  }
 
-        Location selectionPos1 = new Location(world, 0, 0, 0);
-        Location selectionPos2 = new Location(world, 3, 5, 2);
-        Selection selection = new Selection(selectionPos1, selectionPos2);
+  @Test
+  void rotateBlockDataWithYaw360TreatedAsYaw0ReturnsCloneWithoutRotation() {
+    BlockData original = mock(BlockData.class);
+    BlockData cloned = mock(BlockData.class);
+    when(original.clone()).thenReturn(cloned);
 
-        DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+    BlockData result = ModifyHelper.rotateBlockData(original, 360f);
 
-        ModifyClipboardEntry rotatedEntry = result.getSecondValue().getFirst();
-        assertEquals(0, rotatedEntry.getLocation().getBlockX());
-        assertEquals(originalLocation.getBlockY(), rotatedEntry.getLocation().getBlockY());
-        assertEquals(1, rotatedEntry.getLocation().getBlockZ());
-    }
-    @Test
-    void rotate_preservesMaterialAndBlockData() {
-        World world = mock(World.class);
-        BlockData blockData = mock(BlockData.class);
+    assertEquals(cloned, result);
+    verify(original).clone();
+  }
 
-        List<ModifyClipboardEntry> entries = List.of(
-                new ModifyClipboardEntry(new Location(world, 1, 0, 0), Material.GOLD_BLOCK, blockData)
-        );
+  // -------------------------------------------------------------------------
+  // getBlock
+  // -------------------------------------------------------------------------
 
-        Location selectionPos1 = new Location(world, 0, 0, 0);
-        Location selectionPos2 = new Location(world, 1, 5, 1);
-        Selection selection = new Selection(selectionPos1, selectionPos2);
+  @ParameterizedTest
+  @CsvSource({"0,   5, 10, 3,  15, 13", "90,  5, 10, 3,  7,  13", "180, 5, 10, 3,  5,  7", "270, 5, 10, 3,  13, 7", })
+  void getBlockResolvesCorrectWorldPosition(float yaw, int originX, int originY, int originZ) {
+    World world = mock(World.class);
+    Block expectedBlock = mock(Block.class);
 
-        DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+    int relX = 5;
+    int relY = 2;
+    int relZ = 3;
 
-        ModifyClipboardEntry rotatedEntry = result.getSecondValue().getFirst();
-        assertEquals(Material.GOLD_BLOCK, rotatedEntry.getMaterial());
-        assertEquals(blockData, rotatedEntry.getData());
-    }
+    int[] worldOffset = ModifyHelper.relativeToWorld(relX, relZ, yaw);
+    Location targetLocation = new Location(world, originX, originY, originZ);
 
-    @Test
-    void rotate_withEmptyEntries_returnsEmptyList() {
-        World world = mock(World.class);
+    Location expectedLocation = new Location(world, originX + worldOffset[0], originY + relY, originZ + worldOffset[1]);
 
-        Location selectionPos1 = new Location(world, 0, 0, 0);
-        Location selectionPos2 = new Location(world, 5, 5, 5);
-        Selection selection = new Selection(selectionPos1, selectionPos2);
+    when(world.getBlockAt(expectedLocation)).thenReturn(expectedBlock);
+    when(expectedBlock.getLocation()).thenReturn(expectedLocation);
 
-        DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(List.of(), selection);
+    BlockData blockData = mock(BlockData.class);
+    ModifyClipboardEntry entry =
+        new ModifyClipboardEntry(new Location(world, relX, relY, relZ), Material.STONE, blockData);
 
-        assertTrue(result.getSecondValue().isEmpty());
-    }
+    Block result = ModifyHelper.getBlock(entry, yaw, targetLocation);
 
-    @Test
-    void constructor_throwsIllegalStateException() {
-        assertThrows(IllegalStateException.class, () -> {
-            var constructor = ModifyHelper.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
-            try {
-                constructor.newInstance();
-            } catch (java.lang.reflect.InvocationTargetException e) {
-                throw e.getCause();
-            }
-        });
-    }
+    assertNotNull(result);
+    assertEquals(expectedLocation.getBlockX(), result
+        .getLocation()
+        .getBlockX());
+    assertEquals(expectedLocation.getBlockY(), result
+        .getLocation()
+        .getBlockY());
+    assertEquals(expectedLocation.getBlockZ(), result
+        .getLocation()
+        .getBlockZ());
+  }
+
+  @Test
+  void getBlockWithYaw0ReturnsBlockAtDirectOffset() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    Location blockLocation = new Location(world, 15, 12, 13);
+    when(block.getLocation()).thenReturn(blockLocation);
+    when(world.getBlockAt(blockLocation)).thenReturn(block);
+
+    BlockData blockData = mock(BlockData.class);
+    ModifyClipboardEntry entry = new ModifyClipboardEntry(new Location(world, 5, 2, 3), Material.STONE, blockData);
+
+    Location origin = new Location(world, 10, 10, 10);
+    Block result = ModifyHelper.getBlock(entry, 0f, origin);
+
+    assertNotNull(result);
+  }
+
+  // -------------------------------------------------------------------------
+  // getRelativeCopySelection
+  // -------------------------------------------------------------------------
+
+  @Test
+  void getRelativeCopySelectionSubtractsOriginFromBothPositions() {
+    World world = mock(World.class);
+
+    Location pos1 = new Location(world, 10, 5, 20);
+    Location pos2 = new Location(world, 15, 10, 25);
+    Selection selection = new Selection(pos1, pos2);
+
+    Location origin = new Location(world, 5, 5, 10, 90f, 45f);
+
+    Selection result = ModifyHelper.getRelativeCopySelection(selection, origin);
+
+    assertNotNull(result);
+    assertEquals(5, result
+        .getPos1()
+        .getBlockX());
+    assertEquals(0, result
+        .getPos1()
+        .getBlockY());
+    assertEquals(10, result
+        .getPos1()
+        .getBlockZ());
+
+    assertEquals(10, result
+        .getPos2()
+        .getBlockX());
+    assertEquals(5, result
+        .getPos2()
+        .getBlockY());
+    assertEquals(15, result
+        .getPos2()
+        .getBlockZ());
+  }
+
+  @Test
+  void getRelativeCopySelectionAppliesOriginYawAndPitchToBothPositions() {
+    World world = mock(World.class);
+
+    Location pos1 = new Location(world, 10, 5, 20, 0f, 0f);
+    Location pos2 = new Location(world, 15, 10, 25, 0f, 0f);
+    Selection selection = new Selection(pos1, pos2);
+
+    float expectedYaw = 180f;
+    float expectedPitch = 30f;
+    Location origin = new Location(world, 0, 0, 0, expectedYaw, expectedPitch);
+
+    Selection result = ModifyHelper.getRelativeCopySelection(selection, origin);
+
+    assertEquals(expectedYaw, result
+        .getPos1()
+        .getYaw());
+    assertEquals(expectedPitch, result
+        .getPos1()
+        .getPitch());
+    assertEquals(expectedYaw, result
+        .getPos2()
+        .getYaw());
+    assertEquals(expectedPitch, result
+        .getPos2()
+        .getPitch());
+  }
+
+  @Test
+  void getRelativeCopySelectionWithOriginAtZeroReturnsUnchangedPositions() {
+    World world = mock(World.class);
+
+    Location pos1 = new Location(world, 3, 1, 7);
+    Location pos2 = new Location(world, 6, 4, 9);
+    Selection selection = new Selection(pos1, pos2);
+
+    Location origin = new Location(world, 0, 0, 0, 0f, 0f);
+
+    Selection result = ModifyHelper.getRelativeCopySelection(selection, origin);
+
+    assertEquals(3, result
+        .getPos1()
+        .getBlockX());
+    assertEquals(1, result
+        .getPos1()
+        .getBlockY());
+    assertEquals(7, result
+        .getPos1()
+        .getBlockZ());
+
+    assertEquals(6, result
+        .getPos2()
+        .getBlockX());
+    assertEquals(4, result
+        .getPos2()
+        .getBlockY());
+    assertEquals(9, result
+        .getPos2()
+        .getBlockZ());
+  }
+
+  // -------------------------------------------------------------------------
+  // getModifyClipboardEntry
+  // -------------------------------------------------------------------------
+
+  @ParameterizedTest
+  @CsvSource({"0", "90", "180", "270", })
+  void getModifyClipboardEntryStoresCorrectMaterialAndBlockData(float playerYaw) {
+    World world = mock(World.class);
+
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+
+    when(block.getWorld()).thenReturn(world);
+    when(block.getX()).thenReturn(5);
+    when(block.getY()).thenReturn(3);
+    when(block.getZ()).thenReturn(7);
+    when(block.getType()).thenReturn(Material.DIAMOND_BLOCK);
+    when(block.getBlockData()).thenReturn(blockData);
+
+    org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
+    when(player.getLocation()).thenReturn(new Location(world, 0, 0, 0, playerYaw, 0f));
+
+    Location origin = new Location(world, 2, 1, 4);
+
+    ModifyClipboardEntry result = ModifyHelper.getModifyClipboardEntry(block, player, origin);
+
+    assertNotNull(result);
+    assertEquals(Material.DIAMOND_BLOCK, result.getMaterial());
+    assertEquals(blockData, result.getData());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"0,   3, 2, 3", "90,  3, 2, -3", "180, -3, 2, -3", "270, -3, 2, 3", })
+  void getModifyClipboardEntryTransformsRelativePositionBasedOnPlayerYaw(float playerYaw, int expectedLocalX,
+      int expectedLocalY, int expectedLocalZ) {
+    World world = mock(World.class);
+
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+
+    when(block.getWorld()).thenReturn(world);
+    when(block.getX()).thenReturn(5);
+    when(block.getY()).thenReturn(3);
+    when(block.getZ()).thenReturn(7);
+    when(block.getType()).thenReturn(Material.STONE);
+    when(block.getBlockData()).thenReturn(blockData);
+
+    org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
+    when(player.getLocation()).thenReturn(new Location(world, 0, 0, 0, playerYaw, 0f));
+
+    Location origin = new Location(world, 2, 1, 4);
+
+    ModifyClipboardEntry result = ModifyHelper.getModifyClipboardEntry(block, player, origin);
+
+    assertEquals(expectedLocalX, result
+        .getLocation()
+        .getBlockX());
+    assertEquals(expectedLocalY, result
+        .getLocation()
+        .getBlockY());
+    assertEquals(expectedLocalZ, result
+        .getLocation()
+        .getBlockZ());
+  }
+
+  // -------------------------------------------------------------------------
+  // undo
+  // -------------------------------------------------------------------------
+
+  @Test
+  void undoSetsBlockTypeFromHistoryEntry() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+
+    Location location = new Location(world, 1, 2, 3);
+    when(world.getBlockAt(location)).thenReturn(block);
+    when(location.getBlock()).thenReturn(block);
+
+    ModifyHistoryEntry entry = new ModifyHistoryEntry(location, Material.OBSIDIAN, blockData);
+
+    ModifyHelper.undo(entry);
+
+    verify(block).setType(Material.OBSIDIAN);
+  }
+
+  @Test
+  void undoSetsBlockDataFromHistoryEntry() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+
+    Location location = new Location(world, 1, 2, 3);
+    when(world.getBlockAt(location)).thenReturn(block);
+    when(location.getBlock()).thenReturn(block);
+
+    ModifyHistoryEntry entry = new ModifyHistoryEntry(location, Material.OBSIDIAN, blockData);
+
+    ModifyHelper.undo(entry);
+
+    verify(block).setBlockData(blockData);
+  }
+
+  @Test
+  void undoWithDifferentMaterialsSetsCorrectType() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+
+    Location location = new Location(world, 5, 64, 5);
+    when(world.getBlockAt(location)).thenReturn(block);
+    when(location.getBlock()).thenReturn(block);
+
+    ModifyHistoryEntry entry = new ModifyHistoryEntry(location, Material.GRASS_BLOCK, blockData);
+
+    ModifyHelper.undo(entry);
+
+    verify(block).setType(Material.GRASS_BLOCK);
+    verify(block).setBlockData(blockData);
+  }
+
+  // -------------------------------------------------------------------------
+  // rotate (existing)
+  // -------------------------------------------------------------------------
+
+  @Test
+  void rotateReturnsRotatedEntriesWithCorrectCoordinates() {
+    World world = mock(World.class);
+
+    BlockData blockData = mock(BlockData.class);
+    Location locationAt1and0 = new Location(world, 1, 0, 0);
+    Location locationAt0and0 = new Location(world, 0, 0, 1);
+
+    List<ModifyClipboardEntry> entries = List.of(new ModifyClipboardEntry(locationAt1and0, Material.STONE, blockData),
+        new ModifyClipboardEntry(locationAt0and0, Material.DIRT, blockData));
+
+    Location selectionPos1 = new Location(world, 0, 0, 0);
+    Location selectionPos2 = new Location(world, 1, 5, 1);
+    Selection selection = new Selection(selectionPos1, selectionPos2);
+
+    DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+
+    assertNotNull(result);
+    assertNotNull(result.getValue());
+    assertNotNull(result.getSecondValue());
+    assertEquals(entries.size(), result
+        .getSecondValue()
+        .size());
+  }
+
+  @Test
+  void rotatePreservesYaxisBounds() {
+    World world = mock(World.class);
+    BlockData blockData = mock(BlockData.class);
+
+    List<ModifyClipboardEntry> entries =
+        List.of(new ModifyClipboardEntry(new Location(world, 1, 2, 3), Material.STONE, blockData));
+
+    Location selectionPos1 = new Location(world, 0, 10, 0);
+    Location selectionPos2 = new Location(world, 5, 20, 5);
+    Selection selection = new Selection(selectionPos1, selectionPos2);
+
+    DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+
+    assertEquals(selection.getMinY(), result
+        .getValue()
+        .getMinY());
+    assertEquals(selection.getMaxY(), result
+        .getValue()
+        .getMaxY());
+  }
+
+  @Test
+  void rotateRotatesCoordinatesCorrectly() {
+    World world = mock(World.class);
+    BlockData blockData = mock(BlockData.class);
+
+    Location originalLocation = new Location(world, 2, 0, 3);
+    List<ModifyClipboardEntry> entries = List.of(new ModifyClipboardEntry(originalLocation, Material.STONE, blockData));
+
+    Location selectionPos1 = new Location(world, 0, 0, 0);
+    Location selectionPos2 = new Location(world, 3, 5, 2);
+    Selection selection = new Selection(selectionPos1, selectionPos2);
+
+    DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+
+    ModifyClipboardEntry rotatedEntry = result
+        .getSecondValue()
+        .getFirst();
+    assertEquals(0, rotatedEntry
+        .getLocation()
+        .getBlockX());
+    assertEquals(originalLocation.getBlockY(), rotatedEntry
+        .getLocation()
+        .getBlockY());
+    assertEquals(1, rotatedEntry
+        .getLocation()
+        .getBlockZ());
+  }
+
+  @Test
+  void rotatePreservesMaterialAndBlockData() {
+    World world = mock(World.class);
+    BlockData blockData = mock(BlockData.class);
+
+    List<ModifyClipboardEntry> entries =
+        List.of(new ModifyClipboardEntry(new Location(world, 1, 0, 0), Material.GOLD_BLOCK, blockData));
+
+    Location selectionPos1 = new Location(world, 0, 0, 0);
+    Location selectionPos2 = new Location(world, 1, 5, 1);
+    Selection selection = new Selection(selectionPos1, selectionPos2);
+
+    DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(entries, selection);
+
+    ModifyClipboardEntry rotatedEntry = result
+        .getSecondValue()
+        .getFirst();
+    assertEquals(Material.GOLD_BLOCK, rotatedEntry.getMaterial());
+    assertEquals(blockData, rotatedEntry.getData());
+  }
+
+  @Test
+  void rotateWithEmptyEntriesReturnsEmptyList() {
+    World world = mock(World.class);
+
+    Location selectionPos1 = new Location(world, 0, 0, 0);
+    Location selectionPos2 = new Location(world, 5, 5, 5);
+    Selection selection = new Selection(selectionPos1, selectionPos2);
+
+    DoubleStore<Selection, List<ModifyClipboardEntry>> result = ModifyHelper.rotate(List.of(), selection);
+
+    assertTrue(result
+        .getSecondValue()
+        .isEmpty());
+  }
+
+  @Test
+  void constructorThrowsIllegalStateException() {
+    assertThrows(IllegalStateException.class, () -> {
+      var constructor = ModifyHelper.class.getDeclaredConstructor();
+      constructor.setAccessible(true);
+      try {
+        constructor.newInstance();
+      } catch (java.lang.reflect.InvocationTargetException e) {
+        throw e.getCause();
+      }
+    });
+  }
+
+  // -------------------------------------------------------------------------
+  // forEachBlock
+  // -------------------------------------------------------------------------
+
+  @Test
+  void forEachBlockCallsActionForEveryBlockInSelection() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    when(world.getBlockAt(any(Location.class))).thenReturn(block);
+
+    Location pos1 = new Location(world, 0, 0, 0);
+    Location pos2 = new Location(world, 1, 1, 1);
+    Selection selection = new Selection(pos1, pos2);
+
+    List<Block> visitedBlocks = new ArrayList<>();
+    ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+    int expectedBlockCount = 2 * 2 * 2;
+    assertEquals(expectedBlockCount, visitedBlocks.size());
+  }
+
+  @Test
+  void forEachBlockWithSingleBlockSelectionCallsActionOnce() {
+    World world = mock(World.class);
+    Block block = mock(Block.class);
+    when(world.getBlockAt(any(Location.class))).thenReturn(block);
+
+    Location pos1 = new Location(world, 5, 10, 5);
+    Location pos2 = new Location(world, 5, 10, 5);
+    Selection selection = new Selection(pos1, pos2);
+
+    List<Block> visitedBlocks = new ArrayList<>();
+    ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+    assertEquals(1, visitedBlocks.size());
+  }
+
+  @Test
+  void forEachBlockIteratesAllXaxisYaxisZaxisCombinationsWithinBounds() {
+    World world = mock(World.class);
+    when(world.getBlockAt(any(Location.class))).thenAnswer(invocation -> {
+      Location loc = invocation.getArgument(0);
+      Block b = mock(Block.class);
+      when(b.getLocation()).thenReturn(loc);
+      return b;
+    });
+
+    Location pos1 = new Location(world, 2, 3, 4);
+    Location pos2 = new Location(world, 4, 5, 6);
+    Selection selection = new Selection(pos1, pos2);
+
+    List<Block> visitedBlocks = new ArrayList<>();
+    ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+    int expectedX = selection.getMaxX() - selection.getMinX() + 1;
+    int expectedY = selection.getMaxY() - selection.getMinY() + 1;
+    int expectedZ = selection.getMaxZ() - selection.getMinZ() + 1;
+    assertEquals(expectedX * expectedY * expectedZ, visitedBlocks.size());
+  }
+
+  @Test
+  void forEachBlockPassesCorrectBlocksFromWorld() {
+    World world = mock(World.class);
+    Block expectedBlock = mock(Block.class);
+    when(world.getBlockAt(any(Location.class))).thenReturn(expectedBlock);
+
+    Location pos1 = new Location(world, 0, 0, 0);
+    Location pos2 = new Location(world, 0, 0, 0);
+    Selection selection = new Selection(pos1, pos2);
+
+    List<Block> visitedBlocks = new ArrayList<>();
+    ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+    assertEquals(1, visitedBlocks.size());
+    assertEquals(expectedBlock, visitedBlocks.getFirst());
+  }
 }

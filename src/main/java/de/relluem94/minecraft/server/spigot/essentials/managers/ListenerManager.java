@@ -1,72 +1,60 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.discovery.AnnotatedClassLoader;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ClassDiscoveryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.registration.ListenerWrapper;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.wrappers.ListenerWrapper;
 import java.util.List;
-import java.util.Optional;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Manages the registration and initialization of all plugin event listeners.
+ *
+ * <p>Scans the listeners package for annotated listener classes, wraps them in
+ * {@link ListenerWrapper} instances, and initializes them with the plugin and its {@link ServiceContext}.
+ * </p>
+ *
+ * @author relluem94
+ */
 public class ListenerManager implements Enable {
 
-  private List<ListenerWrapper> listenerWrapperList;
-  private ServiceContext serviceContext;
-
+  /**
+   * Enables the listener manager by discovering, initializing, and registering all listeners.
+   *
+   * <p>Loads all annotated listener classes from the listeners package, wraps each one in a
+   * {@link ListenerWrapper}, and initializes them with the plugin and its {@link ServiceContext}.
+   * </p>
+   *
+   * @param plugin the plugin instance used to access the {@link ServiceContext} and to register all discovered
+   *               listeners against the Bukkit event system
+   */
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    this.serviceContext = relluEssentialsPlugin.getServiceContext();
-
-
-
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
 
     TranslationService translationService = serviceContext.getTranslationService();
+    ConsoleCommandSender consoleCommandSender = serviceContext
+        .getServerService()
+        .getConsoleSender();
 
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
-    listenerWrapperList = discoverAnnotatedListeners()
+    consoleCommandSender.sendMessage(
+        PLUGIN_NAME_CONSOLE + translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENT_LISTENERS));
+    List<ListenerWrapper> listenerWrapperList = AnnotatedClassLoader
+        .loadListeners("de.relluem94.minecraft.server.spigot.essentials.listeners", getClass().getClassLoader())
         .stream()
-        .map(this::instantiateListener)
-        .flatMap(Optional::stream)
         .map(ListenerWrapper::new)
         .toList();
 
-    listenerWrapperList.forEach(
-        listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, serviceContext));
+    listenerWrapperList.forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, serviceContext));
 
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
-            listenerWrapperList.size()));
+    consoleCommandSender.sendMessage(PLUGIN_NAME_CONSOLE
+        + translationService.get(MessageKey.PLUGIN_MANAGER_EVENT_LISTENERS_REGISTERED, listenerWrapperList.size()));
   }
-
-
-  private List<Class<? extends ListenerConstruct>> discoverAnnotatedListeners() {
-    ClassLoader classLoader = getClass().getClassLoader();
-    return ClassDiscoveryHelper.findAnnotatedClasses(
-        "de.relluem94.minecraft.server.spigot.essentials.listeners",
-        ListenerName.class,
-        ListenerConstruct.class,
-        classLoader
-    );
-  }
-
-  private Optional<ListenerConstruct> instantiateListener(Class<? extends ListenerConstruct> clazz) {
-    try {
-      return Optional.of(clazz.getDeclaredConstructor().newInstance());
-    } catch (Exception e) {
-      consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Failed to instantiate listener: " + clazz.getSimpleName());
-      return Optional.empty();
-    }
-  }
-
 }

@@ -11,12 +11,16 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Data access object for all bank-related database operations.
+ *
+ * @author rellu
  */
 public class BankDao {
 
   private final QueryExecutor queryExecutor;
 
   /**
+   * Constructs a new {@link BankDao} with the given query executor.
+   *
    * @param queryExecutor the executor used to run SQL queries
    */
   public BankDao(QueryExecutor queryExecutor) {
@@ -47,11 +51,11 @@ public class BankDao {
   /**
    * Retrieves the bank account for the given player.
    *
-   * @param playerFK the internal player id (foreign key)
+   * @param playerFk the internal player id (foreign key)
    * @return the {@link BankAccountEntry} with its tier populated, or {@code null} if not found
    */
-  public BankAccountEntry findBankAccountByPlayerId(int playerFK) {
-    return queryExecutor.querySingle("getBankAccountByPlayer.sql", ps -> ps.setInt(1, playerFK),
+  public BankAccountEntry findBankAccountByPlayerId(int playerFk) {
+    return queryExecutor.querySingle("getBankAccountByPlayer.sql", ps -> ps.setInt(1, playerFk),
         rs -> {
           BankAccountEntry bae = BankMapper.mapBankAccount(rs);
           bae.setTier(findBankTierById(rs.getInt(DatabaseMappings.FIELD_BANK_TIER_FK)));
@@ -76,14 +80,14 @@ public class BankDao {
   /**
    * Inserts a bank transaction record.
    *
-   * @param playerFK        the internal player id
-   * @param bankAccountFK   the bank account id
+   * @param playerFk        the internal player id
+   * @param bankAccountFk   the bank account id
    * @param transactionValue the signed value of the transaction
    */
-  public void insertBankTransaction(int playerFK, int bankAccountFK, double transactionValue) {
+  public void insertBankTransaction(int playerFk, int bankAccountFk, double transactionValue) {
     queryExecutor.executeUpdate("insertBankTransaction.sql", ps -> {
-      ps.setInt(1, playerFK);
-      ps.setInt(2, bankAccountFK);
+      ps.setInt(1, playerFk);
+      ps.setInt(2, bankAccountFk);
       ps.setDouble(3, transactionValue);
     });
   }
@@ -91,27 +95,27 @@ public class BankDao {
   /**
    * Updates the bank account balance and tier for the given player.
    *
-   * @param playerFK          the internal player id
+   * @param playerFk          the internal player id
    * @param newBalance        the new total balance to persist
    * @param tierId            the tier id to set on the account
    */
-  public void updateBankAccount(int playerFK, double newBalance, int tierId) {
+  public void updateBankAccount(int playerFk, double newBalance, int tierId) {
     queryExecutor.executeUpdate("updateBankAccount.sql", ps -> {
-      ps.setInt(1, playerFK);
+      ps.setInt(1, playerFk);
       ps.setDouble(2, newBalance);
       ps.setInt(3, tierId);
-      ps.setInt(4, playerFK);
+      ps.setInt(4, playerFk);
     });
   }
 
   /**
    * Retrieves all transactions for the given bank account.
    *
-   * @param bankAccountFK the bank account id
+   * @param bankAccountFk the bank account id
    * @return list of {@link BankTransactionEntry} records
    */
-  public List<BankTransactionEntry> findTransactionsByBankAccountId(int bankAccountFK) {
+  public List<BankTransactionEntry> findTransactionsByBankAccountId(int bankAccountFk) {
     return queryExecutor.queryList("getBankAccountTransactionsByPlayer.sql",
-        ps -> ps.setInt(1, bankAccountFK), BankMapper::mapBankTransaction);
+        ps -> ps.setInt(1, bankAccountFk), BankMapper::mapBankTransaction);
   }
 }

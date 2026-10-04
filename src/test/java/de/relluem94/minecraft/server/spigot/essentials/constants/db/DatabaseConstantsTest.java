@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DatabaseConstantsTest {
+class DatabaseConstantsTest {
 
   @Test
   public void constructorThrowsIllegalStateException() throws Exception {
@@ -14,7 +14,7 @@ public class DatabaseConstantsTest {
 
     InvocationTargetException thrown = Assertions.assertThrows(
         InvocationTargetException.class,
-        () -> constructor.newInstance()
+        constructor::newInstance
     );
 
     Assertions.assertInstanceOf(IllegalStateException.class, thrown.getCause());

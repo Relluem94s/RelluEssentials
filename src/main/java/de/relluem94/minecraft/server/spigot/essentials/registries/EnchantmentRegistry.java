@@ -2,10 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -19,6 +21,16 @@ import org.jspecify.annotations.NonNull;
 public class EnchantmentRegistry {
 
   private final Map<RelluEssentialsNamespacedKey, EnchantmentHelper> registry = new HashMap<>();
+  private final BukkitRegistryAdapter registryAdapter;
+
+  /**
+   * Creates a new {@link EnchantmentRegistry} with the given {@link BukkitRegistryAdapter}.
+   *
+   * @param registryAdapter the adapter used to resolve Bukkit registry entries
+   */
+  public EnchantmentRegistry(BukkitRegistryAdapter registryAdapter) {
+    this.registryAdapter = registryAdapter;
+  }
 
   /**
    * Registers an enchantment under a key derived from the given plugin and namespaced key.
@@ -63,11 +75,14 @@ public class EnchantmentRegistry {
       return Optional.empty();
     }
 
+    List<NamespacedKey> storedEnchantmentKeys = registryAdapter.resolveEnchantmentKeys(
+        meta.getStoredEnchants());
+
     return registry.values().stream()
         .filter(enchantment -> meta.getPersistentDataContainer()
             .has(enchantment.getKey(), PersistentDataType.INTEGER))
-        .filter(enchantment -> meta.getStoredEnchants().keySet().stream()
-            .noneMatch(storedEnchant -> storedEnchant.getKeyOrThrow().equals(enchantment.getKey())))
+        .filter(enchantment -> storedEnchantmentKeys.stream()
+            .noneMatch(storedKey -> storedKey.equals(enchantment.getKey())))
         .findFirst();
   }
 

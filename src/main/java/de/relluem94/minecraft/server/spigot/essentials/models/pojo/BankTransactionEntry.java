@@ -1,14 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Represents a single transaction entry associated with a bank account,
+ * including audit information for creation, updates, and deletion.
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class BankTransactionEntry {
 
   private int id;

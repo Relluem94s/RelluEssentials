@@ -1,15 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 /**
+ * Represents a protection configuration for a specific location in the world.
+ *
+ * <p>A protection entry contains metadata about its lifecycle (creation, update,
+ * deletion), the associated location, the protected material, and JSON-based flag and rights configurations.</p>
  *
  * @author rellu
  */
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class ProtectionEntry {
 
   private int id;

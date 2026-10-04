@@ -34,118 +34,94 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class WorldGroupSettingMapperTest {
 
-    @Mock
-    private ResultSet resultSet;
+  @Mock
+  private ResultSet resultSet;
 
-    @Mock
-    private SettingService settingService;
+  @Mock
+  private SettingService settingService;
 
-    @Test
-    void mapWorldGroupSettingReturnsEntryWithNoSettingEntryWhenSettingFkDoesNotMatch() throws SQLException {
-        when(settingService.findById(99)).thenReturn(Optional.empty());
+  @Test
+  void mapWorldGroupSettingReturnsEntryWithNoSettingEntryWhenSettingFkDoesNotMatch() throws SQLException {
+    when(settingService.findById(99)).thenReturn(Optional.empty());
 
-        when(resultSet.getInt(FIELD_ID)).thenReturn(3);
-        when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-03-01");
-        when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(12);
-        when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-08-01");
-        when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(22);
-        when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(true);
-        when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(7);
-        when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(99);
+    when(resultSet.getInt(FIELD_ID)).thenReturn(3);
+    when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-03-01");
+    when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(12);
+    when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-08-01");
+    when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(22);
+    when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(true);
+    when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(7);
+    when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(99);
 
-        WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
+    WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
 
-        assertAll(
-            () -> assertEquals(3, result.getId()),
-            () -> assertEquals("2024-03-01", result.getCreated()),
-            () -> assertEquals(12, result.getCreatedBy()),
-            () -> assertEquals("2024-08-01", result.getUpdated()),
-            () -> assertEquals(22, result.getUpdatedBy()),
-            () -> assertTrue(result.isValue()),
-            () -> assertEquals(7, result.getWorldGroupEntryFk()),
-            () -> assertEquals(99, result.getSettingEntryFk()),
-            () -> assertNull(result.getSettingEntry())
-        );
-    }
+    assertAll(() -> assertEquals(3, result.getId()), () -> assertEquals("2024-03-01", result.getCreated()),
+        () -> assertEquals(12, result.getCreatedBy()), () -> assertEquals("2024-08-01", result.getUpdated()),
+        () -> assertEquals(22, result.getUpdatedBy()), () -> assertTrue(result.isValue()),
+        () -> assertEquals(7, result.getWorldGroupEntryFk()), () -> assertEquals(99, result.getSettingEntryFk()),
+        () -> assertNull(result.getSettingEntry()));
+  }
 
-    @Test
-    void mapWorldGroupSettingReturnsFullyMappedEntryWithMatchingSettingEntry() throws SQLException {
-        SettingEntry settingEntry = new SettingEntry();
-        settingEntry.setId(42);
-        when(settingService.findById(42)).thenReturn(Optional.of(settingEntry));
+  @Test
+  void mapWorldGroupSettingReturnsFullyMappedEntryWithMatchingSettingEntry() throws SQLException {
+    SettingEntry settingEntry = new SettingEntry();
+    settingEntry.setId(42);
+    when(settingService.findById(42)).thenReturn(Optional.of(settingEntry));
 
-        when(resultSet.getInt(FIELD_ID)).thenReturn(1);
-        when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
-        when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(10);
-        when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01");
-        when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(20);
-        when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(true);
-        when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(5);
-        when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(42);
+    when(resultSet.getInt(FIELD_ID)).thenReturn(1);
+    when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
+    when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(10);
+    when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01");
+    when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(20);
+    when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(true);
+    when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(5);
+    when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(42);
 
-        WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
+    WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
 
-        assertAll(
-            () -> assertEquals(1, result.getId()),
-            () -> assertEquals("2024-01-01", result.getCreated()),
-            () -> assertEquals(10, result.getCreatedBy()),
-            () -> assertEquals("2024-06-01", result.getUpdated()),
-            () -> assertEquals(20, result.getUpdatedBy()),
-            () -> assertTrue(result.isValue()),
-            () -> assertEquals(5, result.getWorldGroupEntryFk()),
-            () -> assertEquals(42, result.getSettingEntryFk()),
-            () -> assertNotNull(result.getSettingEntry()),
-            () -> assertEquals(settingEntry, result.getSettingEntry())
-        );
-    }
+    assertAll(() -> assertEquals(1, result.getId()), () -> assertEquals("2024-01-01", result.getCreated()),
+        () -> assertEquals(10, result.getCreatedBy()), () -> assertEquals("2024-06-01", result.getUpdated()),
+        () -> assertEquals(20, result.getUpdatedBy()), () -> assertTrue(result.isValue()),
+        () -> assertEquals(5, result.getWorldGroupEntryFk()), () -> assertEquals(42, result.getSettingEntryFk()),
+        () -> assertNotNull(result.getSettingEntry()), () -> assertEquals(settingEntry, result.getSettingEntry()));
+  }
 
-    @Test
-    void mapWorldGroupSettingReturnsEntryWithNoSettingEntryWhenNoMatchFound() throws SQLException {
-        when(settingService.findById(99)).thenReturn(Optional.empty());
+  @Test
+  void mapWorldGroupSettingReturnsEntryWithNoSettingEntryWhenNoMatchFound() throws SQLException {
+    when(settingService.findById(99)).thenReturn(Optional.empty());
 
-        when(resultSet.getInt(FIELD_ID)).thenReturn(2);
-        when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-02-01");
-        when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(11);
-        when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-07-01");
-        when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(21);
-        when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(false);
-        when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(6);
-        when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(99);
+    when(resultSet.getInt(FIELD_ID)).thenReturn(2);
+    when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-02-01");
+    when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(11);
+    when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-07-01");
+    when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(21);
+    when(resultSet.getBoolean(FIELD_VALUE)).thenReturn(false);
+    when(resultSet.getInt(FIELD_WORLD_GORUP_FK)).thenReturn(6);
+    when(resultSet.getInt(FIELD_SETTING_FK)).thenReturn(99);
 
-        WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
+    WorldGroupSettingEntry result = WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService);
 
-        assertAll(
-            () -> assertEquals(2, result.getId()),
-            () -> assertEquals("2024-02-01", result.getCreated()),
-            () -> assertEquals(11, result.getCreatedBy()),
-            () -> assertEquals("2024-07-01", result.getUpdated()),
-            () -> assertEquals(21, result.getUpdatedBy()),
-            () -> assertFalse(result.isValue()),
-            () -> assertEquals(6, result.getWorldGroupEntryFk()),
-            () -> assertEquals(99, result.getSettingEntryFk()),
-            () -> assertNull(result.getSettingEntry())
-        );
-    }
+    assertAll(() -> assertEquals(2, result.getId()), () -> assertEquals("2024-02-01", result.getCreated()),
+        () -> assertEquals(11, result.getCreatedBy()), () -> assertEquals("2024-07-01", result.getUpdated()),
+        () -> assertEquals(21, result.getUpdatedBy()), () -> assertFalse(result.isValue()),
+        () -> assertEquals(6, result.getWorldGroupEntryFk()), () -> assertEquals(99, result.getSettingEntryFk()),
+        () -> assertNull(result.getSettingEntry()));
+  }
 
-    @Test
-    void mapWorldGroupSettingPropagatesSQLException() throws SQLException {
-        when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
+  @Test
+  void mapWorldGroupSettingPropagatesSqlException() throws SQLException {
+    when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
 
-        assertThrows(SQLException.class,
-            () -> WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService));
-    }
+    assertThrows(SQLException.class, () -> WorldGroupSettingMapper.mapWorldGroupSetting(resultSet, settingService));
+  }
 
-    @Test
-    void constructorThrowsIllegalStateException() throws NoSuchMethodException {
-        Constructor<WorldGroupSettingMapper> constructor =
-            WorldGroupSettingMapper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
+  @Test
+  void constructorThrowsIllegalStateException() throws NoSuchMethodException {
+    Constructor<WorldGroupSettingMapper> constructor = WorldGroupSettingMapper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
 
-        InvocationTargetException thrown = assertThrows(
-            InvocationTargetException.class,
-            constructor::newInstance
-        );
+    InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
 
-        assertInstanceOf(IllegalStateException.class, thrown.getCause());
-    }
+    assertInstanceOf(IllegalStateException.class, thrown.getCause());
+  }
 }

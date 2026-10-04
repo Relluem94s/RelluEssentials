@@ -52,7 +52,7 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCMapsAllFieldsIncludingEntityUuidAndUpdatedBy() throws SQLException {
+  void mapNpcMapsAllFieldsIncludingEntityUuidAndUpdatedBy() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
     UUID entityUuid = UUID.randomUUID();
     String inventoryJson = "{\"key\":\"value\"}";
@@ -72,7 +72,7 @@ class NpcMapperTest {
     when(resultSet.getString(FIELD_UPDATEDBY)).thenReturn("20");
     when(resultSet.getInt(FIELD_UPDATED)).thenReturn(20);
 
-    NpcEntry entry = NpcMapper.mapNPC(resultSet);
+    NpcEntry entry = NpcMapper.mapNpc(resultSet);
 
     assertAll(
         () -> assertEquals(1, entry.getId()),
@@ -93,7 +93,7 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCMapsNullInventoryAsNull() throws SQLException {
+  void mapNpcMapsNullInventoryAsNull() throws SQLException {
     UUID npcUuid = UUID.randomUUID();
 
     when(resultSet.getInt(FIELD_ID)).thenReturn(1);
@@ -110,7 +110,7 @@ class NpcMapperTest {
     when(resultSet.getString(FIELD_ENTITY_UUID)).thenReturn(null);
     when(resultSet.getString(FIELD_UPDATEDBY)).thenReturn(null);
 
-    NpcEntry entry = NpcMapper.mapNPC(resultSet);
+    NpcEntry entry = NpcMapper.mapNpc(resultSet);
 
     assertAll(
         () -> assertNull(entry.getInventory()),
@@ -120,10 +120,10 @@ class NpcMapperTest {
   }
 
   @Test
-  void mapNPCPropagatesSQLException() throws SQLException {
+  void mapNpcPropagatesSqlException() throws SQLException {
     when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
-    assertThrows(SQLException.class, () -> NpcMapper.mapNPC(resultSet));
+    assertThrows(SQLException.class, () -> NpcMapper.mapNpc(resultSet));
   }
 
   @Test
@@ -133,7 +133,7 @@ class NpcMapperTest {
     JSONObject inventory = new JSONObject("{\"slot\":\"item\"}");
 
     Npc npc = new Npc(1, npcUuid, "ProfileName", inventory, 10.0, 20.0, 30.0, 180.0f, 90.0f, "world_nether");
-    npc.setEntityUUID(entityUuid);
+    npc.setEntityUuid(entityUuid);
 
     NpcEntry entry = NpcMapper.toEntry(npc, 42);
 
@@ -157,7 +157,7 @@ class NpcMapperTest {
   void toEntryOmitsEntityUuidWhenNpcEntityUuidIsNull() {
     UUID npcUuid = UUID.randomUUID();
     Npc npc = new Npc(1, npcUuid, "ProfileName", 10.0, 20.0, 30.0, 180.0f, 90.0f, "world");
-    npc.setEntityUUID(null);
+    npc.setEntityUuid(null);
 
     NpcEntry entry = NpcMapper.toEntry(npc, 5);
 
@@ -196,7 +196,7 @@ class NpcMapperTest {
         () -> assertEquals(7.7, npc.getZ()),
         () -> assertEquals(45.0f, npc.getYaw()),
         () -> assertEquals(15.0f, npc.getPitch()),
-        () -> assertEquals(entityUuid, npc.getEntityUUID())
+        () -> assertEquals(entityUuid, npc.getEntityUuid())
     );
   }
 

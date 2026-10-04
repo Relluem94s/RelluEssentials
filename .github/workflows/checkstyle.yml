@@ -1,0 +1,22 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  checkstyle:
+    name: Checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Run Checkstyle
+        uses: nikitasavinov/checkstyle-action@master
+        with:
+          checkstyle_config: '.github/checkstyle/checkstyle.xml'
+          checkstyle_version: '13.8.0'
+          fail_level: 'error'

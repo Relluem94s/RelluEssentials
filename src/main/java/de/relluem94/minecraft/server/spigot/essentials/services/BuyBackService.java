@@ -14,6 +14,8 @@ import org.bukkit.inventory.ItemStack;
  * Service responsible for managing the buy-back history of players.
  * It allows recording items sold by players, retrieving their history,
  * and managing the removal or clearing of these records.
+ *
+ * @author rellu
  */
 @AllArgsConstructor
 public class BuyBackService {
@@ -81,7 +83,7 @@ public class BuyBackService {
 
   private List<ItemStack> splitIntoStacks(ItemStack item, int totalAmount) {
     List<ItemStack> stacks = new ArrayList<>();
-    int maxStackSize = item.getType().getMaxStackSize();
+    int maxStackSize = item.getMaxStackSize();
     int remaining = totalAmount;
     while (remaining > 0) {
       int stackSize = Math.min(remaining, maxStackSize);

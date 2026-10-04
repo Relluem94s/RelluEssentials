@@ -1,11 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.Material;
 
-@Setter
-@Getter
+/**
+ * Represents a single drop configuration entry with material and minimum and maximum amounts.
+ *
+ * @author rellu
+ */
+@Data
+@NoArgsConstructor
 public class DropEntry {
 
   private int id;

@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.List;
 import java.util.Optional;
 import org.bukkit.NamespacedKey;
@@ -42,11 +44,14 @@ class EnchantmentRegistryTest {
   @Mock
   private PersistentDataContainer mockPdc;
 
+  @Mock
+  private BukkitRegistryAdapter mockRegistryAdapter;
+
   private EnchantmentRegistry registry;
 
   @BeforeEach
   void setUp() {
-    registry = new EnchantmentRegistry();
+    registry = new EnchantmentRegistry(mockRegistryAdapter);
   }
 
   @Test
@@ -98,16 +103,16 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStack_Success() {
+  void testFindByBookItemStackSuccess() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
-    NamespacedKey enchantmentKey = new NamespacedKey("test", "magic");
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
     when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
 
     registry.register(mockPlugin, "magic", mockEnchantment);
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
     when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
-
     when(mockPdc.has(enchantmentKey, PersistentDataType.INTEGER)).thenReturn(true);
     when(mockMeta.getStoredEnchants()).thenReturn(java.util.Collections.emptyMap());
 
@@ -118,16 +123,40 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStack_NotABook() {
+  void testFindByBookItemStackAlreadyStoredEnchant() {
+    when(mockPlugin.getName()).thenReturn("test_plugin");
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
+    when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
+
+    registry.register(mockPlugin, "magic", mockEnchantment);
+
+    when(mockRegistryAdapter.resolveEnchantmentKeys(any())).thenReturn(List.of(enchantmentKey));
+
+    when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
+    when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
+    when(mockPdc.has(enchantmentKey, PersistentDataType.INTEGER)).thenReturn(true);
+    when(mockMeta.getStoredEnchants()).thenReturn(java.util.Collections.emptyMap());
+
+    Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
+
+    assertFalse(result.isPresent());
+  }
+
+  @Test
+  void testFindByBookItemStackNotaBook() {
     when(mockItemStack.getItemMeta()).thenReturn(mock(org.bukkit.inventory.meta.ItemMeta.class));
     Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
     assertFalse(result.isPresent());
   }
 
   @Test
-  void testFindByBookItemStack_NoDataInPdc() {
+  void testFindByBookItemStackNoDataInPdc() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
-    when(mockEnchantment.getKey()).thenReturn(new NamespacedKey("test", "magic"));
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
+    when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
+
     registry.register(mockPlugin, "magic", mockEnchantment);
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
@@ -137,5 +166,17 @@ class EnchantmentRegistryTest {
     Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
 
     assertFalse(result.isPresent());
+  }
+
+  @Test
+  void testClear() {
+    when(mockPlugin.getName()).thenReturn("test_plugin");
+    registry.register(mockPlugin, "clear_test", mockEnchantment);
+    assertEquals(1, registry.count());
+
+    registry.clear();
+
+    assertEquals(0, registry.count());
+    assertFalse(registry.find(new RelluEssentialsNamespacedKey("test_plugin", "clear_test")).isPresent());
   }
 }

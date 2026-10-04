@@ -4,10 +4,12 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.NoArgsConstructor;
 
 /**
  * In-memory registry for managing {@link BagTypeEntry} instances at runtime.
  */
+@NoArgsConstructor
 public class BagTypeRegistry {
 
   private final List<BagTypeEntry> bagTypeEntries = new ArrayList<>();

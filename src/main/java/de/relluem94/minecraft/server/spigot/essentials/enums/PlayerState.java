@@ -1,5 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.enums;
 
+/**
+ * Represents the different logical states a player can be in within the plugin,
+ * such as protection configuration, sign interaction, light toggling, fake AFK,
+ * and damage information display.
+ *
+ * @author rellu
+ * @version 3.0
+ * @since 2.0
+ */
 public enum PlayerState {
   PROTECTION_INFO,
   PROTECTION_ADD,

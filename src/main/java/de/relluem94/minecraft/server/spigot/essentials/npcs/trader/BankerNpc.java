@@ -21,7 +21,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -31,6 +30,8 @@ import org.bukkit.inventory.Inventory;
 
 /**
  * Represents a Banker NPC that provides access to banking-related GUIs.
+ *
+ * @author rellu
  */
 public class BankerNpc extends TraderNpc implements BankerGui {
 
@@ -59,7 +60,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getMainGUI() {
+  public Inventory getMainGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -93,7 +94,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getDepositGUI(double total) {
+  public Inventory getDepositGui(double total) {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -141,7 +142,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getWithdrawGUI(double total) {
+  public Inventory getWithdrawGui(double total) {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -192,7 +193,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getBalanceGUI() {
+  public Inventory getBalanceGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -226,15 +227,15 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getUpgradeGUI() {
+  public Inventory getUpgradeGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
     int slot = 0;
-    List<ItemHelper> bankTiersItems = serviceContext.getBankService().getBankTiers();
+    List<CustomItem> bankTiersItems = serviceContext.getBankService().getBankTiers();
     for (int i = 0; i < bankTiersItems.size(); i++) {
       slot = InventoryHelper.getNextSlot(slot);
-      inv.setItem(slot, bankTiersItems.get(i).getCustomItem());
+      inv.setItem(slot, bankTiersItems.get(i).toItemStack());
       if (bankTiersItems.size() <= 3) {
         slot++; // for spacing
         slot++; // disables it self if enduser adds new banktier

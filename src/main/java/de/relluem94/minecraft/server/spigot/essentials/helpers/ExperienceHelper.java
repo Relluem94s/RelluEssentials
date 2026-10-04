@@ -3,12 +3,22 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.entity.Player;
 
+/**
+ * Utility class providing helper methods for calculating and manipulating player
+ * experience points and levels.
+ */
 public class ExperienceHelper {
 
   private ExperienceHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
+  /**
+   * Calculates the total experience points required to reach the given level from zero.
+   *
+   * @param level the target level for which the total experience is calculated
+   * @return the total experience points required to reach the specified level
+   */
   public static int getTotalExperience(int level) {
     int xp = 0;
 
@@ -22,11 +32,25 @@ public class ExperienceHelper {
     return xp;
   }
 
+  /**
+   * Calculates the total accumulated experience points of the given player,
+   * including both their current level progress and the experience within the current level.
+   *
+   * @param player the player whose total experience is calculated
+   * @return the total experience points the player currently has
+   */
   public static int getTotalExperience(Player player) {
     return Math.round(player.getExp() * player.getExpToLevel()) + getTotalExperience(
         player.getLevel());
   }
 
+  /**
+   * Sets the total experience points of the given player to the specified amount,
+   * automatically deriving and applying the corresponding level and remaining experience progress.
+   *
+   * @param player the player whose total experience is set
+   * @param amount the total experience points to assign to the player
+   */
   public static void setTotalExperience(Player player, int amount) {
     int level;
     int xp;

@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
@@ -62,10 +61,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
         }
 
         if (!isSource && (inventory.firstEmpty() != -1 && size < 4)) {
-          CustomItem coinItem = serviceContext.getItemService().find(
-              new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-                  PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
-          inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem, coinItem));
+          inventory.addItem(serviceContext.getCoinItemService().getCoin(sellPriceItem));
 
           final ItemStack toRemove = is.clone();
           serviceContext.getSchedulerService()

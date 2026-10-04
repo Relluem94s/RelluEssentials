@@ -1,16 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 /**
+ * Represents a persisted snapshot of a player's inventory and player state
+ * within a specific world group.
+ *
+ * <p>Contains metadata for creation, update and deletion, a reference to the
+ * associated world group, and the player's health, food level and experience
+ * at the time of the snapshot.</p>
  *
  * @author rellu
  */
-
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
 public class WorldGroupInventoryEntry {
 
   private int id;

@@ -6,23 +6,30 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
-
+/**
+ * Command implementation for displaying detailed information about a player.
+ *
+ * <p>Provides statistics, home count, death points, group, partner and activity data
+ * for a given online or offline player. Requires the {@code vip} permission group.</p>
+ *
+ * @author rellu
+ */
 @CommandName("playerinfo")
 public class PlayerInfo implements CommandConstruct {
 
@@ -57,9 +64,8 @@ public class PlayerInfo implements CommandConstruct {
     OfflinePlayer target = PlayerHelper.getOfflinePlayer(args[0]);
 
     if (target == null) {
-      sender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
@@ -71,47 +77,43 @@ public class PlayerInfo implements CommandConstruct {
     OfflinePlayer target = PlayerHelper.getOfflinePlayer(targetName);
 
     if (target == null) {
-      sender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 
     PlayerEntry pet = serviceContext.getPlayerService().getPlayerEntry(target.getPlayer());
 
     if (pet == null) {
-      sender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 
-    sender.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_PLAYERINFO, target.getName()));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES,
-            pet.getHomes().size()));
     sender.sendMessage(serviceContext.getTranslationService()
-        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHPOINTS,
-            pet.getDeaths().size()));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_GROUP,
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO, target.getName()));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES, pet.getHomes().size()));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHPOINTS, pet.getDeaths().size()));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_GROUP,
             pet.getGroup().getPrefix() + pet.getGroup().getName()));
 
     if (pet.getPartner() != null) {
+      PlayerEntry fpe = serviceContext.getPlayerService()
+          .getPlayerEntryByInternalId(pet.getPartner().getFirstPartnerId());
+      PlayerEntry spe = serviceContext.getPlayerService()
+          .getPlayerEntryByInternalId(pet.getPartner().getSecondPartnerId());
+      if (fpe == null || spe == null) {
+        return;
+      }
+
       sender.sendMessage(serviceContext.getTranslationService()
-          .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
-              serviceContext.getPlayerService()
-
-                  .getPlayerEntryByInternalId(pet.getPartner().getFirstPartnerId()).getName(),
-              serviceContext.getPlayerService()
-
-                  .getPlayerEntryByInternalId(pet.getPartner().getSecondPartnerId())));
-      sender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
-                  pet.getPartner().getCreated()));
+          .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO, fpe.getName(), spe.getName()));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
+              pet.getPartner().getCreated()));
     }
 
     sender.sendMessage(serviceContext.getTranslationService()
@@ -121,37 +123,30 @@ public class PlayerInfo implements CommandConstruct {
         .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_FIRST_ONLINE,
             new Date(target.getFirstPlayed())));
 
-    sender.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.STONE.name(),
-                target.getStatistic(Statistic.MINE_BLOCK, Material.STONE)));
-    sender.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DIRT.name(),
-                target.getStatistic(Statistic.MINE_BLOCK, Material.DIRT)));
-    sender.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.SAND.name(),
-                target.getStatistic(Statistic.MINE_BLOCK, Material.SAND)));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
-            Material.COBBLESTONE.name(),
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.STONE.name(),
+            target.getStatistic(Statistic.MINE_BLOCK, Material.STONE)));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DIRT.name(),
+            target.getStatistic(Statistic.MINE_BLOCK, Material.DIRT)));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.SAND.name(),
+            target.getStatistic(Statistic.MINE_BLOCK, Material.SAND)));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.COBBLESTONE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.COBBLESTONE)));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
-            Material.DEEPSLATE.name(),
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DEEPSLATE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.DEEPSLATE)));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
-            Material.DIAMOND_ORE.name(),
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DIAMOND_ORE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE) + target.getStatistic(
                 Statistic.MINE_BLOCK, Material.DEEPSLATE_DIAMOND_ORE)));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHS,
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHS,
             target.getStatistic(Statistic.DEATHS)));
-    sender.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PLAYERINFO_JUMPED,
-            target.getStatistic(Statistic.JUMP)));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_JUMPED, target.getStatistic(Statistic.JUMP)));
     sender.sendMessage(serviceContext.getTranslationService()
         .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LEFT_GAME,
             target.getStatistic(Statistic.LEAVE_GAME)));
@@ -163,7 +158,7 @@ public class PlayerInfo implements CommandConstruct {
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
@@ -179,8 +174,7 @@ public class PlayerInfo implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

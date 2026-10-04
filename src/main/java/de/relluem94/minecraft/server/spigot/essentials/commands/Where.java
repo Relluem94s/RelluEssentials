@@ -5,19 +5,22 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
-import org.bukkit.Bukkit;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for the /where command.
+ * Allows players to check their own location and moderators to check the location of other players.
+ */
 @CommandName("where")
 public class Where implements CommandConstruct {
 
@@ -27,7 +30,6 @@ public class Where implements CommandConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
   }
-
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
@@ -62,11 +64,10 @@ public class Where implements CommandConstruct {
   }
 
   private void where(CommandSender commandSender, String targetArg) {
-    Player target = Bukkit.getPlayer(targetArg);
+    Player target = serviceContext.getServerService().getPlayer(targetArg);
     if (target == null) {
-      commandSender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
+      commandSender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
       return;
     }
 
@@ -74,10 +75,9 @@ public class Where implements CommandConstruct {
   }
 
   private void where(@NotNull CommandSender sender, @NotNull Player target) {
-    sender.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(),
-                serviceContext.getMessageService().locationToString(target.getLocation())));
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(),
+            serviceContext.getMessageService().locationToString(target.getLocation())));
   }
 
   @Override
@@ -98,7 +98,7 @@ public class Where implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

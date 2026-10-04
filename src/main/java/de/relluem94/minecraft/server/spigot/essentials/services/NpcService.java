@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
@@ -7,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEn
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator.ValidationResult;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -56,7 +58,7 @@ public class NpcService {
    */
   public boolean isTrackedNpcEntity(UUID entityUuid) {
     return loadedNpcs.values().stream()
-        .anyMatch(npc -> entityUuid.equals(npc.getEntityUUID()));
+        .anyMatch(npc -> entityUuid.equals(npc.getEntityUuid()));
   }
 
   /**
@@ -76,12 +78,12 @@ public class NpcService {
       float yaw, float pitch, String worldName, int actorPlayerId) {
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(profileName);
     if (!profileValidation.valid()) {
-      return NpcOperationResult.failure(profileValidation.errorMessage());
+      return NpcOperationResult.failure(profileValidation);
     }
 
     NpcValidator.ValidationResult coordinateValidation = npcValidator.validateCoordinates(x, y, z);
     if (!coordinateValidation.valid()) {
-      return NpcOperationResult.failure(coordinateValidation.errorMessage());
+      return NpcOperationResult.failure(coordinateValidation);
     }
 
     Npc npc = new Npc(-1, UUID.randomUUID(), profileName, x, y, z, yaw, pitch, worldName);
@@ -89,7 +91,7 @@ public class NpcService {
     loadedNpcs.put(npc.getId(), npc);
 
     npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
-      npc.setEntityUUID(uuid);
+      npc.setEntityUuid(uuid);
       npcRepository.save(npc, actorPlayerId);
     });
 
@@ -107,24 +109,24 @@ public class NpcService {
   public NpcOperationResult updateNpcProfile(UUID npcId, String newProfileName, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(
         newProfileName);
     if (!profileValidation.valid()) {
-      return NpcOperationResult.failure(profileValidation.errorMessage());
+      return NpcOperationResult.failure(profileValidation);
     }
 
-    if (npc.getEntityUUID() != null) {
-      npcSpawner.despawnMannequin(npc.getEntityUUID());
+    if (npc.getEntityUuid() != null) {
+      npcSpawner.despawnMannequin(npc.getEntityUuid());
     }
 
     npc.setProfileName(newProfileName);
     npcRepository.save(npc, actorPlayerId);
 
     npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
-      npc.setEntityUUID(uuid);
+      npc.setEntityUuid(uuid);
       restoreNpcEquipment(npc);
       npcRepository.save(npc, actorPlayerId);
     });
@@ -148,16 +150,16 @@ public class NpcService {
       float yaw, float pitch, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
     NpcValidator.ValidationResult coordinateValidation = npcValidator.validateCoordinates(x, y, z);
     if (!coordinateValidation.valid()) {
-      return NpcOperationResult.failure(coordinateValidation.errorMessage());
+      return NpcOperationResult.failure(coordinateValidation);
     }
 
-    if (npc.getEntityUUID() != null) {
-      npcSpawner.despawnMannequin(npc.getEntityUUID());
+    if (npc.getEntityUuid() != null) {
+      npcSpawner.despawnMannequin(npc.getEntityUuid());
     }
 
     npc.setX(x);
@@ -168,7 +170,7 @@ public class NpcService {
     npcRepository.save(npc, actorPlayerId);
 
     npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
-      npc.setEntityUUID(uuid);
+      npc.setEntityUuid(uuid);
       restoreNpcEquipment(npc);
       npcRepository.save(npc, actorPlayerId);
     });
@@ -183,7 +185,7 @@ public class NpcService {
    * @param inventory the inventory containing the equipment
    */
   public void saveNpcInventory(@NonNull Npc npc, Inventory inventory) {
-    npc.setInventory(InventoryHelper.saveInventoryToJSON(inventory));
+    npc.setInventory(InventoryHelper.saveInventoryToJson(inventory));
     npcRepository.save(npc, -1);
   }
 
@@ -197,11 +199,11 @@ public class NpcService {
   public NpcOperationResult deleteNpc(UUID npcId, int actorPlayerId) {
     Npc npc = loadedNpcs.get(npcId);
     if (npc == null) {
-      return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
+      return NpcOperationResult.failure(ValidationResult.failure(MessageKey.PLUGIN_NPC_ERROR_NPC_NOT_FOUND, npcId));
     }
 
-    if (npc.getEntityUUID() != null) {
-      npcSpawner.despawnMannequin(npc.getEntityUUID());
+    if (npc.getEntityUuid() != null) {
+      npcSpawner.despawnMannequin(npc.getEntityUuid());
     }
 
     npcDialogueProgressService.removeNpc(npcId);
@@ -212,13 +214,13 @@ public class NpcService {
   }
 
   private void restoreNpcEquipment(@NonNull Npc npc) {
-    if (npc.getInventory() == null || npc.getEntityUUID() == null) {
+    if (npc.getInventory() == null) {
       return;
     }
     Inventory equipmentInventory = Bukkit.createInventory(null, 54);
-    InventoryHelper.loadInventoryFromJSON(equipmentInventory, npc.getInventory());
+    InventoryHelper.loadInventoryFromJson(equipmentInventory, npc.getInventory());
     NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory,
-        npc.getEntityUUID());
+        npc.getEntityUuid());
   }
 
   /**
@@ -226,8 +228,8 @@ public class NpcService {
    */
   public void despawnAllNpcs() {
     for (Npc npc : loadedNpcs.values()) {
-      if (npc.getEntityUUID() != null) {
-        npcSpawner.despawnMannequin(npc.getEntityUUID());
+      if (npc.getEntityUuid() != null) {
+        npcSpawner.despawnMannequin(npc.getEntityUuid());
       }
     }
     loadedNpcs.clear();
@@ -293,7 +295,7 @@ public class NpcService {
    */
   public void spawnNpc(Npc npc) {
     npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
-      npc.setEntityUUID(uuid);
+      npc.setEntityUuid(uuid);
       restoreNpcEquipment(npc);
       loadedNpcs.putIfAbsent(npc.getId(), npc);
     });
@@ -306,9 +308,9 @@ public class NpcService {
    */
   public void despawnNpc(UUID npcId) {
     Npc npc = loadedNpcs.get(npcId);
-    if (npc != null && npc.getEntityUUID() != null) {
-      npcSpawner.despawnMannequin(npc.getEntityUUID());
-      npc.setEntityUUID(null);
+    if (npc != null && npc.getEntityUuid() != null) {
+      npcSpawner.despawnMannequin(npc.getEntityUuid());
+      npc.setEntityUuid(null);
     }
   }
 
