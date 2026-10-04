@@ -2,8 +2,10 @@
 
 ### a Spigot Plugin compatible with Spigot 1.21.10
 
+
 # First Steps
 Find out how to get the plugin and how to use it.
+
 
 ## Usage of Plugin
 1. [Download](https://github.com/Relluem94s/RelluEssentials/packages) or [Build](https://github.com/Relluem94s/RelluEssentials#build) the plugin jar 
@@ -18,8 +20,10 @@ Find out how to get the plugin and how to use it.
 7. Use (`/setGroup`) in your Server Console to grant permission to your player
 8. Enjoy
 
+
 # Functionality 
 What does the plugin include?
+
 
 ## Commands
 * Admin gives AdminTools, Clearing Chat, Fake AFK, Teleport to the highest Block and Custom NPCs and others (`/admin`) 
@@ -47,7 +51,7 @@ What does the plugin include?
 * Change time to Night (`/night`)
 * Set Permission Group (`/setGroup`)
 * Poke a Player if he does not respond (`/poke`)
-*  Set Positions for Modify Command (`/postion`)
+* Set Positions for Modify Command (`/postion`)
 * Portable Crafting Bench (`/craft`)
 * Print Message in Chat in Player / Command Block Name (`/print`)
 * Protect your Chests, Doors and other Blocks with (`/protect`)
@@ -74,37 +78,36 @@ What does the plugin include?
 * Show Worlds or Teleport to the spawn (`/world`)
 
 
-
 ## NPCs
 * Custom NPC via Database or via API
 * NPCs in Game via Database
-    * Adventurer
-    * Baker
-    * Butcher
-    * Farmer
-    * Fisher
-    * Florist
-    * Lumberjack
-    * Miner
-    * Musician
-    * Shepherd
-    * Smith
-    * Builder
+  * Adventurer
+  * Baker
+  * Butcher
+  * Farmer
+  * Fisher
+  * Florist
+  * Lumberjack
+  * Miner
+  * Musician
+  * Shepherd
+  * Smith
+  * Builder
 * NPCs in Game via Code
-    * Bag Salesman
-    * Banker
-    * Beekeeper
-    * Enchanter (WIP)
+  * Bag Salesman
+  * Banker
+  * Beekeeper
+  * Enchanter (WIP)
 
 
 ## Bags
 * Custom Bags via Database
-    * Mining Bag
-    * Farming Bag
-    * Monster Bag
-    * Shepherd Bag
-    * Lumberjack Bag
-    * Nether Bag
+  * Mining Bag
+  * Farming Bag
+  * Monster Bag
+  * Shepherd Bag
+  * Lumberjack Bag
+  * Nether Bag
 
 
 ## Functional Block Protections
@@ -121,15 +124,15 @@ What does the plugin include?
 
 ## Skills
 * Skills will be reworked. Some as Enchant some as Skill. (WIP)
-    * TreeFeller (Fell the whole Tree) [he is dead jim]
-    * Repair (Repair Tools and Armor) [the lost son]
-    * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
+  * TreeFeller (Fell the whole Tree) [he is dead jim]
+  * Repair (Repair Tools and Armor) [the lost son]
+  * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
 
 
 ## Listener
 * Better Chat Format (Player >> Message)
-    * Color Codes for VIP and higher
-    * Chat Channels Vip, Mod, Admin | #v, #m, #a
+  * Color Codes for VIP and higher
+  * Chat Channels Vip, Mod, Admin | #v, #m, #a
 * Better Player Join Message (Shows Custom Join Message)
   * Sets Custom Tab Header and Footer (Database)
   * Sets Fly mode to enabled 
@@ -149,6 +152,7 @@ What does the plugin include?
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
+
 
 ## Build
 1. ```shell
@@ -173,6 +177,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 
 # Documentation
 How it is working? What's under the hood?
+
 
 ## JavaDocs
 ```shell
