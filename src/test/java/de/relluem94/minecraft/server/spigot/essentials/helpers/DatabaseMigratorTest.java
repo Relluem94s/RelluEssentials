@@ -15,7 +15,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,7 +26,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.RowMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.StatementConfigurer;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.migration.DatabaseMigrator;
@@ -40,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.AfterEach;
+import org.bukkit.command.ConsoleCommandSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +46,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,20 +59,12 @@ class DatabaseMigratorTest {
   private PlayerDao playerDao;
   @Mock
   private LocationDao locationDao;
-
-  private DatabaseMigrator databaseMigrator;
-
   @Mock
   private PersistenceContext persistenceContext;
-
-  private MockedStatic<ChatHelper> chatHelperMock;
-
   @Mock
   private ResultSet resultSet;
-
   @Mock
   private QueryExecutor queryExecutor;
-
   @Mock
   private DataSource dataSource;
   @Mock
@@ -84,20 +73,19 @@ class DatabaseMigratorTest {
   private PreparedStatement preparedStatement;
   @Mock
   private SqlResourceLoader sqlResourceLoader;
+  @Mock
+  private ConsoleCommandSender consoleSender;
+
+  private DatabaseMigrator databaseMigrator;
 
   @BeforeEach
   void setUp() {
     lenient()
         .when(persistenceContext.getPlayerDao())
         .thenReturn(playerDao);
-    chatHelperMock = mockStatic(ChatHelper.class);
-    databaseMigrator = new DatabaseMigrator(persistenceContext, queryExecutor, playerService, _ -> {
-    }, configHelperMock);
-  }
-
-  @AfterEach
-  void tearDown() {
-    chatHelperMock.close();
+    databaseMigrator = new DatabaseMigrator(persistenceContext, queryExecutor, playerService,
+        _ -> {
+        }, configHelperMock, consoleSender);
   }
 
   @Test
@@ -788,7 +776,7 @@ class DatabaseMigratorTest {
     expectedEntry.setDbVersion(10);
 
     when(queryExecutor.querySingle(eq("getPluginInformation.sql"), any(StatementConfigurer.class),
-        any(RowMapper.class))).thenReturn(expectedEntry);
+        any())).thenReturn(expectedEntry);
 
     PluginInformationEntry result = databaseMigrator.loadPluginInformation();
 
@@ -799,7 +787,7 @@ class DatabaseMigratorTest {
   @Test
   void loadPluginInformationWhenQueryReturnsNullReturnsFallbackWithDefaultDbVersion() {
     when(queryExecutor.querySingle(eq("getPluginInformation.sql"), any(StatementConfigurer.class),
-        any(RowMapper.class))).thenReturn(null);
+        any())).thenReturn(null);
 
     PluginInformationEntry result = databaseMigrator.loadPluginInformation();
 
@@ -810,7 +798,7 @@ class DatabaseMigratorTest {
   @Test
   void loadPluginInformationWhenQueryThrowsExceptionReturnsFallbackWithDbVersionMinusOne() {
     when(queryExecutor.querySingle(eq("getPluginInformation.sql"), any(StatementConfigurer.class),
-        any(RowMapper.class))).thenThrow(new RuntimeException("DB connection failed"));
+        any())).thenThrow(new RuntimeException("DB connection failed"));
 
     PluginInformationEntry result = databaseMigrator.loadPluginInformation();
 
@@ -823,7 +811,7 @@ class DatabaseMigratorTest {
     QueryExecutor realQueryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
     DatabaseMigrator migratorWithRealExecutor =
         new DatabaseMigrator(persistenceContext, realQueryExecutor, playerService, _ -> {
-        }, configHelperMock);
+        }, configHelperMock, consoleSender);
 
     when(dataSource.getConnection()).thenReturn(connection);
     when(connection.prepareStatement(any())).thenReturn(preparedStatement);
