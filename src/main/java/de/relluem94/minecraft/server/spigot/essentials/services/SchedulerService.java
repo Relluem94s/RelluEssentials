@@ -145,7 +145,7 @@ public class SchedulerService {
    * @return the task ID assigned to the scheduled task
    */
   public int scheduleAsyncDelayedTask(Runnable task) {
-    return scheduler().scheduleAsyncDelayedTask(plugin, task);
+    return scheduler().runTaskAsynchronously(plugin, task).getTaskId();
   }
 
   /**
@@ -157,7 +157,7 @@ public class SchedulerService {
    * @return the task ID assigned to the scheduled task
    */
   public int scheduleAsyncDelayedTask(Runnable task, long delay) {
-    return scheduler().scheduleAsyncDelayedTask(plugin, task, delay);
+    return scheduler().runTaskLaterAsynchronously(plugin, task, delay).getTaskId();
   }
 
   /**
@@ -170,7 +170,7 @@ public class SchedulerService {
    * @return the task ID assigned to the scheduled task
    */
   public int scheduleAsyncRepeatingTask(Runnable task, long delay, long period) {
-    return scheduler().scheduleAsyncRepeatingTask(plugin, task, delay, period);
+    return scheduler().runTaskTimerAsynchronously(plugin, task, delay, period).getTaskId();
   }
 
   /**

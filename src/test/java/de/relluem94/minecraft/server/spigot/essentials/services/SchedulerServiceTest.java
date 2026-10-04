@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.function.Consumer;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -171,40 +170,41 @@ class SchedulerServiceTest {
 
   @Test
   void scheduleAsyncDelayedTaskWithoutDelayDelegatesToScheduler() {
-    when(bukkitScheduler.scheduleAsyncDelayedTask(eq(plugin), any(Runnable.class))).thenReturn(45);
+    when(bukkitScheduler.runTaskAsynchronously(eq(plugin), any(Runnable.class))).thenReturn(
+        bukkitTask);
+    when(bukkitTask.getTaskId()).thenReturn(45);
 
-    int taskId = schedulerService.scheduleAsyncDelayedTask(() -> {
-    });
+    int taskId = schedulerService.scheduleAsyncDelayedTask(() -> {});
 
     assertEquals(45, taskId);
-    verify(bukkitScheduler).scheduleAsyncDelayedTask(eq(plugin), any(Runnable.class));
+    verify(bukkitScheduler).runTaskAsynchronously(eq(plugin), any(Runnable.class));
   }
 
   @Test
   void scheduleAsyncDelayedTaskWithDelayDelegatesToScheduler() {
     long delay = 10L;
-    when(bukkitScheduler.scheduleAsyncDelayedTask(eq(plugin), any(Runnable.class),
-        eq(delay))).thenReturn(46);
+    when(bukkitScheduler.runTaskLaterAsynchronously(eq(plugin), any(Runnable.class),
+        eq(delay))).thenReturn(bukkitTask);
+    when(bukkitTask.getTaskId()).thenReturn(46);
 
-    int taskId = schedulerService.scheduleAsyncDelayedTask(() -> {
-    }, delay);
+    int taskId = schedulerService.scheduleAsyncDelayedTask(() -> {}, delay);
 
     assertEquals(46, taskId);
-    verify(bukkitScheduler).scheduleAsyncDelayedTask(eq(plugin), any(Runnable.class), eq(delay));
+    verify(bukkitScheduler).runTaskLaterAsynchronously(eq(plugin), any(Runnable.class), eq(delay));
   }
 
   @Test
   void scheduleAsyncRepeatingTaskDelegatesToSchedulerWithDelayAndPeriod() {
     long delay = 0L;
     long period = 20L;
-    when(bukkitScheduler.scheduleAsyncRepeatingTask(eq(plugin), any(Runnable.class), eq(delay),
-        eq(period))).thenReturn(47);
+    when(bukkitScheduler.runTaskTimerAsynchronously(eq(plugin), any(Runnable.class), eq(delay),
+        eq(period))).thenReturn(bukkitTask);
+    when(bukkitTask.getTaskId()).thenReturn(47);
 
-    int taskId = schedulerService.scheduleAsyncRepeatingTask(() -> {
-    }, delay, period);
+    int taskId = schedulerService.scheduleAsyncRepeatingTask(() -> {}, delay, period);
 
     assertEquals(47, taskId);
-    verify(bukkitScheduler).scheduleAsyncRepeatingTask(eq(plugin), any(Runnable.class), eq(delay),
+    verify(bukkitScheduler).runTaskTimerAsynchronously(eq(plugin), any(Runnable.class), eq(delay),
         eq(period));
   }
 
@@ -215,10 +215,7 @@ class SchedulerServiceTest {
     when(bukkitScheduler.runTaskTimer(eq(plugin), any(Runnable.class), eq(delay),
         eq(period))).thenReturn(bukkitTask);
 
-    BukkitTask[] capturedTask = new BukkitTask[1];
-    Consumer<BukkitTask> consumer = task -> capturedTask[0] = task;
-
-    BukkitTask result = schedulerService.runTaskTimer(consumer, delay, period);
+    BukkitTask result = schedulerService.runTaskTimer(_ -> {}, delay, period);
 
     assertAll(() -> assertNotNull(result), () -> assertEquals(bukkitTask, result));
   }
@@ -230,10 +227,7 @@ class SchedulerServiceTest {
     when(bukkitScheduler.runTaskTimerAsynchronously(eq(plugin), any(Runnable.class), eq(delay),
         eq(period))).thenReturn(bukkitTask);
 
-    BukkitTask[] capturedTask = new BukkitTask[1];
-    Consumer<BukkitTask> consumer = task -> capturedTask[0] = task;
-
-    BukkitTask result = schedulerService.runTaskTimerAsynchronously(consumer, delay, period);
+    BukkitTask result = schedulerService.runTaskTimerAsynchronously(_ -> {}, delay, period);
 
     assertAll(() -> assertNotNull(result), () -> assertEquals(bukkitTask, result));
   }
