@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.migration;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
@@ -12,9 +10,21 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExe
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.migration.ConfigMigrationService;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
+import org.bukkit.command.ConsoleCommandSender;
 
+/**
+ * Handles the sequential application of database patches to migrate the database schema
+ * and data from one version to the next.
+ *
+ * <p>Each patch method corresponds to a specific version upgrade and executes the required
+ * SQL scripts in order. After all applicable patches have been applied, the in-memory
+ * player cache is refreshed and the caller is notified via the provided callback.</p>
+ *
+ * @author rellu
+ */
 public class DatabaseMigrator {
 
   private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
@@ -25,26 +35,51 @@ public class DatabaseMigrator {
   private final Consumer<PluginInformationEntry> onPatchingFinished;
   private final ConfigMigrationService configMigrationService;
   private final PersistenceContext persistenceContext;
+  private final ConsoleCommandSender consoleSender;
 
+  /**
+   * Creates a new {@code DatabaseMigrator} with all required dependencies.
+   *
+   * @param persistenceContext     the persistence context providing access to all DAOs
+   * @param queryExecutor          the executor used to run SQL scripts and queries
+   * @param playerService          the service used to manage the in-memory player cache
+   * @param onPatchingFinished     callback invoked with the current {@link PluginInformationEntry}
+   *                               after all patches have been successfully applied
+   * @param configMigrationService the service used to read legacy configuration data during migration
+   * @param consoleSender          the console sender used to log migration progress messages
+   */
   public DatabaseMigrator(PersistenceContext persistenceContext, QueryExecutor queryExecutor,
       PlayerService playerService, Consumer<PluginInformationEntry> onPatchingFinished,
-      ConfigMigrationService configMigrationService) {
+      ConfigMigrationService configMigrationService, ConsoleCommandSender consoleSender) {
     this.queryExecutor = queryExecutor;
     this.playerService = playerService;
     this.onPatchingFinished = onPatchingFinished;
     this.configMigrationService = configMigrationService;
     this.persistenceContext = persistenceContext;
+    this.consoleSender = consoleSender;
   }
 
+  /**
+   * Loads the current plugin information from the database, including the stored database version.
+   *
+   * <p>If the plugin information table does not yet exist or any error occurs during the query,
+   * a fallback {@link PluginInformationEntry} with a database version of {@code -1} is returned,
+   * indicating that the database has not been initialized yet.</p>
+   *
+   * @return the current {@link PluginInformationEntry} from the database,
+   *         or a fallback entry with version {@code -1} if the table is unavailable
+   */
   public PluginInformationEntry loadPluginInformation() {
     PluginInformationEntry fallback = new PluginInformationEntry();
     try {
       PluginInformationEntry result = queryExecutor.querySingle(
           "getPluginInformation.sql", _ -> {
           }, MiscMapper::mapPluginInformation);
-      return result != null ? result : fallback;
+      return Optional
+          .ofNullable(result)
+          .orElse(fallback);
     } catch (Exception ex) {
-      consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "Init Database..");
+      consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " Init Database..");
       fallback.setDbVersion(-1);
       return fallback;
     }
@@ -64,7 +99,7 @@ public class DatabaseMigrator {
 
   private void patch1() {
     String v = "patches/v1/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "createGroup.sql");
     executeScript(v + "createPlayer.sql");
     executeScript(v + "createLocationType.sql");
@@ -96,7 +131,7 @@ public class DatabaseMigrator {
 
   private void patch2() {
     String v = "patches/v2/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "dropBlockHistory.sql");
     executeScript(v + "createBlockHistory.sql");
     executeScript(v + INSERT_NEW_DB_VERSION);
@@ -105,7 +140,7 @@ public class DatabaseMigrator {
 
   private void patch3() {
     String v = "patches/v3/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "dropPlayerConstraint.sql");
     executeScript(v + "updateAdminGroup.sql");
     executeScript(v + "updateModGroup.sql");
@@ -120,7 +155,7 @@ public class DatabaseMigrator {
 
   private void patch4() {
     String v = "patches/v4/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "addBankTier.sql");
     executeScript(v + "addBankAccount.sql");
     executeScript(v + "addBagType.sql");
@@ -151,7 +186,7 @@ public class DatabaseMigrator {
 
   private void patch5() {
     String v = "patches/v5/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "addSetting.sql");
     executeScript(v + "addPluginSetting.sql");
     executeScript(v + "addSettingPlayer.sql");
@@ -178,7 +213,7 @@ public class DatabaseMigrator {
 
   private void patch6() {
     String v = "patches/v6/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "updateNPCStick.sql");
     executeScript(v + "updateNPCRedSand.sql");
     executeScript(v + "updateNPCBambooBlock.sql");
@@ -196,7 +231,7 @@ public class DatabaseMigrator {
 
   private void patch7() {
     String v = "patches/v7/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "alterFarmingBag.sql");
     executeScript(v + "alterFarmingBagType.sql");
     executeScript(v + "alterMiningBagType.sql");
@@ -206,7 +241,7 @@ public class DatabaseMigrator {
 
   private void patch8() {
     String v = "patches/v8/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "insertProtectionLocks.sql");
     executeScript(v + INSERT_NEW_DB_VERSION);
     executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
@@ -214,7 +249,7 @@ public class DatabaseMigrator {
 
   private void patch9() {
     String v = "patches/v9/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "updateProtections.sql");
     executeScript(v + "fixProtections.sql");
     executeScript(v + INSERT_NEW_DB_VERSION);
@@ -223,7 +258,7 @@ public class DatabaseMigrator {
 
   private void patch10() {
     String v = "patches/v10/";
-    consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+    consoleSender.sendMessage(Constants.PLUGIN_NAME_CONSOLE + " applying " + v);
     executeScript(v + "RE-266_fixDeletedLocationsFromProtections.sql");
     executeScript(v + "alterMonsterBag.sql");
     executeScript(v + "insertProtectionLocks.sql");
@@ -251,6 +286,16 @@ public class DatabaseMigrator {
     executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
+  /**
+   * Applies all database patches starting from the given version index up to the latest patch.
+   *
+   * <p>Each patch is applied in sequential order. If the provided version is already at or beyond
+   * the latest available patch, no patches are applied and the method returns immediately.
+   * Once all applicable patches have been executed, the player cache is refreshed and
+   * the registered callback is notified.</p>
+   *
+   * @param version the current database version, used to determine which patches still need to be applied
+   */
   public void applyPatch(int version) {
     List<Runnable> allPatches = List.of(
         this::patch1,
