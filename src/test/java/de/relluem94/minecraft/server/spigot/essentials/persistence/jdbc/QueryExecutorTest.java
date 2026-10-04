@@ -28,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@SuppressWarnings("unchecked")
 @ExtendWith(MockitoExtension.class)
 class QueryExecutorTest {
 
