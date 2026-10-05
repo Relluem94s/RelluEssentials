@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Registry;
@@ -347,7 +346,7 @@ public class ServerService {
    */
   public void cloneWorld(String clonedWorldName, String originalWorldName)
       throws WorldNotFoundException {
-    World originalWorld = Bukkit.getWorld(originalWorldName);
+    World originalWorld = server.getWorld(originalWorldName);
     if (originalWorld == null) {
       throw new WorldNotFoundException(
           String.format(PLUGIN_EXCEPTION_WORLD_NOT_FOUND, originalWorldName));
