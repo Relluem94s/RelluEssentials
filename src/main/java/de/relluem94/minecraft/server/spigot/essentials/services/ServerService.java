@@ -1,8 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_LOADED;
+
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Registry;
@@ -295,6 +303,10 @@ public class ServerService {
     return server.createWorld(creator);
   }
 
+  public void loadWorld(String worldName) {
+    server.createWorld(new WorldCreator(worldName));
+  }
+
   /**
    * Unloads a world, optionally saving it before unloading.
    *
@@ -304,5 +316,29 @@ public class ServerService {
    */
   public boolean unloadWorld(World world, boolean save) {
     return server.unloadWorld(world, save);
+  }
+
+  public void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException {
+    if (server.getWorld(worldName) != null) {
+      server.unloadWorld(worldName, save);
+    } else {
+      throw new WorldNotLoadedException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_LOADED, worldName));
+    }
+  }
+
+  public void cloneWorld(String clonedWorldName, String originalWorldName)
+      throws WorldNotFoundException {
+    World originalWorld = Bukkit.getWorld(originalWorldName);
+    if (originalWorld == null) {
+      throw new WorldNotFoundException(
+          String.format(PLUGIN_EXCEPTION_WORLD_NOT_FOUND, originalWorldName));
+    }
+    WorldCreator worldCreator = new WorldCreator(clonedWorldName);
+    worldCreator.copy(Objects.requireNonNull(originalWorld));
+    server.createWorld(worldCreator);
+  }
+
+  public boolean worldExists(String worldName) {
+    return new File(server.getWorldContainer(), worldName).exists();
   }
 }
