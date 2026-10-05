@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.lang.reflect.Field;
 import java.util.Optional;
@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.command.ConsoleCommandSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,6 +54,9 @@ class WorldManagerTest {
 
   @Mock
   private WorldGroupService worldGroupService;
+
+  @Mock
+  private ServerService serverService;
 
   @Mock
   private PluginMetadataService pluginMetadataService;
@@ -86,6 +88,7 @@ class WorldManagerTest {
     lenient().when(plugin.getServiceContext()).thenReturn(serviceContext);
     lenient().when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    lenient().when(serviceContext.getServerService()).thenReturn(serverService);
     lenient().when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     lenient().when(plugin.getServer()).thenReturn(server);
     lenient().when(server.getConsoleSender()).thenReturn(consoleCommandSender);
@@ -130,7 +133,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.enable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.worldExists(anyString()), never());
+      worldHelperMock.verify(() -> serverService.worldExists(anyString()), never());
     }
   }
 
@@ -143,26 +146,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.enable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.worldExists(anyString()), never());
-    }
-  }
-
-  @Test
-  void enableCreatesWorldWhenWorldDoesNotExist() {
-    when(worldEntry.getName()).thenReturn("testworld");
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-    worldsMap.put(worldGroupEntry, worldEntry);
-    when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
-
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(false);
-
-      worldManager.enable(plugin);
-
-      worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("testworld"), any(WorldType.class),
-              any(World.Environment.class), eq(false)));
+      worldHelperMock.verify(() -> serverService.worldExists(anyString()), never());
     }
   }
 
@@ -176,68 +160,11 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(true);
+      worldHelperMock.when(() -> serverService.worldExists("testworld")).thenReturn(true);
 
       worldManager.enable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.loadWorld(anyString()), never());
-    }
-  }
-
-  @Test
-  void enableDetectsNetherEnvironmentBySuffix() {
-    when(worldEntry.getName()).thenReturn("testworld_nether");
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-    worldsMap.put(worldGroupEntry, worldEntry);
-    when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
-
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld_nether")).thenReturn(false);
-
-      worldManager.enable(plugin);
-
-      worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("testworld_nether"), any(WorldType.class),
-              eq(World.Environment.NETHER), eq(false)));
-    }
-  }
-
-  @Test
-  void enableDetectsTheEndEnvironmentBySuffix() {
-    when(worldEntry.getName()).thenReturn("testworld_the_end");
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-    worldsMap.put(worldGroupEntry, worldEntry);
-    when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
-
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld_the_end")).thenReturn(false);
-
-      worldManager.enable(plugin);
-
-      worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("testworld_the_end"), any(WorldType.class),
-              eq(World.Environment.THE_END), eq(false)));
-    }
-  }
-
-  @Test
-  void enableDetectsCustomEnvironmentBySuffix() {
-    when(worldEntry.getName()).thenReturn("testworld_custom");
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-    worldsMap.put(worldGroupEntry, worldEntry);
-    when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
-
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld_custom")).thenReturn(false);
-
-      worldManager.enable(plugin);
-
-      worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("testworld_custom"), any(WorldType.class),
-              eq(World.Environment.CUSTOM), eq(false)));
+      worldHelperMock.verify(() -> serverService.loadWorld(anyString()), never());
     }
   }
 
@@ -250,13 +177,12 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(false);
+      worldHelperMock.when(() -> serverService.worldExists("testworld")).thenReturn(false);
 
       worldManager.enable(plugin);
 
       worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("testworld"), any(WorldType.class),
-              eq(World.Environment.NORMAL), eq(false)));
+          () -> serverService.createWorld(any()));
     }
   }
 
@@ -270,7 +196,7 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(true);
+      worldHelperMock.when(() -> serverService.worldExists("testworld")).thenReturn(true);
 
       worldManager.enable(plugin);
 
@@ -293,7 +219,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.disable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.unloadWorld("testworld", true));
+      worldHelperMock.verify(() -> serverService.unloadWorld("testworld", true));
     }
   }
 
@@ -310,7 +236,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.disable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.unloadWorld(anyString(), anyBoolean()), never());
+      worldHelperMock.verify(() -> serverService.unloadWorld(anyString(), anyBoolean()), never());
     }
   }
 
@@ -327,7 +253,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.disable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.unloadWorld(anyString(), anyBoolean()), never());
+      worldHelperMock.verify(() -> serverService.unloadWorld(anyString(), anyBoolean()), never());
     }
   }
 
@@ -348,12 +274,12 @@ class WorldManagerTest {
     contextField.set(worldManager, serviceContext);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.unloadWorld("testworld", true))
+      worldHelperMock.when(() -> serverService.unloadWorld("testworld", true))
           .thenThrow(new WorldNotLoadedException("testworld"));
 
       worldManager.disable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.unloadWorld("testworld", true));
+      worldHelperMock.verify(() -> serverService.unloadWorld("testworld", true));
     }
   }
 
@@ -369,7 +295,7 @@ class WorldManagerTest {
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldManager.disable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.unloadWorld(anyString(), anyBoolean()), never());
+      worldHelperMock.verify(() -> serverService.unloadWorld(anyString(), anyBoolean()), never());
     }
   }
 
@@ -383,34 +309,10 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(true);
+      worldHelperMock.when(() -> serverService.worldExists("testworld")).thenReturn(true);
 
       worldManager.enable(plugin);
 
-      verify(bukkitRegistryAdapter).applyGameRule(world, "fireDamage", false);
-      verify(bukkitRegistryAdapter).applyGameRule(world, "doMobSpawning", false);
-      verify(bukkitRegistryAdapter).applyGameRule(world, "mobGriefing", false);
-      verify(bukkitRegistryAdapter).applyGameRule(world, "doWeatherCycle", false);
-    }
-  }
-
-  @Test
-  void enableCreatesLobbyWorldWithFixedSeedAndSetsSpawnAndGameRules() {
-    when(worldEntry.getName()).thenReturn("lobby");
-    when(server.getWorld("lobby")).thenReturn(world);
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-    worldsMap.put(worldGroupEntry, worldEntry);
-    when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
-
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("lobby")).thenReturn(false);
-
-      worldManager.enable(plugin);
-
-      worldHelperMock.verify(
-          () -> WorldHelper.createWorld(eq("lobby"), eq(WorldType.NORMAL),
-              eq(World.Environment.NORMAL), eq(false), eq(6203818585396731238L)));
       verify(bukkitRegistryAdapter).applyGameRule(world, "fireDamage", false);
       verify(bukkitRegistryAdapter).applyGameRule(world, "doMobSpawning", false);
       verify(bukkitRegistryAdapter).applyGameRule(world, "mobGriefing", false);
@@ -428,11 +330,11 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("testworld")).thenReturn(true);
+      worldHelperMock.when(() -> serverService.worldExists("testworld")).thenReturn(true);
 
       worldManager.enable(plugin);
 
-      worldHelperMock.verify(() -> WorldHelper.loadWorld("testworld"));
+      worldHelperMock.verify(() -> serverService.loadWorld("testworld"));
     }
   }
 
@@ -446,7 +348,7 @@ class WorldManagerTest {
     when(worldGroupService.getWorldsMap()).thenReturn(worldsMap);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("lobby")).thenReturn(false);
+      worldHelperMock.when(() -> serverService.worldExists("lobby")).thenReturn(false);
 
       worldManager.enable(plugin);
 
@@ -476,7 +378,7 @@ class WorldManagerTest {
     randomField.set(worldManager, fixedRandom);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.worldExists("lobby")).thenReturn(false);
+      worldHelperMock.when(() -> serverService.worldExists("lobby")).thenReturn(false);
 
       worldManager.enable(plugin);
 

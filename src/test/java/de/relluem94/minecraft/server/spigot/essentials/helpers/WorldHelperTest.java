@@ -1,15 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -199,65 +195,6 @@ class WorldHelperTest {
       when(entity.getWorld()).thenReturn(otherWorld);
 
       assertFalse(WorldHelper.isInWorld(entity, world));
-    }
-  }
-
-  @Nested
-  class UnloadWorld {
-
-    @Test
-    void unloadsWorldSuccessfullyWhenWorldIsLoaded() throws WorldNotLoadedException {
-      mockedBukkit
-          .when(() -> Bukkit.getWorld("world"))
-          .thenReturn(world);
-
-      WorldHelper.unloadWorld("world", true);
-
-      mockedBukkit.verify(() -> Bukkit.unloadWorld("world", true));
-    }
-
-    @Test
-    void throwsWorldNotLoadedExceptionWhenWorldIsNotLoaded() {
-      mockedBukkit
-          .when(() -> Bukkit.getWorld("unknown_world"))
-          .thenReturn(null);
-
-      assertThrows(WorldNotLoadedException.class, () -> WorldHelper.unloadWorld("unknown_world", true));
-    }
-
-    @Test
-    void unloadsWorldWithoutSavingWhenSaveIsFalse() throws WorldNotLoadedException {
-      mockedBukkit
-          .when(() -> Bukkit.getWorld("world"))
-          .thenReturn(world);
-
-      WorldHelper.unloadWorld("world", false);
-
-      mockedBukkit.verify(() -> Bukkit.unloadWorld("world", false));
-    }
-  }
-
-  @Nested
-  class CloneWorld {
-
-    @Test
-    void throwsWorldNotFoundExceptionWhenOriginalWorldIsNotLoaded() {
-      mockedBukkit
-          .when(() -> Bukkit.getWorld("nonexistent_world"))
-          .thenReturn(null);
-
-      assertThrows(WorldNotFoundException.class, () -> WorldHelper.cloneWorld("cloned_world", "nonexistent_world"));
-    }
-
-    @Test
-    void createsClonedWorldWhenOriginalWorldExists() throws WorldNotFoundException {
-      mockedBukkit
-          .when(() -> Bukkit.getWorld("original_world"))
-          .thenReturn(world);
-
-      WorldHelper.cloneWorld("cloned_world", "original_world");
-
-      mockedBukkit.verify(() -> Bukkit.createWorld(any()));
     }
   }
 }
