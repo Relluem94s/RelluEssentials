@@ -303,6 +303,11 @@ public class ServerService {
     return server.createWorld(creator);
   }
 
+  /**
+   * Loads a world with the given name by creating it using a {@link WorldCreator}.
+   *
+   * @param worldName the name of the world to load
+   */
   public void loadWorld(String worldName) {
     server.createWorld(new WorldCreator(worldName));
   }
@@ -318,6 +323,13 @@ public class ServerService {
     return server.unloadWorld(world, save);
   }
 
+  /**
+   * Unloads a world by name, optionally saving it before unloading.
+   *
+   * @param worldName the name of the world to unload
+   * @param save      whether to save the world before unloading
+   * @throws WorldNotLoadedException if no world with the given name is currently loaded
+   */
   public void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException {
     if (server.getWorld(worldName) != null) {
       server.unloadWorld(worldName, save);
@@ -326,6 +338,13 @@ public class ServerService {
     }
   }
 
+  /**
+   * Clones an existing world into a new world with the given name.
+   *
+   * @param clonedWorldName   the name of the new cloned world
+   * @param originalWorldName the name of the world to clone
+   * @throws WorldNotFoundException if no world with the given original name exists
+   */
   public void cloneWorld(String clonedWorldName, String originalWorldName)
       throws WorldNotFoundException {
     World originalWorld = Bukkit.getWorld(originalWorldName);
@@ -338,6 +357,12 @@ public class ServerService {
     server.createWorld(worldCreator);
   }
 
+  /**
+   * Checks whether a world with the given name exists on disk.
+   *
+   * @param worldName the name of the world to check
+   * @return {@code true} if the world folder exists in the world container, {@code false} otherwise
+   */
   public boolean worldExists(String worldName) {
     return new File(server.getWorldContainer(), worldName).exists();
   }
