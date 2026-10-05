@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
@@ -114,7 +114,7 @@ public class Worlds implements CommandConstruct {
 
     if (args.length == 2) {
       if (Commands.LOAD.getName().equalsIgnoreCase(args[0])) {
-        WorldHelper.loadWorld(args[1]);
+        serviceContext.getServerService().loadWorld(args[1]);
         p.sendMessage(
             serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_LOAD));
         return true;
@@ -162,8 +162,14 @@ public class Worlds implements CommandConstruct {
         && (Boolean.parseBoolean(args[4]))) {
       WorldType type = WorldType.getByName(args[2].toUpperCase());
       World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
+
+      WorldCreator worldCreator = new WorldCreator(args[1]);
+      worldCreator.environment(worldEnvironment);
+      assert type != null;
+      worldCreator.type(type);
       boolean structures = Boolean.parseBoolean(args[4]);
-      WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
+      worldCreator.generateStructures(structures);
+      serviceContext.getServerService().createWorld(worldCreator);
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_CREATE));
     } else {
@@ -174,7 +180,7 @@ public class Worlds implements CommandConstruct {
 
   private void unloadWorld(@NotNull Player p, String name, boolean save) {
     try {
-      WorldHelper.unloadWorld(name, save);
+      serviceContext.getServerService().unloadWorld(name, save);
       p.sendMessage(save ? serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD) : serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));

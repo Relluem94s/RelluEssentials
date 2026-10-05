@@ -2,14 +2,21 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -384,4 +391,93 @@ class ServerServiceTest {
     verify(server).dispatchCommand(sender, "test abc 123");
   }
 
+  @Test
+  void loadWorldDelegatesToServerCreateWorld() {
+    serverService.loadWorld("testWorld");
+
+    verify(server).createWorld(any(WorldCreator.class));
+  }
+
+  @Test
+  void unloadWorldByNameDelegatesToServerWhenWorldIsLoaded() throws WorldNotLoadedException {
+    World world = mock(World.class);
+    when(server.getWorld("testWorld")).thenReturn(world);
+
+    serverService.unloadWorld("testWorld", true);
+
+    verify(server).unloadWorld("testWorld", true);
+  }
+
+  @Test
+  void unloadWorldByNameThrowsWorldNotLoadedExceptionWhenWorldIsNotLoaded() {
+    when(server.getWorld("testWorld")).thenReturn(null);
+
+    assertThrows(WorldNotLoadedException.class, () -> serverService.unloadWorld("testWorld", true));
+  }
+
+  @Test
+  void unloadWorldByNameDoesNotCallUnloadWhenWorldIsNotLoaded() {
+    when(server.getWorld("testWorld")).thenReturn(null);
+
+    assertThrows(WorldNotLoadedException.class,
+        () -> serverService.unloadWorld("testWorld", true));
+
+    verify(server, never()).unloadWorld("testWorld", true);
+  }
+
+  @Test
+  void cloneWorldDelegatesToServerCreateWorldWhenOriginalWorldExists() throws WorldNotFoundException {
+    World originalWorld = mock(World.class);
+    when(server.getWorld("originalWorld")).thenReturn(originalWorld);
+
+    serverService.cloneWorld("clonedWorld", "originalWorld");
+
+    verify(server).createWorld(any(WorldCreator.class));
+  }
+
+  @Test
+  void cloneWorldThrowsWorldNotFoundExceptionWhenOriginalWorldDoesNotExist() {
+    when(server.getWorld("nonExistentWorld")).thenReturn(null);
+
+    assertThrows(WorldNotFoundException.class,
+        () -> serverService.cloneWorld("clonedWorld", "nonExistentWorld"));
+  }
+
+  @Test
+  void cloneWorldDoesNotCallCreateWorldWhenOriginalWorldDoesNotExist() {
+    when(server.getWorld("nonExistentWorld")).thenReturn(null);
+
+    assertThrows(WorldNotFoundException.class,
+        () -> serverService.cloneWorld("clonedWorld", "nonExistentWorld"));
+
+    verify(server, never()).createWorld(any(WorldCreator.class));
+  }
+
+  @Test
+  void worldExistsReturnsTrueWhenWorldFolderExists() {
+    File worldContainer = mock(File.class);
+    when(server.getWorldContainer()).thenReturn(worldContainer);
+
+    try (var ignored = org.mockito.Mockito.mockConstruction(File.class,
+        (mock, _) -> when(mock.exists()).thenReturn(true))) {
+
+      boolean result = serverService.worldExists("testWorld");
+
+      assertTrue(result);
+    }
+  }
+
+  @Test
+  void worldExistsReturnsFalseWhenWorldFolderDoesNotExist() {
+    File worldContainer = mock(File.class);
+    when(server.getWorldContainer()).thenReturn(worldContainer);
+
+    try (var ignored = org.mockito.Mockito.mockConstruction(File.class,
+        (mock, _) -> when(mock.exists()).thenReturn(false))) {
+
+      boolean result = serverService.worldExists("testWorld");
+
+      assertFalse(result);
+    }
+  }
 }
