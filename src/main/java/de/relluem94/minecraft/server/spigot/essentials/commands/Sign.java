@@ -58,6 +58,7 @@ public class Sign implements CommandConstruct {
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_SIGN_INFO,
               AnnotationHelper.getCommandName(this.getClass()), Commands.COPY.getName(),
               Commands.EDIT.getName()));
+      return true;
     }
 
     if (args.length > 1) {
