@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -28,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +54,8 @@ class MarryTest {
   @Mock
   private ServerService serverService;
   @Mock
+  private TabCompleterService tabCompleterService;
+  @Mock
   private PlayerService playerService;
   @Mock
   private SchedulerService schedulerService;
@@ -79,6 +81,7 @@ class MarryTest {
     lenient().when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     lenient().when(serviceContext.getProtectionService()).thenReturn(protectionService);
     lenient().when(serviceContext.getProtectionActionService()).thenReturn(protectionActionService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
   }
 
   @Test
@@ -316,10 +319,9 @@ class MarryTest {
 
   @Test
   void onTabCompleteReturnsSubCommandsAndOnlinePlayersWhenAuthorizedPlayerWithOneArg() {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer.getName()).thenReturn("OnlinePlayer");
+    when(tabCompleterService.getCommands(Marry.Commands.values())).thenReturn(List.of("accept", "divorce"));
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 
     List<String> result = marry.onTabComplete(player, command, "marry", new String[]{"partial"});
 
