@@ -749,4 +749,17 @@ class WorldsTest {
     assertTrue(result.isEmpty());
   }
 
+  @Test
+  void onCommandFiveArgsCreateWithNullWorldTypeFromGetByNameSendsWrongArgumentsMessage() {
+    String expectedMessage = "wrong arguments";
+    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
+
+    boolean result = worlds.onCommand(player, command, "world",
+        new String[] {"create", "myWorld", "INVALID_TYPE", "NORMAL", "true"});
+
+    assertTrue(result);
+    verify(player).sendMessage(expectedMessage);
+  }
 }

@@ -157,15 +157,13 @@ public class Worlds implements CommandConstruct {
   }
 
   private void createWorld(Player p, String @NotNull [] args) {
-    if (WorldType.getByName(args[2].toUpperCase()) != null && isValidWorldEnvironment(args[3])
-        && (Boolean.parseBoolean(args[4]))) {
-      WorldType type = WorldType.getByName(args[2].toUpperCase());
+    WorldType worldType = WorldType.getByName(args[2].toUpperCase());
+    if (worldType != null && isValidWorldEnvironment(args[3]) && Boolean.parseBoolean(args[4])) {
       World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
 
       WorldCreator worldCreator = new WorldCreator(args[1]);
       worldCreator.environment(worldEnvironment);
-      assert type != null;
-      worldCreator.type(type);
+      worldCreator.type(worldType);
       boolean structures = Boolean.parseBoolean(args[4]);
       worldCreator.generateStructures(structures);
       serviceContext.getServerService().createWorld(worldCreator);
