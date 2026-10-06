@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -20,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +43,9 @@ class ProtectTest {
 
   @Mock
   private TranslationService translationService;
+
+  @Mock
+  private TabCompleterService tabCompleterService;
 
   @Mock
   private GroupService groupService;
@@ -76,6 +79,7 @@ class ProtectTest {
     lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
     lenient().when(serviceContext.getPlayerService()).thenReturn(playerService);
     lenient().when(serviceContext.getServerService()).thenReturn(serverService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     lenient().when(player.getUniqueId()).thenReturn(PLAYER_UUID);
     lenient().when(playerService.getPlayerEntry(PLAYER_UUID)).thenReturn(playerEntry);
   }
@@ -431,6 +435,14 @@ class ProtectTest {
   @Test
   void onTabCompleteReturnsAllCommandsWhenOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(tabCompleterService.getCommands(Protect.Commands.values()))
+        .thenReturn(List.of(
+            Protect.Commands.ADD.getName(),
+            Protect.Commands.REMOVE.getName(),
+            Protect.Commands.INFO.getName(),
+            Protect.Commands.FLAG.getName(),
+            Protect.Commands.RIGHT.getName()
+        ));
 
     List<String> result = protect.onTabComplete(player, command, "protect", new String[]{"a"});
 
@@ -474,6 +486,7 @@ class ProtectTest {
   @ValueSource(strings = {"add", "remove"})
   void onTabCompleteReturnsProtectionFlagsWhenThreeArgsAndFlagSubCommand(String subCommand) {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(tabCompleterService.getProtectionFlags()).thenReturn(List.of("ALLOW_PUBLIC", "INTERACT"));
 
     List<String> result = protect.onTabComplete(player, command, "protect", new String[]{"flag", subCommand, "partial"});
 
@@ -484,10 +497,8 @@ class ProtectTest {
   @ParameterizedTest
   @ValueSource(strings = {"add", "remove"})
   void onTabCompleteReturnsOnlinePlayersWhenThreeArgsAndRightSubCommand(String subCommand) {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer.getName()).thenReturn("OnlinePlayer");
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 
     List<String> result = protect.onTabComplete(player, command, "protect", new String[]{"right", subCommand, "partial"});
 

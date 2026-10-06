@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
@@ -206,7 +205,7 @@ public class Protect implements CommandConstruct {
 
     switch (strings.length) {
       case 1:
-        tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+        tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
         break;
       case 2:
         if (strings[0].equalsIgnoreCase(Commands.FLAG.getName())) {
@@ -219,12 +218,11 @@ public class Protect implements CommandConstruct {
         if (strings[0].equalsIgnoreCase(Commands.FLAG.getName()) && (
             strings[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0])
                 || strings[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1]))) {
-          tabList.addAll(TabCompleterHelper.getProtectionFlags());
+          tabList.addAll(serviceContext.getTabCompleterService().getProtectionFlags());
         } else if (strings[0].equalsIgnoreCase(Commands.RIGHT.getName()) && (
             strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])
                 || strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1]))) {
-          tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
-              .map(Player::getName).toList());
+          tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
         }
         break;
       default:
@@ -239,6 +237,12 @@ public class Protect implements CommandConstruct {
     return Commands.values();
   }
 
+  /**
+   * Enumeration of all available sub-commands for the /protect command.
+   *
+   * <p>Each entry defines a command name and optional sub-commands used for
+   * tab completion and argument parsing.</p>
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

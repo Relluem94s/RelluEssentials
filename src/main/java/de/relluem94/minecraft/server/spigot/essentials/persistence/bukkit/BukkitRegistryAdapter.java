@@ -1,10 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.Server;
@@ -87,5 +89,14 @@ public class BukkitRegistryAdapter {
       return;
     }
     world.setGameRule(gameRule, value);
+  }
+
+  /**
+   * Returns all available {@link Material} values.
+   *
+   * @return a {@link List} of all {@link Material} values
+   */
+  public List<Material> getAllMaterials() {
+    return Arrays.asList(Material.values());
   }
 }

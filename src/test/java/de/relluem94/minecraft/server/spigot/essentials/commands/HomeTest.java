@@ -22,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ class HomeTest {
   @Mock
   private MessageService messageService;
   @Mock
+  private TabCompleterService tabCompleterService;
+  @Mock
   private Player player;
   @Mock
   private CommandSender nonPlayerSender;
@@ -88,6 +91,7 @@ class HomeTest {
 
     lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
     lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     lenient().when(world.getName()).thenReturn("world");
   }
 
@@ -474,6 +478,8 @@ class HomeTest {
   @Test
   void onTabCompleteFirstArgReturnsAllSubCommands() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(tabCompleterService.getCommands(Home.Commands.values())).thenReturn(
+        List.of("set", "delete", "list", "tp"));
 
     List<String> result = homeCommand.onTabComplete(player, command, "home", new String[]{"s"});
 

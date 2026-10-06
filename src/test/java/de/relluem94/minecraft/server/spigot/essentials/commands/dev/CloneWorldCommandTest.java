@@ -44,36 +44,33 @@ class CloneWorldCommandTest {
 
   @BeforeEach
   void setUp() {
+    Logger.getLogger(ServerService.class.getName()).setLevel(Level.OFF);
     cloneWorldCommand = new CloneWorldCommand(serviceContext);
     lenient().when(serviceContext.getServerService()).thenReturn(serverService);
   }
 
   @Test
-  void executeTeleportsPlayerToClonedWorldSpawn() {
+  void executeTeleportsPlayerToClonedWorldSpawn() throws WorldNotFoundException {
     World clonedWorld = mock(World.class);
     Location spawnLocation = mock(Location.class);
 
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      when(serverService.getWorld("world2")).thenReturn(clonedWorld);
-      when(clonedWorld.getSpawnLocation()).thenReturn(spawnLocation);
+    when(serverService.getWorld("world2")).thenReturn(clonedWorld);
+    when(clonedWorld.getSpawnLocation()).thenReturn(spawnLocation);
 
-      cloneWorldCommand.execute(player, new String[]{"worlds"});
+    cloneWorldCommand.execute(player, new String[]{"worlds"});
 
-      worldHelperMock.verify(() -> WorldHelper.cloneWorld("world2", "world"));
-      verify(player).teleport(spawnLocation);
-    }
+    verify(serverService).cloneWorld("world2", "world");
+    verify(player).teleport(spawnLocation);
   }
 
   @Test
-  void executeDoesNotTeleportPlayerWhenClonedWorldIsNull() {
-    try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      when(serverService.getWorld("world2")).thenReturn(null);
+  void executeDoesNotTeleportPlayerWhenClonedWorldIsNull() throws WorldNotFoundException {
+    when(serverService.getWorld("world2")).thenReturn(null);
 
-      cloneWorldCommand.execute(player, new String[]{"worlds"});
+    cloneWorldCommand.execute(player, new String[]{"worlds"});
 
-      worldHelperMock.verify(() -> WorldHelper.cloneWorld("world2", "world"));
-      verify(player, never()).teleport((Location) org.mockito.ArgumentMatchers.any());
-    }
+    verify(serverService).cloneWorld("world2", "world");
+    verify(player, never()).teleport((Location) org.mockito.ArgumentMatchers.any());
   }
 
   @Test
@@ -83,7 +80,7 @@ class CloneWorldCommandTest {
     Location spawnLocation = mock(Location.class);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
-      worldHelperMock.when(() -> WorldHelper.cloneWorld("world2", "world"))
+      worldHelperMock.when(() -> serverService.cloneWorld("world2", "world"))
           .thenThrow(new WorldNotFoundException("world not found"));
       when(serverService.getWorld("world2")).thenReturn(clonedWorld);
       when(clonedWorld.getSpawnLocation()).thenReturn(spawnLocation);

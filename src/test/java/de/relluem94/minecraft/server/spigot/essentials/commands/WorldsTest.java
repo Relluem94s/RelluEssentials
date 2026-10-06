@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -14,8 +16,10 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
@@ -60,6 +64,8 @@ class WorldsTest {
   private WorldMenuService worldMenuService;
   @Mock
   private ServerService serverService;
+  @Mock
+  private TabCompleterService tabCompleterService;
   @Mock
   private Player player;
   @Mock
@@ -207,10 +213,12 @@ class WorldsTest {
   }
 
   @Test
-  void onCommandTwoArgsUnloadWithSaveSendsUnloadMessage() {
+  void onCommandTwoArgsUnloadWithSaveSendsUnloadMessage() throws WorldNotLoadedException {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    doNothing().when(serverService).unloadWorld("nonexistentWorld", true);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)).thenReturn("world unloaded");
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "nonexistentWorld"});
 
@@ -221,6 +229,7 @@ class WorldsTest {
   void onCommandTwoArgsUnloadNoSaveSendsUnloadNoSaveMessage() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "nonexistentWorld"});
 
@@ -228,21 +237,13 @@ class WorldsTest {
   }
 
   @Test
-  void unloadWorldWithSaveAndLoadedWorldSendsUnloadMessage() {
+  void unloadWorldWithSaveAndLoadedWorldSendsUnloadMessage() throws WorldNotLoadedException {
     String expectedMessage = "world unloaded";
-    World loadedWorld = mock(World.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)).thenReturn(expectedMessage);
-    Bukkit
-        .getServer()
-        .getWorlds(); // warm-up
-    when(Bukkit
-        .getServer()
-        .getWorld("loadedWorld")).thenReturn(loadedWorld);
-    when(Bukkit
-        .getServer()
-        .unloadWorld(loadedWorld, true)).thenReturn(true);
+    doNothing().when(serverService).unloadWorld("loadedWorld", true);
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "loadedWorld"});
 
@@ -251,18 +252,13 @@ class WorldsTest {
   }
 
   @Test
-  void unloadWorldWithoutSaveAndLoadedWorldSendsUnloadNoSaveMessage() {
+  void unloadWorldWithoutSaveAndLoadedWorldSendsUnloadNoSaveMessage() throws WorldNotLoadedException {
     String expectedMessage = "world unloaded no save";
-    World loadedWorld = mock(World.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE)).thenReturn(expectedMessage);
-    when(Bukkit
-        .getServer()
-        .getWorld("loadedWorld")).thenReturn(loadedWorld);
-    when(Bukkit
-        .getServer()
-        .unloadWorld(loadedWorld, false)).thenReturn(true);
+    doNothing().when(serverService).unloadWorld("loadedWorld", false);
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "loadedWorld"});
 
@@ -271,13 +267,13 @@ class WorldsTest {
   }
 
   @Test
-  void unloadWorldWithNonexistentWorldLogsWorldNotLoadedAndDoesNotMessagePlayer() {
+  void unloadWorldWithNonexistentWorldLogsWorldNotLoadedAndDoesNotMessagePlayer() throws WorldNotLoadedException {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
-    when(Bukkit
-        .getServer()
-        .getWorld("nonexistentWorld")).thenReturn(null);
+    doThrow(new de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException("not loaded"))
+        .when(serverService).unloadWorld("nonexistentWorld", true);
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unload", "nonexistentWorld"});
 
@@ -286,13 +282,13 @@ class WorldsTest {
   }
 
   @Test
-  void unloadWorldNoSaveWithNonexistentWorldLogsWorldNotLoadedAndDoesNotMessagePlayer() {
+  void unloadWorldNoSaveWithNonexistentWorldLogsWorldNotLoadedAndDoesNotMessagePlayer() throws WorldNotLoadedException {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED)).thenReturn("world not loaded");
-    when(Bukkit
-        .getServer()
-        .getWorld("nonexistentWorld")).thenReturn(null);
+    doThrow(new de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException("not loaded"))
+        .when(serverService).unloadWorld("nonexistentWorld", false);
 
     boolean result = worlds.onCommand(player, command, "world", new String[] {"unloadNoSave", "nonexistentWorld"});
 
@@ -393,7 +389,16 @@ class WorldsTest {
     when(world.getName()).thenReturn("world");
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     when(serverService.getWorlds()).thenReturn(List.of(world));
+    when(tabCompleterService.getCommands(Worlds.Commands.values()))
+        .thenReturn(List.of(
+            Worlds.Commands.CREATE.getName(),
+            Worlds.Commands.LOAD.getName(),
+            Worlds.Commands.LIST.getName(),
+            Worlds.Commands.UNLOAD.getName(),
+            Worlds.Commands.UNLOAD_NO_SAVE.getName()
+        ));
 
     List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"w"});
 
@@ -431,6 +436,8 @@ class WorldsTest {
   @Test
   void onTabCompleteThirdArgCreateReturnsWorldTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getWorldTypes()).thenReturn(List.of("NORMAL", "FLAT", "LARGE_BIOMES", "AMPLIFIED"));
 
     List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", ""});
 
@@ -440,6 +447,8 @@ class WorldsTest {
   @Test
   void onTabCompleteFourthArgCreateReturnsEnvironmentTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getWorldEnvironmentTypes()).thenReturn(List.of("NORMAL", "NETHER", "THE_END"));
 
     List<String> result =
         worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", "FLAT", ""});
@@ -523,6 +532,7 @@ class WorldsTest {
     String expectedMessage = "world created";
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
     boolean result =
@@ -575,10 +585,37 @@ class WorldsTest {
   }
 
   @Test
+  void onCommandTwoArgsLoadWithExistingWorldSendsWorldLoadMessage() {
+    String expectedMessage = "world loaded";
+    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_LOAD)).thenReturn(expectedMessage);
+
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "existingWorld"});
+
+    assertTrue(result);
+    verify(player).sendMessage(expectedMessage);
+  }
+
+  @Test
+  void onCommandTwoArgsLoadWithNonExistentWorldDoesNotSendLoadMessage() {
+    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+
+    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "nonExistentWorld"});
+
+    assertTrue(result);
+    verify(player, never()).sendMessage(anyString());
+  }
+
+  @Test
   void onCommandFiveArgsCreateWithNetherEnvironmentCreatesWorldAndSendsCreateMessage() {
     String expectedMessage = "world created";
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
     boolean result =
@@ -593,6 +630,7 @@ class WorldsTest {
     String expectedMessage = "world created";
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE)).thenReturn(expectedMessage);
 
     boolean result =
@@ -600,37 +638,6 @@ class WorldsTest {
 
     assertTrue(result);
     verify(player).sendMessage(expectedMessage);
-  }
-
-  @Test
-  void onCommandTwoArgsLoadWithExistingWorldSendsWorldLoadMessage() {
-    String expectedMessage = "world loaded";
-    World existingWorld = mock(World.class);
-    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_LOAD)).thenReturn(expectedMessage);
-    when(Bukkit
-        .getServer()
-        .getWorld("existingWorld")).thenReturn(existingWorld);
-
-    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "existingWorld"});
-
-    assertTrue(result);
-    verify(player).sendMessage(expectedMessage);
-  }
-
-  @Test
-  void onCommandTwoArgsLoadWithNonExistentWorldDoesNotSendLoadMessage() {
-    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(Bukkit
-        .getServer()
-        .getWorld("nonExistentWorld")).thenReturn(null);
-
-    boolean result = worlds.onCommand(player, command, "world", new String[] {"load", "nonExistentWorld"});
-
-    assertTrue(result);
-    verify(player, never()).sendMessage(anyString());
   }
 
   @Test
@@ -742,4 +749,17 @@ class WorldsTest {
     assertTrue(result.isEmpty());
   }
 
+  @Test
+  void onCommandFiveArgsCreateWithNullWorldTypeFromGetByNameSendsWrongArgumentsMessage() {
+    String expectedMessage = "wrong arguments";
+    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS)).thenReturn(expectedMessage);
+
+    boolean result = worlds.onCommand(player, command, "world",
+        new String[] {"create", "myWorld", "INVALID_TYPE", "NORMAL", "true"});
+
+    assertTrue(result);
+    verify(player).sendMessage(expectedMessage);
+  }
 }
