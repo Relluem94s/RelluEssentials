@@ -133,6 +133,7 @@ public class DevCommand implements CommandConstruct {
 
     return tabList;
   }
+
   /**
    * Defines the available sub-commands for the dev command.
    * Each entry represents a distinct dev mode.

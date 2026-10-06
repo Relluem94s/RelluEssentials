@@ -17,6 +17,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation that allows players to set their personal weather type.
+ *
+ * <p>Requires the sender to be a player with at least "vip" group authorization.
+ * Accepts a single {@link org.bukkit.WeatherType} argument to apply the weather effect
+ * exclusively to the executing player.
+ *
+ * @author rellu
+ */
 @CommandName("playerweather")
 public class PlayerWeather implements CommandConstruct {
 

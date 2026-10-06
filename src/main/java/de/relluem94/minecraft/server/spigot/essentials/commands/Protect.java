@@ -237,6 +237,12 @@ public class Protect implements CommandConstruct {
     return Commands.values();
   }
 
+  /**
+   * Enumeration of all available sub-commands for the /protect command.
+   *
+   * <p>Each entry defines a command name and optional sub-commands used for
+   * tab completion and argument parsing.</p>
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

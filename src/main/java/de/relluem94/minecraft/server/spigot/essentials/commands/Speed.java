@@ -17,6 +17,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for adjusting a player's walk or fly speed.
+ *
+ * <p>Allows authorized players to set their movement speed to a value between 1 and 10.
+ * The speed is normalized to Bukkit's expected range by dividing the input by 10.</p>
+ *
+ * @author rellu
+ */
 @CommandName("speed")
 public class Speed implements CommandConstruct {
 
@@ -91,6 +99,11 @@ public class Speed implements CommandConstruct {
     return tabList;
   }
 
+  /**
+   * Enum representing the valid speed values accepted by the speed command.
+   *
+   * <p>Each constant corresponds to a numeric input from 1 to 10.</p>
+   */
   @Getter
   public enum Commands implements CommandsEnum {
     ONE("1"),

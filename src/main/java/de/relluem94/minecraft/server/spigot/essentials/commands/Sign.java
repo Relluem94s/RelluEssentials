@@ -20,7 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-
+/**
+ * Command handler for the /sign command.
+ * Allows authorized players to edit or copy signs in the world.
+ *
+ * @author rellu
+ */
 @CommandName("sign")
 public class Sign implements CommandConstruct {
 
@@ -101,6 +106,10 @@ public class Sign implements CommandConstruct {
     return tabList;
   }
 
+
+  /**
+   * Enum representing the available sub-commands for the /sign command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

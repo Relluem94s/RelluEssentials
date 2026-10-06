@@ -30,6 +30,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command handler for the /modify command, providing world editing capabilities
+ * such as setting, replacing, copying, pasting, and filling blocks.
+ *
+ * @author rellu
+ */
 @CommandName("modify")
 public class Modify implements CommandConstruct {
 
@@ -160,6 +166,9 @@ public class Modify implements CommandConstruct {
     return tabList;
   }
 
+  /**
+   * Represents all available sub-commands for the /modify command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

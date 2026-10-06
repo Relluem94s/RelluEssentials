@@ -40,6 +40,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command handler for the /admin command.
+ *
+ * <p>Provides administrative functionality including NPC management, chat cleanup,
+ * location cleanup, protection cleanup, AFK simulation, light toggling, ping checks,
+ * plugin information and admin tools. Requires at least moderator group authorization.</p>
+ *
+ * @author rellu
+ */
 @CommandName("admin")
 public class Admin implements CommandConstruct {
 
@@ -312,7 +321,7 @@ public class Admin implements CommandConstruct {
    * Represents all available sub-commands for the /admin command.
    *
    * <p>Each entry defines the primary command name and optional nested sub-command names
-   * that are used for tab completion and command routing.
+   * that are used for tab completion and command routing.</p>
    */
   @Getter
   public enum Commands implements CommandsEnum {
