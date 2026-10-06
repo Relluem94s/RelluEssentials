@@ -316,15 +316,11 @@ public class Teleport implements CommandConstruct {
 
     if (strings.length == 1) {
       tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
-      serviceContext.getServerService().getOnlinePlayers().stream()
-          .filter(player -> !player.equals(commandSender)).map(Player::getName)
-          .forEach(tabList::add);
+      tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
     }
 
     if (strings.length == 2 && strings[0].equalsIgnoreCase(Commands.TO.getName())) {
-      serviceContext.getServerService().getOnlinePlayers().stream()
-          .filter(player -> !player.equals(commandSender)).map(Player::getName)
-          .forEach(tabList::add);
+      tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
     }
 
     return tabList;

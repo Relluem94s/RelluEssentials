@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -146,8 +145,7 @@ public class PermissionsGroup implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
-          .collect(Collectors.toList());
+      return serviceContext.getTabCompleterService().getOnlinePlayerNames(null);
     }
 
     return serviceContext.getTabCompleterService().getGroups(serviceContext.getGroupService().findAllGroups());

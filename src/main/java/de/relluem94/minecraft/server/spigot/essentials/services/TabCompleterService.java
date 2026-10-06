@@ -1,23 +1,27 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.WorldType;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Service class providing methods for tab completion in commands. Supplies lists of valid
- * values for various command arguments such as players, worlds, materials, weather types, and
- * protection flags.
+ * Service class providing methods for tab completion in commands. Supplies lists of valid values for various command
+ * arguments such as players, worlds, materials, weather types, and protection flags.
  *
  * @author Relluem94
  */
@@ -25,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public class TabCompleterService {
 
   private final BukkitRegistryAdapter bukkitRegistryAdapter;
+  private final ServiceContext serviceContext;
 
   /**
    * Returns a list of all available protection flag names.
@@ -102,30 +107,53 @@ public class TabCompleterService {
   }
 
   /**
-   * Returns a list of non-legacy, solid block material names, optionally filtered by a search
-   * string.
+   * Returns a list of non-legacy, solid block material names, optionally filtered by a search string.
    *
-   * @param filter a case-insensitive substring to filter material names by, or {@code null} to
-   *               return all matching materials
+   * @param filter a case-insensitive substring to filter material names by, or {@code null} to return all matching
+   *               materials
    * @return a {@link List} of material names that are solid blocks and match the given filter
    */
   public @NotNull List<String> getMaterials(@Nullable String filter) {
     List<String> materials = new ArrayList<>();
     for (Material material : bukkitRegistryAdapter.getAllMaterials()) {
-      if (material.name().startsWith("LEGACY")) {
+      if (material
+          .name()
+          .startsWith("LEGACY")) {
         continue;
       }
 
       String materialName = material.name();
 
       if (material.isBlock() && material.isSolid()) {
-        if (filter == null || materialName.toLowerCase().contains(filter.toLowerCase())) {
+        if (filter == null || materialName
+            .toLowerCase()
+            .contains(filter.toLowerCase())) {
           materials.add(materialName);
         }
       }
     }
 
     return materials;
+  }
+
+  /**
+   * Returns a list of material names filtered by a given predicate and optionally by a search string.
+   *
+   * @param materialFilter a {@link Predicate} to filter materials by their properties
+   * @param filter         a case-insensitive prefix to filter material names by, or {@code null} to return all matching
+   *                       materials
+   * @return a sorted {@link List} of material names matching the predicate and filter
+   */
+  public @NotNull List<String> getMaterialsByPredicate(@NotNull Predicate<Material> materialFilter,
+      @Nullable String filter) {
+    return bukkitRegistryAdapter
+        .getAllMaterials()
+        .stream()
+        .filter(materialFilter)
+        .map(Material::name)
+        .filter(name -> filter == null || name.startsWith(filter.toUpperCase()))
+        .sorted()
+        .toList();
   }
 
   /**
@@ -141,5 +169,21 @@ public class TabCompleterService {
     }
 
     return weatherTypes;
+  }
+
+  /**
+   * Returns a list of online player names, excluding the given sender if they are a player.
+   *
+   * @param excludedSender the {@link CommandSender} to exclude from the list, or {@code null} to include all players
+   * @return a {@link List} of online player names
+   */
+  public @NotNull List<String> getOnlinePlayerNames(@Nullable CommandSender excludedSender) {
+    return serviceContext
+        .getServerService()
+        .getOnlinePlayers()
+        .stream()
+        .filter(player -> !player.equals(excludedSender))
+        .map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

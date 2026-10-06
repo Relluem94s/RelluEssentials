@@ -226,7 +226,7 @@ public class ServiceManager implements Enable {
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
     serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
         serviceContext.getPluginMetadataService()));
-    serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter));
+    serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter, serviceContext));
   }
 
   /**

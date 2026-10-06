@@ -94,11 +94,10 @@ public class Admin implements CommandConstruct {
     }
     if (strings.length == 2) {
       if (Commands.PING.getName().equalsIgnoreCase(strings[0])) {
-        tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
-            .map(Player::getName).toList());
+        tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
       }
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
-        tabList.addAll(List.of("create", "update", "delete", "dialogue", "equip"));
+        tabList.addAll(List.of(Commands.NPC.subCommands));
       }
       return tabList;
     }

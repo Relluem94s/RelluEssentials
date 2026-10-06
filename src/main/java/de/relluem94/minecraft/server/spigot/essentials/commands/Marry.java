@@ -288,8 +288,7 @@ public class Marry implements CommandConstruct {
     }
 
     tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
-    tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
-        .map(Player::getName).toList());
+    tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
 
     return tabList;
   }

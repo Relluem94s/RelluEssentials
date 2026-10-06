@@ -22,10 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -136,13 +134,9 @@ public class Modify implements CommandConstruct {
 
       if (strings[0].equalsIgnoreCase(Commands.PLANT.getName())) {
         String input = strings[1].isEmpty() ? null : strings[1].toUpperCase();
-        tabList.addAll(Arrays
-            .stream(Material.values())
-            .filter(ModifyHelper::isPlantMaterial)
-            .map(Material::name)
-            .filter(name -> input == null || name.startsWith(input))
-            .sorted()
-            .toList());
+        tabList.addAll(serviceContext
+            .getTabCompleterService()
+            .getMaterialsByPredicate(ModifyHelper::isPlantMaterial, input));
         return tabList;
       }
 

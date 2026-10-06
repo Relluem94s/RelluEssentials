@@ -80,8 +80,6 @@ public class PlayerWeather implements CommandConstruct {
       return tabList;
     }
 
-    Player p = (Player) commandSender;
-
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "vip")) {
       return tabList;
     }
