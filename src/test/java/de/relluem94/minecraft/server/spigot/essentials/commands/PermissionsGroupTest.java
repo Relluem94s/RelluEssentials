@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -51,6 +50,9 @@ class PermissionsGroupTest {
 
   @Mock
   private TranslationService translationService;
+
+  @Mock
+  private TabCompleterService tabCompleterService;
 
   @Mock
   private GroupService groupService;
@@ -341,15 +343,11 @@ class PermissionsGroupTest {
   @Test
   void onTabCompleteReturnsOnlinePlayerNamesWhenFirstArgIsBeingEntered() {
     Player sender = mock(Player.class);
-    Player onlinePlayer1 = mock(Player.class);
-    Player onlinePlayer2 = mock(Player.class);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(sender, "mod")).thenReturn(true);
-    when(serviceContext.getServerService()).thenReturn(serverService);
-    doReturn(List.of(onlinePlayer1, onlinePlayer2)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer1.getName()).thenReturn("Alice");
-    when(onlinePlayer2.getName()).thenReturn("Bob");
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getOnlinePlayerNames(null)).thenReturn(List.of("Alice", "Bob"));
 
     List<String> result = permissionsGroup.onTabComplete(sender, command, "setGroup", new String[]{"Al"});
 
@@ -368,20 +366,15 @@ class PermissionsGroupTest {
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(sender, "mod")).thenReturn(true);
     when(groupService.findAllGroups()).thenReturn(List.of(group1, group2));
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getGroups(List.of(group1, group2))).thenReturn(List.of("mod", "admin"));
 
-    try (MockedStatic<TabCompleterService> tabCompleterHelperMock =
-        Mockito.mockStatic(TabCompleterService.class)) {
-      tabCompleterHelperMock.when(() ->
-              serviceContext.getTabCompleterService().getGroups(List.of(group1, group2)))
-          .thenReturn(List.of("mod", "admin"));
+    List<String> result = permissionsGroup.onTabComplete(sender, command, "setGroup", new String[]{"Alice", "mo"});
 
-      List<String> result = permissionsGroup.onTabComplete(sender, command, "setGroup", new String[]{"Alice", "mo"});
-
-      assertNotNull(result);
-      assertEquals(2, result.size());
-      assertTrue(result.contains("mod"));
-      assertTrue(result.contains("admin"));
-    }
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertTrue(result.contains("mod"));
+    assertTrue(result.contains("admin"));
   }
 
   @Test
