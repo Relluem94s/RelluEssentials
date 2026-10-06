@@ -220,7 +220,6 @@ class AdminTest {
 
   @Test
   void onTabCompleteReturnsOnlinePlayersWhenTwoArgsAndFirstArgIsPing() {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 

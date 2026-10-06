@@ -103,7 +103,7 @@ class SpeedTest {
   }
 
   @Test
-  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+  void onCommandSendsNotAnPlayerMessageWhenSenderIsNotAnPlayer() {
     when(serviceContext.getTranslationService()
         .getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(MESSAGE);
 

@@ -407,7 +407,6 @@ class TeleportTest {
 
   @Test
   void onTabCompleteReturnsSubCommandsAndOnlinePlayersWhenOneArgProvided() {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(tabCompleterService.getCommands(teleport.getCommands())).thenReturn(List.of("accept", "to"));
     when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
