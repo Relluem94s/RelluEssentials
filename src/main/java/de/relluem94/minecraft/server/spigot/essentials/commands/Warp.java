@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
@@ -55,7 +54,7 @@ public class Warp implements CommandConstruct {
     switch (strings.length) {
       case 1:
         if (serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
-          tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+          tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
         }
         tabList.addAll(serviceContext.getWarpService().getWarpNamesByWorld(p.getWorld()));
         break;

@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.command.Command;
@@ -43,6 +44,9 @@ class BroadcastTest {
 
   @Mock
   private ServerService serverService;
+
+  @Mock
+  private TabCompleterService tabCompleterService;
 
   @Mock
   private CommandSender commandSender;
@@ -181,6 +185,8 @@ class BroadcastTest {
   @Test
   void onTabCompleteAuthorizedSenderWithOneArgReturnsSubCommands() {
     when(groupService.isSenderAuthorized(commandSender, "mod")).thenReturn(true);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getCommands(Broadcast.Commands.values())).thenReturn(List.of("title", "chat"));
 
     List<String> result = broadcast.onTabComplete(commandSender, command, "broadcast", new String[]{"c"});
 

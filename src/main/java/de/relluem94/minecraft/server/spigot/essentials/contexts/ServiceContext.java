@@ -32,6 +32,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -93,4 +94,5 @@ public class ServiceContext {
   private EnchantmentService enchantmentService;
   private CoinItemService coinItemService;
   private WorldMenuService worldMenuService;
+  private TabCompleterService tabCompleterService;
 }

@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -18,6 +17,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for adjusting a player's walk or fly speed.
+ *
+ * <p>Allows authorized players to set their movement speed to a value between 1 and 10.
+ * The speed is normalized to Bukkit's expected range by dividing the input by 10.</p>
+ *
+ * @author rellu
+ */
 @CommandName("speed")
 public class Speed implements CommandConstruct {
 
@@ -49,6 +56,7 @@ public class Speed implements CommandConstruct {
 
     if (!args[0].matches("^\\d+$")) {
       p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID));
+      return true;
     }
 
     float speed = parseSpeed(args[0]);
@@ -87,11 +95,16 @@ public class Speed implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+    tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
 
     return tabList;
   }
 
+  /**
+   * Enum representing the valid speed values accepted by the speed command.
+   *
+   * <p>Each constant corresponds to a numeric input from 1 to 10.</p>
+   */
   @Getter
   public enum Commands implements CommandsEnum {
     ONE("1"),

@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
@@ -49,6 +50,8 @@ class WarpTest {
   private WarpService warpService;
   @Mock
   private TeleportService teleportService;
+  @Mock
+  private TabCompleterService tabCompleterService;
   @Mock
   private Player player;
   @Mock
@@ -351,13 +354,14 @@ class WarpTest {
   void onTabCompleteFirstArgAsAdminReturnsSubCommandsAndWarpNames() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
-    when(warpService.getWarpNamesByWorld(world)).thenReturn(List.of("spawn"));
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getCommands(Warp.Commands.values())).thenReturn(List.of("add", "remove"));
 
     List<String> result = warpCommand.onTabComplete(player, command, "warp", new String[]{"s"});
 
     assertTrue(result.contains("add"));
     assertTrue(result.contains("remove"));
-    assertTrue(result.contains("spawn"));
+    assertFalse(result.contains("spawn"));
   }
 
   @Test

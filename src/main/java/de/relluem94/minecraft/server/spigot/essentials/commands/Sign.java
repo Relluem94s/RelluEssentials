@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -21,7 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-
+/**
+ * Command handler for the /sign command.
+ * Allows authorized players to edit or copy signs in the world.
+ *
+ * @author rellu
+ */
 @CommandName("sign")
 public class Sign implements CommandConstruct {
 
@@ -54,6 +58,7 @@ public class Sign implements CommandConstruct {
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_SIGN_INFO,
               AnnotationHelper.getCommandName(this.getClass()), Commands.COPY.getName(),
               Commands.EDIT.getName()));
+      return true;
     }
 
     if (args.length > 1) {
@@ -96,12 +101,16 @@ public class Sign implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
     }
 
     return tabList;
   }
 
+
+  /**
+   * Enum representing the available sub-commands for the /sign command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

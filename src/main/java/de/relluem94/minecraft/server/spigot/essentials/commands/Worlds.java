@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -158,15 +157,13 @@ public class Worlds implements CommandConstruct {
   }
 
   private void createWorld(Player p, String @NotNull [] args) {
-    if (WorldType.getByName(args[2].toUpperCase()) != null && isValidWorldEnvironment(args[3])
-        && (Boolean.parseBoolean(args[4]))) {
-      WorldType type = WorldType.getByName(args[2].toUpperCase());
+    WorldType worldType = WorldType.getByName(args[2].toUpperCase());
+    if (worldType != null && isValidWorldEnvironment(args[3]) && Boolean.parseBoolean(args[4])) {
       World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
 
       WorldCreator worldCreator = new WorldCreator(args[1]);
       worldCreator.environment(worldEnvironment);
-      assert type != null;
-      worldCreator.type(type);
+      worldCreator.type(worldType);
       boolean structures = Boolean.parseBoolean(args[4]);
       worldCreator.generateStructures(structures);
       serviceContext.getServerService().createWorld(worldCreator);
@@ -209,7 +206,7 @@ public class Worlds implements CommandConstruct {
 
     if (strings.length == 1) {
       List<String> tabList = new ArrayList<>();
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
       tabList.addAll(
           serviceContext.getServerService().getWorlds().stream().map(World::getName).toList());
       return tabList;
@@ -229,13 +226,13 @@ public class Worlds implements CommandConstruct {
 
     if (strings.length == 3) {
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorldTypes();
+        return serviceContext.getTabCompleterService().getWorldTypes();
       }
     }
 
     if (strings.length == 4) {
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorldEnvironmentTypes();
+        return serviceContext.getTabCompleterService().getWorldEnvironmentTypes();
       }
     }
 
