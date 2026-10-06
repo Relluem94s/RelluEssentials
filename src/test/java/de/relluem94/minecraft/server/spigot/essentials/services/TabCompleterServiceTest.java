@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,14 +11,13 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.GroupDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
@@ -35,8 +33,6 @@ class TabCompleterServiceTest {
 
   @Mock
   private static QueryExecutor queryExecutor;
-
-  @Mock
   private static TabCompleterService tabCompleterService;
 
   @BeforeAll
@@ -61,17 +57,19 @@ class TabCompleterServiceTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(serviceContext.getWarpService()).thenReturn(warpService);
     when(relluEssentials.getServiceContext()).thenReturn(serviceContext);
+
+    BukkitRegistryAdapter bukkitRegistryAdapter = mock(BukkitRegistryAdapter.class);
+    tabCompleterService = new TabCompleterService(bukkitRegistryAdapter, serviceContext);
   }
 
   @Test
-  void constructorThrowsIllegalStateException() throws NoSuchMethodException {
-    Constructor<TabCompleterService> constructor = TabCompleterService.class.getDeclaredConstructor();
-    constructor.setAccessible(true);
+  void constructorCreatesInstanceSuccessfully() {
+    BukkitRegistryAdapter bukkitRegistryAdapter = mock(BukkitRegistryAdapter.class);
+    ServiceContext serviceContext = mock(ServiceContext.class);
 
-    InvocationTargetException thrownException = assertThrows(InvocationTargetException.class,
-        constructor::newInstance);
+    TabCompleterService instance = new TabCompleterService(bukkitRegistryAdapter, serviceContext);
 
-    assertInstanceOf(IllegalStateException.class, thrownException.getCause());
+    assertInstanceOf(TabCompleterService.class, instance);
   }
 
   @Test
