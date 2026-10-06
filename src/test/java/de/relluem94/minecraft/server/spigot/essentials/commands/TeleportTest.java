@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -18,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.Location;
@@ -47,6 +47,9 @@ class TeleportTest {
   private ServerService serverService;
 
   @Mock
+  private TabCompleterService tabCompleterService;
+
+  @Mock
   private BackService backService;
 
   @Mock
@@ -72,6 +75,7 @@ class TeleportTest {
     lenient().when(serviceContext.getServerService()).thenReturn(serverService);
     lenient().when(serviceContext.getBackService()).thenReturn(backService);
     lenient().when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     lenient().when(command.getName()).thenReturn("teleport");
   }
 
@@ -405,8 +409,8 @@ class TeleportTest {
   void onTabCompleteReturnsSubCommandsAndOnlinePlayersWhenOneArgProvided() {
     Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer.getName()).thenReturn("OnlinePlayer");
+    when(tabCompleterService.getCommands(teleport.getCommands())).thenReturn(List.of("accept", "to"));
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 
     List<String> result = teleport.onTabComplete(player, command, "teleport", new String[]{"partial"});
 
@@ -420,20 +424,19 @@ class TeleportTest {
   @Test
   void onTabCompleteExcludesSenderFromOnlinePlayersWhenOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(player)).when(serverService).getOnlinePlayers();
+    when(tabCompleterService.getCommands(teleport.getCommands())).thenReturn(List.of("accept", "to"));
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of());
 
     List<String> result = teleport.onTabComplete(player, command, "teleport", new String[]{"partial"});
 
     assertNotNull(result);
-    verify(serverService).getOnlinePlayers();
+    verify(tabCompleterService).getOnlinePlayerNames(player);
   }
 
   @Test
   void onTabCompleteReturnsOnlinePlayersWhenTwoArgsAndFirstArgIsTo() {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer.getName()).thenReturn("OnlinePlayer");
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 
     List<String> result = teleport.onTabComplete(player, command, "teleport", new String[]{"to", "partial"});
 
@@ -606,7 +609,6 @@ class TeleportTest {
   @Test
   void onTabCompleteExcludesSenderFromSuggestionsWhenTwoArgsAndFirstArgIsTo() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    doReturn(List.of(player)).when(serverService).getOnlinePlayers();
 
     List<String> result = teleport.onTabComplete(player, command, "teleport", new String[]{"to", "partial"});
 
