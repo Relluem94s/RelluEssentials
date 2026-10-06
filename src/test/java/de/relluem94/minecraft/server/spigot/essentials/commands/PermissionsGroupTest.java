@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Optional;
@@ -368,10 +369,10 @@ class PermissionsGroupTest {
     when(groupService.isSenderAuthorized(sender, "mod")).thenReturn(true);
     when(groupService.findAllGroups()).thenReturn(List.of(group1, group2));
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper> tabCompleterHelperMock =
-        Mockito.mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper.class)) {
+    try (MockedStatic<TabCompleterService> tabCompleterHelperMock =
+        Mockito.mockStatic(TabCompleterService.class)) {
       tabCompleterHelperMock.when(() ->
-              de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper.getGroups(List.of(group1, group2)))
+              serviceContext.getTabCompleterService().getGroups(List.of(group1, group2)))
           .thenReturn(List.of("mod", "admin"));
 
       List<String> result = permissionsGroup.onTabComplete(sender, command, "setGroup", new String[]{"Alice", "mo"});

@@ -80,7 +80,9 @@ public class RelluEssentials extends JavaPlugin {
     persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
     serviceContext.setServerService(new ServerService(this));
-    ServiceManager serviceManager = new ServiceManager();
+    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
+    bukkitRegistryAdapter.initializeGameRuleCache(this.getServer());
+    ServiceManager serviceManager = new ServiceManager(bukkitRegistryAdapter);
     serviceManager.preEnable(this);
     ConsoleCommandSender sender = getServer().getConsoleSender();
     setInstance(this);
@@ -131,8 +133,6 @@ public class RelluEssentials extends JavaPlugin {
     sender.sendMessage(PLUGIN_NAME_CONSOLE);
     sender.sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER);
 
-    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
-    bukkitRegistryAdapter.initializeGameRuleCache(this.getServer());
     worldManager = new WorldManager(bukkitRegistryAdapter);
     worldManager.enable(this);
     getServiceContext()

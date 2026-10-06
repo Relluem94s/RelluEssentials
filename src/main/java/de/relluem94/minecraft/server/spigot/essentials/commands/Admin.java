@@ -22,7 +22,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.admin.PluginInfo
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.TopCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -90,7 +89,7 @@ public class Admin implements CommandConstruct {
     }
     Player player = (Player) commandSender;
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
       return tabList;
     }
     if (strings.length == 2) {

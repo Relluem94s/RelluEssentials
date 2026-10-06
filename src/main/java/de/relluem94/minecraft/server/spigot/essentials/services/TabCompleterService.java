@@ -1,12 +1,12 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
@@ -15,24 +15,23 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Utility class providing helper methods for tab completion in commands. Supplies lists of valid
+ * Service class providing methods for tab completion in commands. Supplies lists of valid
  * values for various command arguments such as players, worlds, materials, weather types, and
  * protection flags.
  *
  * @author Relluem94
  */
-public class TabCompleterHelper {
+@AllArgsConstructor
+public class TabCompleterService {
 
-  private TabCompleterHelper() {
-    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
-  }
+  private final BukkitRegistryAdapter bukkitRegistryAdapter;
 
   /**
    * Returns a list of all available protection flag names.
    *
    * @return a {@link List} of protection flag names derived from {@link ProtectionFlags}
    */
-  public static @NotNull List<String> getProtectionFlags() {
+  public @NotNull List<String> getProtectionFlags() {
     List<String> protectionFlagList = new ArrayList<>();
     for (ProtectionFlags protectionFlag : ProtectionFlags.values()) {
       protectionFlagList.add(protectionFlag.toString());
@@ -47,7 +46,7 @@ public class TabCompleterHelper {
    * @param commandsEnums the array of {@link CommandsEnum} entries to extract names from
    * @return a {@link List} of command names
    */
-  public static @NotNull List<String> getCommands(CommandsEnum @NotNull [] commandsEnums) {
+  public @NotNull List<String> getCommands(CommandsEnum @NotNull [] commandsEnums) {
     List<String> commands = new ArrayList<>();
     for (CommandsEnum command : commandsEnums) {
       commands.add(command.getName());
@@ -62,7 +61,7 @@ public class TabCompleterHelper {
    * @param groupEntryList the list of {@link GroupEntry} objects to extract names from
    * @return a {@link List} of group names
    */
-  public static @NotNull List<String> getGroups(List<GroupEntry> groupEntryList) {
+  public @NotNull List<String> getGroups(List<GroupEntry> groupEntryList) {
     List<String> groups = new ArrayList<>();
 
     for (GroupEntry ge : groupEntryList) {
@@ -77,7 +76,7 @@ public class TabCompleterHelper {
    *
    * @return a {@link List} of world type names derived from {@link WorldType}
    */
-  public static @NotNull List<String> getWorldTypes() {
+  public @NotNull List<String> getWorldTypes() {
     List<String> worldTypes = new ArrayList<>();
 
     for (WorldType worldType : WorldType.values()) {
@@ -92,7 +91,7 @@ public class TabCompleterHelper {
    *
    * @return a {@link List} of environment type names derived from {@link World.Environment}
    */
-  public static @NotNull List<String> getWorldEnvironmentTypes() {
+  public @NotNull List<String> getWorldEnvironmentTypes() {
     List<String> worldTypes = new ArrayList<>();
 
     for (World.Environment worldEnvironmentType : World.Environment.values()) {
@@ -110,9 +109,8 @@ public class TabCompleterHelper {
    *               return all matching materials
    * @return a {@link List} of material names that are solid blocks and match the given filter
    */
-  public static @NotNull List<String> getMaterials(@Nullable String filter) {
+  public @NotNull List<String> getMaterials(@Nullable String filter) {
     List<String> materials = new ArrayList<>();
-    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
     for (Material material : bukkitRegistryAdapter.getAllMaterials()) {
       if (material.name().startsWith("LEGACY")) {
         continue;
@@ -135,7 +133,7 @@ public class TabCompleterHelper {
    *
    * @return a {@link List} of weather type names derived from {@link WeatherType}
    */
-  public static @NotNull List<String> getWeatherTypes() {
+  public @NotNull List<String> getWeatherTypes() {
     List<String> weatherTypes = new ArrayList<>();
 
     for (WeatherType weatherType : WeatherType.values()) {

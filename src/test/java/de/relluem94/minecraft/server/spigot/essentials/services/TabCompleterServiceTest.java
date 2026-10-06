@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -17,9 +17,6 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExe
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -34,10 +31,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TabCompleterHelperTest {
+class TabCompleterServiceTest {
 
   @Mock
   private static QueryExecutor queryExecutor;
+
+  @Mock
+  private static TabCompleterService tabCompleterService;
 
   @BeforeAll
   static void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -65,7 +65,7 @@ class TabCompleterHelperTest {
 
   @Test
   void constructorThrowsIllegalStateException() throws NoSuchMethodException {
-    Constructor<TabCompleterHelper> constructor = TabCompleterHelper.class.getDeclaredConstructor();
+    Constructor<TabCompleterService> constructor = TabCompleterService.class.getDeclaredConstructor();
     constructor.setAccessible(true);
 
     InvocationTargetException thrownException = assertThrows(InvocationTargetException.class,
@@ -76,7 +76,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getProtectionFlagsReturnsAllFlags() {
-    List<String> result = TabCompleterHelper.getProtectionFlags();
+    List<String> result = tabCompleterService.getProtectionFlags();
 
     assertEquals(ProtectionFlags.values().length, result.size());
     for (ProtectionFlags flag : ProtectionFlags.values()) {
@@ -86,7 +86,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getCommandsReturnsEmptyListWhenNoCommandsGiven() {
-    List<String> result = TabCompleterHelper.getCommands(new CommandsEnum[]{});
+    List<String> result = tabCompleterService.getCommands(new CommandsEnum[]{});
 
     assertTrue(result.isEmpty());
   }
@@ -98,7 +98,7 @@ class TabCompleterHelperTest {
     when(firstCommand.getName()).thenReturn("fly");
     when(secondCommand.getName()).thenReturn("home");
 
-    List<String> result = TabCompleterHelper.getCommands(
+    List<String> result = tabCompleterService.getCommands(
         new CommandsEnum[]{firstCommand, secondCommand});
 
     assertEquals(2, result.size());
@@ -108,7 +108,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getGroupsReturnsEmptyListWhenNoGroupsExist() {
-    List<String> result = TabCompleterHelper.getGroups(List.of());
+    List<String> result = tabCompleterService.getGroups(List.of());
 
     assertTrue(result.isEmpty());
   }
@@ -121,7 +121,7 @@ class TabCompleterHelperTest {
     GroupEntry userGroup = new GroupEntry();
     userGroup.setName("user");
 
-    List<String> result = TabCompleterHelper.getGroups(List.of(adminGroup, userGroup));
+    List<String> result = tabCompleterService.getGroups(List.of(adminGroup, userGroup));
 
     assertEquals(2, result.size());
     assertTrue(result.contains("admin"));
@@ -130,7 +130,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getWorldTypesReturnsAllWorldTypes() {
-    List<String> result = TabCompleterHelper.getWorldTypes();
+    List<String> result = tabCompleterService.getWorldTypes();
 
     assertEquals(WorldType.values().length, result.size());
     for (WorldType worldType : WorldType.values()) {
@@ -140,7 +140,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getWorldEnvironmentTypesReturnsAllEnvironments() {
-    List<String> result = TabCompleterHelper.getWorldEnvironmentTypes();
+    List<String> result = tabCompleterService.getWorldEnvironmentTypes();
 
     assertEquals(World.Environment.values().length, result.size());
     for (World.Environment environment : World.Environment.values()) {
@@ -150,7 +150,7 @@ class TabCompleterHelperTest {
 
   @Test
   void getWeatherTypesReturnsAllWeatherTypes() {
-    List<String> result = TabCompleterHelper.getWeatherTypes();
+    List<String> result = tabCompleterService.getWeatherTypes();
 
     assertEquals(WeatherType.values().length, result.size());
     for (WeatherType weatherType : WeatherType.values()) {

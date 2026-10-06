@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
@@ -151,7 +150,7 @@ public class PermissionsGroup implements CommandConstruct {
           .collect(Collectors.toList());
     }
 
-    return TabCompleterHelper.getGroups(serviceContext.getGroupService().findAllGroups());
+    return serviceContext.getTabCompleterService().getGroups(serviceContext.getGroupService().findAllGroups());
   }
 
   private void notifySenderAndTarget(@NotNull CommandSender sender, @NotNull GroupEntry g,

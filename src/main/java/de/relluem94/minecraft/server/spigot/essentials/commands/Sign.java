@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -96,7 +95,7 @@ public class Sign implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
     }
 
     return tabList;

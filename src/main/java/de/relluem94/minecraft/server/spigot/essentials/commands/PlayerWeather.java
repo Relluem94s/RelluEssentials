@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class PlayerWeather implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getWeatherTypes());
+      tabList.addAll(serviceContext.getTabCompleterService().getWeatherTypes());
       return tabList;
     }
 

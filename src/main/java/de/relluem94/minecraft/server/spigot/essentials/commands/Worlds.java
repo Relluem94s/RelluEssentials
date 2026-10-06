@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -209,7 +208,7 @@ public class Worlds implements CommandConstruct {
 
     if (strings.length == 1) {
       List<String> tabList = new ArrayList<>();
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
       tabList.addAll(
           serviceContext.getServerService().getWorlds().stream().map(World::getName).toList());
       return tabList;
@@ -229,13 +228,13 @@ public class Worlds implements CommandConstruct {
 
     if (strings.length == 3) {
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorldTypes();
+        return serviceContext.getTabCompleterService().getWorldTypes();
       }
     }
 
     if (strings.length == 4) {
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorldEnvironmentTypes();
+        return serviceContext.getTabCompleterService().getWorldEnvironmentTypes();
       }
     }
 

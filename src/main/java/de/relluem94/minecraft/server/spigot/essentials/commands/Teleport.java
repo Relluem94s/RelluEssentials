@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.rellulib.utils.TypeUtils;
@@ -316,7 +315,7 @@ public class Teleport implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(getCommands()));
       serviceContext.getServerService().getOnlinePlayers().stream()
           .filter(player -> !player.equals(commandSender)).map(Player::getName)
           .forEach(tabList::add);
