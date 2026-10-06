@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -111,8 +112,8 @@ public class TabCompleterHelper {
    */
   public static @NotNull List<String> getMaterials(@Nullable String filter) {
     List<String> materials = new ArrayList<>();
-
-    for (Material material : Material.values()) {
+    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
+    for (Material material : bukkitRegistryAdapter.getAllMaterials()) {
       if (material.name().startsWith("LEGACY")) {
         continue;
       }

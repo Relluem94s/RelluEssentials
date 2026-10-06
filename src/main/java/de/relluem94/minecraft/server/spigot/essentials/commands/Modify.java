@@ -159,7 +159,6 @@ public class Modify implements CommandConstruct {
     return tabList;
   }
 
-
   @Getter
   public enum Commands implements CommandsEnum {
 
