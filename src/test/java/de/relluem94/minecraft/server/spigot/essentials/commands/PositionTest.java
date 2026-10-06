@@ -16,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
@@ -47,6 +48,8 @@ class PositionTest {
   @Mock
   private MessageService messageService;
   @Mock
+  private TabCompleterService tabCompleterService;
+  @Mock
   private Player player;
   @Mock
   private CommandSender nonPlayerSender;
@@ -67,6 +70,7 @@ class PositionTest {
     lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
     lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
     lenient().when(serviceContext.getPositionService()).thenReturn(positionService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     lenient().when(world.getName()).thenReturn("world");
   }
 
@@ -623,6 +627,8 @@ class PositionTest {
   @Test
   void onTabCompleteFirstArgReturnsAllSubCommands() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(tabCompleterService.getCommands(Commands.values())).thenReturn(
+        List.of("set", "remove", "shift", "expand", "decrease", "clear"));
 
     List<String> result = positionCommand.onTabComplete(player, command, "position",
         new String[]{"c"});
