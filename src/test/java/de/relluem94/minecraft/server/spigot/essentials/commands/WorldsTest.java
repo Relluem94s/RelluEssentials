@@ -19,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
@@ -63,6 +64,8 @@ class WorldsTest {
   private WorldMenuService worldMenuService;
   @Mock
   private ServerService serverService;
+  @Mock
+  private TabCompleterService tabCompleterService;
   @Mock
   private Player player;
   @Mock
@@ -386,7 +389,16 @@ class WorldsTest {
     when(world.getName()).thenReturn("world");
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
     when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
     when(serverService.getWorlds()).thenReturn(List.of(world));
+    when(tabCompleterService.getCommands(Worlds.Commands.values()))
+        .thenReturn(List.of(
+            Worlds.Commands.CREATE.getName(),
+            Worlds.Commands.LOAD.getName(),
+            Worlds.Commands.LIST.getName(),
+            Worlds.Commands.UNLOAD.getName(),
+            Worlds.Commands.UNLOAD_NO_SAVE.getName()
+        ));
 
     List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"w"});
 
@@ -424,6 +436,8 @@ class WorldsTest {
   @Test
   void onTabCompleteThirdArgCreateReturnsWorldTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getWorldTypes()).thenReturn(List.of("NORMAL", "FLAT", "LARGE_BIOMES", "AMPLIFIED"));
 
     List<String> result = worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", ""});
 
@@ -433,6 +447,8 @@ class WorldsTest {
   @Test
   void onTabCompleteFourthArgCreateReturnsEnvironmentTypes() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
+    when(tabCompleterService.getWorldEnvironmentTypes()).thenReturn(List.of("NORMAL", "NETHER", "THE_END"));
 
     List<String> result =
         worlds.onTabComplete(player, command, "world", new String[] {"create", "myWorld", "FLAT", ""});
