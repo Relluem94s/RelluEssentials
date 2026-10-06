@@ -332,7 +332,7 @@ public class Admin implements CommandConstruct {
     CHAT("chat"),
     INFO("info"),
     LIGHT("light"),
-    NPC("npc", "create", "update", "delete", "dialogue"),
+    NPC("npc", "create", "update", "delete", "dialogue", "equip"),
     PING("ping"),
     TOP("top"),
     ADMIN_TOOLS("adminTools");
