@@ -3,6 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.List;
+import java.util.stream.Stream;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Answers;
 import org.mockito.Mock;
@@ -290,5 +295,38 @@ class ModifyTest {
       assertNotNull(cmd.getSubCommands());
       assertEquals(0, cmd.getSubCommands().length);
     }
+  }
+
+  static Stream<Arguments> plantTabCompleteInputs() {
+    return Stream.of(
+        Arguments.of("oak", "OAK", List.of("OAK_SAPLING")),
+        Arguments.of("", null, List.of("OAK_SAPLING", "BAMBOO"))
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("plantTabCompleteInputs")
+  void onTabCompleteReturnsPlantMaterialsForPlantCommand(String input, String expectedKey, List<String> expectedResult) {
+    when(serviceContext.getGroupService().isSenderAuthorized(player, "mod"))
+        .thenReturn(true);
+    when(serviceContext.getTabCompleterService().getMaterialsByPredicate(any(), eq(expectedKey)))
+        .thenReturn(expectedResult);
+
+    List<String> suggestions = modify.onTabComplete(player, command, "modify",
+        new String[]{Modify.Commands.PLANT.getName(), input});
+
+    assertNotNull(suggestions);
+    assertEquals(expectedResult, suggestions);
+  }
+
+  @Test
+  void onCommandReturnsTrueAndExecutesSubCommandWhenSubCommandIsKnown() {
+    when(serviceContext.getGroupService().isSenderAuthorized(player, "mod"))
+        .thenReturn(true);
+
+    boolean result = modify.onCommand(player, command, "modify", new String[]{Modify.Commands.UNDO.getName()});
+
+    assertTrue(result);
+    verify(player, org.mockito.Mockito.never()).sendMessage(any(String.class));
   }
 }
