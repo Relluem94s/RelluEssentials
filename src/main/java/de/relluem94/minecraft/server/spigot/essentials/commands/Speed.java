@@ -56,6 +56,7 @@ public class Speed implements CommandConstruct {
 
     if (!args[0].matches("^\\d+$")) {
       p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID));
+      return true;
     }
 
     float speed = parseSpeed(args[0]);
