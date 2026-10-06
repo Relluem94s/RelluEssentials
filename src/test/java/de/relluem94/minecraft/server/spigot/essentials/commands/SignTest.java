@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -232,5 +233,16 @@ class SignTest {
         sign.onTabComplete(player, command, "sign", new String[]{"e"});
 
     assertEquals(List.of("edit", "copy"), suggestions);
+  }
+
+  @Test
+  void onCommandDoesNotSendMessageWhenUnknownArgumentIsProvided() {
+    when(serviceContext.getGroupService().isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serviceContext.getPlayerService().getPlayerEntry(player)).thenReturn(new PlayerEntry());
+
+    boolean result = sign.onCommand(player, command, "sign", new String[]{"unknown"});
+
+    assertTrue(result);
+    verify(player, never()).sendMessage(any(String.class));
   }
 }
