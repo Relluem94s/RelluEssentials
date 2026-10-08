@@ -102,4 +102,16 @@ public class MobRegistry {
   public List<CustomMob> findAllSpawnedByDefinitionKey(RelluEssentialsNamespacedKey key) {
     return spawnedMobs.stream().filter(mob -> mob.getDefinitionKey().equals(key)).toList();
   }
+
+  /**
+   * Finds a spawned mob instance by its entity UUID.
+   *
+   * @param entityUuid the UUID of the entity to find
+   * @return an Optional containing the mob if found, otherwise empty
+   */
+  public Optional<CustomMob> findSpawnedMobByUuid(UUID entityUuid) {
+    return spawnedMobs.stream()
+        .filter(mob -> mob.getLivingEntity().getUniqueId().equals(entityUuid))
+        .findFirst();
+  }
 }

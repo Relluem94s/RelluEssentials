@@ -229,7 +229,7 @@ public class ServiceManager implements Enable {
     serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
         serviceContext.getPluginMetadataService()));
     serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter, serviceContext));
-    serviceContext.setMobService(new MobService(new MobRegistry()));
+    serviceContext.setMobService(new MobService(new MobRegistry(), serviceContext));
   }
 
   /**

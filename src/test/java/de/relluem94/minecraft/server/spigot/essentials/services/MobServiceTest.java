@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -12,6 +13,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsMobSpawnEvent;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMob;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobDefinition;
@@ -69,11 +72,18 @@ class MobServiceTest {
   @Mock
   private RelluEssentialsNamespacedKey definitionKey;
 
+  @Mock
+  private ServiceContext serviceContext;
+
+  @Mock
+  private PluginManagerService pluginManagerService;
+
   private MobService mobService;
 
   @BeforeEach
   void setUp() {
-    mobService = new MobService(mobRegistry);
+    lenient().when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+    mobService = new MobService(mobRegistry, serviceContext);
   }
 
   @Test
@@ -411,6 +421,55 @@ class MobServiceTest {
     mobService.spawnMob(definition, location);
 
     verify(persistentDataContainer, never()).set(any(), any(), any());
+  }
+
+  @Test
+  void findSpawnedMobByUuidReturnsCustomMobWhenFound() {
+    UUID uuid = UUID.randomUUID();
+    CustomMob mob = mock(CustomMob.class);
+    when(mobRegistry.findSpawnedMobByUuid(uuid)).thenReturn(Optional.of(mob));
+
+    Optional<CustomMob> result = mobService.findSpawnedMobByUuid(uuid);
+
+    assertTrue(result.isPresent());
+    assertEquals(mob, result.get());
+  }
+
+  @Test
+  void findSpawnedMobByUuidReturnsEmptyWhenNotFound() {
+    UUID uuid = UUID.randomUUID();
+    when(mobRegistry.findSpawnedMobByUuid(uuid)).thenReturn(Optional.empty());
+
+    Optional<CustomMob> result = mobService.findSpawnedMobByUuid(uuid);
+
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void spawnMobReturnsEmptyAndRemovesEntityWhenSpawnEventIsCancelled() {
+    setupFullSpawnMocks(10.0);
+    doAnswer(invocation -> {
+      RelluEssentialsMobSpawnEvent event = invocation.getArgument(0);
+      event.setCancelled(true);
+      return null;
+    }).when(pluginManagerService).callEvent(any(RelluEssentialsMobSpawnEvent.class));
+
+    Optional<CustomMob> result = mobService.spawnMob(definition, location);
+
+    assertTrue(result.isEmpty());
+    verify(livingEntity).remove();
+    verify(mobRegistry, never()).registerSpawnedMob(any());
+  }
+
+  @Test
+  void spawnMobRegistersAndReturnsCustomMobWhenSpawnEventIsNotCancelled() {
+    setupFullSpawnMocks(10.0);
+
+    Optional<CustomMob> result = mobService.spawnMob(definition, location);
+
+    assertTrue(result.isPresent());
+    verify(livingEntity, never()).remove();
+    verify(mobRegistry).registerSpawnedMob(any(CustomMob.class));
   }
 
   private List<CustomMob> createMockMobList(int size) {
