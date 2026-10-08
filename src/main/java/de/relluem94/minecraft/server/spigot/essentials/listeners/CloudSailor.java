@@ -54,14 +54,16 @@ public class CloudSailor implements ListenerConstruct {
   @EventHandler
   public void mobDeath(@NonNull EntityDeathEvent event) {
     LivingEntity e = event.getEntity();
-    if (e instanceof Chicken) {
-      int i = random.nextInt(150);
+    if (!(e instanceof Chicken)) {
+      return;
+    }
 
-      if (i == 19 || i == 94) {
-        event.getDrops().clear();
-        event.setDroppedExp(30);
-        event.getDrops().add(cloudSailorItem.toItemStack());
-      }
+    int i = random.nextInt(150);
+
+    if (i == 19 || i == 94) {
+      event.getDrops().clear();
+      event.setDroppedExp(30);
+      event.getDrops().add(cloudSailorItem.toItemStack());
     }
   }
 
