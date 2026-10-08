@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -50,16 +51,23 @@ public class NpcTradeHandler {
   private final CustomItem coinsItem;
   private final BuyBackSlotResolver buyBackSlotResolver;
   private final ServiceContext serviceContext;
+  private final NamespacedKey buyPriceKey;
+  private final NamespacedKey sellPriceKey;
 
   /**
-   * Creates a new {@code NpcTradeHandler} and resolves all required GUI items from the
-   * item service.
+   * Creates a new {@code NpcTradeHandler} with explicitly provided {@link org.bukkit.NamespacedKey}
+   * instances for buy and sell price lookups.
+   *
+   * <p>Intended for use in tests where static key creation via
+   * {@link de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants}
+   * is not available due to the absence of a real Bukkit plugin instance.</p>
    *
    * @param serviceContext the service context providing access to all required services
-   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the
-   *     item service
+   * @param buyPriceKey    the namespaced key used to read buy prices from item persistent data
+   * @param sellPriceKey   the namespaced key used to read and write sell prices from item
+   *                       persistent data
    */
-  public NpcTradeHandler(ServiceContext serviceContext) {
+  NpcTradeHandler(ServiceContext serviceContext, NamespacedKey buyPriceKey, NamespacedKey sellPriceKey) {
     this.disabledItem = serviceContext.getItemService().find(
         new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
             PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
@@ -73,6 +81,20 @@ public class NpcTradeHandler {
     this.buyBackSlotResolver = new BuyBackSlotResolver(serviceContext.getBuyBackService(),
         this.disabledItem.toItemStack());
     this.serviceContext = serviceContext;
+    this.buyPriceKey = buyPriceKey;
+    this.sellPriceKey = sellPriceKey;
+  }
+
+  /**
+   * Creates a new {@code NpcTradeHandler} and resolves all required GUI items from the
+   * item service.
+   *
+   * @param serviceContext the service context providing access to all required services
+   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the
+   *     item service
+   */
+  public NpcTradeHandler(ServiceContext serviceContext) {
+    this(serviceContext, itemBuyPrice(), itemSellPrice());
   }
 
   /**
@@ -138,13 +160,13 @@ public class NpcTradeHandler {
     }
 
     Integer buyPrice =
-        itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)
-            ? itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER)
+        itemMeta.getPersistentDataContainer().has(buyPriceKey, PersistentDataType.INTEGER)
+            ? itemMeta.getPersistentDataContainer().get(buyPriceKey, PersistentDataType.INTEGER)
             : null;
 
     Integer sellPrice =
-        itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)
-            ? itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER)
+        itemMeta.getPersistentDataContainer().has(sellPriceKey, PersistentDataType.INTEGER)
+            ? itemMeta.getPersistentDataContainer().get(sellPriceKey, PersistentDataType.INTEGER)
             : null;
 
     if (buyPrice == null || sellPrice == null) {
@@ -263,8 +285,8 @@ public class NpcTradeHandler {
   }
 
   private Integer resolveBuyPrice(ItemStack item, @NonNull ItemMeta meta) {
-    if (meta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)) {
-      return meta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
+    if (meta.getPersistentDataContainer().has(buyPriceKey, PersistentDataType.INTEGER)) {
+      return meta.getPersistentDataContainer().get(buyPriceKey, PersistentDataType.INTEGER);
     }
 
     Optional<Integer> enchantmentBuyPrice = serviceContext.getEnchantmentService()
@@ -280,8 +302,8 @@ public class NpcTradeHandler {
   }
 
   private Integer resolveSellPrice(ItemStack item, @NonNull ItemMeta meta) {
-    if (meta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)) {
-      return meta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER);
+    if (meta.getPersistentDataContainer().has(sellPriceKey, PersistentDataType.INTEGER)) {
+      return meta.getPersistentDataContainer().get(sellPriceKey, PersistentDataType.INTEGER);
     }
 
     Optional<Integer> enchantmentSellPrice = serviceContext.getEnchantmentService()
@@ -377,7 +399,7 @@ public class NpcTradeHandler {
       return;
     }
     targetMeta.getPersistentDataContainer()
-        .set(itemSellPrice(), PersistentDataType.INTEGER, sellPrice);
+        .set(sellPriceKey, PersistentDataType.INTEGER, sellPrice);
     targetItem.setItemMeta(targetMeta);
   }
 
@@ -394,7 +416,7 @@ public class NpcTradeHandler {
     boolean isRegisteredItem = serviceContext.getItemService().findByItemStack(item).isPresent()
         || serviceContext.getEnchantmentService().findByBookItemStack(item).isPresent() || (
         meta != null && meta.getPersistentDataContainer()
-            .has(itemSellPrice(), PersistentDataType.INTEGER));
+            .has(sellPriceKey, PersistentDataType.INTEGER));
 
     if (!isRegisteredItem) {
       if (meta == null) {

@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -82,6 +83,9 @@ class NpcTradeHandlerTest {
   @Mock
   private Location location;
 
+  private NamespacedKey buyPriceKey;
+  private NamespacedKey sellPriceKey;
+
   private PlayerEntry playerEntry;
   private NpcTradeHandler npcTradeHandler;
 
@@ -107,7 +111,10 @@ class NpcTradeHandlerTest {
     playerEntry.setId(1);
     playerEntry.setPurse(1000.0);
 
-    npcTradeHandler = new NpcTradeHandler(serviceContext) {
+    buyPriceKey = NamespacedKey.fromString("relluessentials:buy_price");
+    sellPriceKey = NamespacedKey.fromString("relluessentials:sell_price");
+
+    npcTradeHandler = new NpcTradeHandler(serviceContext, buyPriceKey, sellPriceKey) {
       @Override
       protected boolean isChestInventory(Inventory inventory) {
         return testIsChestInventory;
@@ -768,9 +775,9 @@ class NpcTradeHandlerTest {
     when(playerInventory.firstEmpty()).thenReturn(0);
     when(regularItem.clone()).thenReturn(regularItem);
     when(itemMeta.getLore()).thenReturn(null);
-    when(player.getOpenInventory()).thenReturn(inventoryView);
-    when(inventoryView.getTopInventory()).thenReturn(topInventory);
-    when(buyBackService.hasBuyBackItems(player)).thenReturn(false);
+    lenient().when(player.getOpenInventory()).thenReturn(inventoryView);
+    lenient().when(inventoryView.getTopInventory()).thenReturn(topInventory);
+    lenient().when(buyBackService.hasBuyBackItems(player)).thenReturn(false);
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BUY), any(), any(), any(), any(),
         any())).thenReturn("Bought!");
 
