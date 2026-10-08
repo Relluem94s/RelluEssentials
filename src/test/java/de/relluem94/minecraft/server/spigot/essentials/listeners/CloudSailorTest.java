@@ -463,8 +463,6 @@ class CloudSailorTest {
   void onSailDoesNothingWhenPlayerIsFlying() {
     stubWorldSettingActive(true);
     stubBlockLocationsDifferent();
-    when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getItemInOffHand()).thenReturn(cloudSailorItemStack);
     when(player.isFlying()).thenReturn(true);
 
     listener.onSail(playerMoveEvent);
@@ -476,8 +474,6 @@ class CloudSailorTest {
   void onSailDoesNothingWhenPlayerIsSneaking() {
     stubWorldSettingActive(true);
     stubBlockLocationsDifferent();
-    when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getItemInOffHand()).thenReturn(cloudSailorItemStack);
     when(player.isFlying()).thenReturn(false);
     when(player.isSneaking()).thenReturn(true);
 
@@ -559,6 +555,22 @@ class CloudSailorTest {
 
     verify(player, never()).setVelocity(any());
     verify(world, never()).playEffect(any(), any(), anyInt());
+  }
+
+  @Test
+  void onSailDoesNothingWhenPlayerWearingOtherBootsAndNotHoldingCloudSailor() {
+    ItemStack otherBoots = Mockito.mock(ItemStack.class);
+    ItemStack otherOffHandItem = Mockito.mock(ItemStack.class);
+
+    stubWorldSettingActive(true);
+    stubBlockLocationsDifferent();
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getItemInOffHand()).thenReturn(otherOffHandItem);
+    when(playerInventory.getBoots()).thenReturn(otherBoots);
+
+    listener.onSail(playerMoveEvent);
+
+    verify(player, never()).setVelocity(any());
   }
 
   @Test

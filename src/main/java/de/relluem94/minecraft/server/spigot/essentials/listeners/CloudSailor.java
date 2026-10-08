@@ -126,31 +126,45 @@ public class CloudSailor implements ListenerConstruct {
     Player p = e.getPlayer();
     boolean useCloudSailor = serviceContext.getWorldGroupService()
         .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
-    if (useCloudSailor) {
-      if (e.getTo() != null && !e.getFrom().getBlock().getLocation()
-          .equals(e.getTo().getBlock().getLocation())) {
-        if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
-            || p.getInventory().getBoots() != null && p.getInventory().getBoots()
-            .equals(cloudBoots.toItemStack())) {
-          if (!p.isFlying() && !p.isSneaking()) {
 
-            List<Block> blocks = new ArrayList<>();
-            blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
+    if (!useCloudSailor) {
+      return;
+    }
 
-            blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
+    if (e.getTo() == null) {
+      return;
+    }
 
-            if (areBlocksMaterial(blocks, Material.AIR)) {
-              Vector dir = p.getLocation().getDirection().multiply(0.5);
-              Vector vec = new Vector(dir.getX(), -0.001D, dir.getZ());
-              p.setVelocity(vec);
-              p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 1);
-            }
-          }
-        }
+    if (e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
+      return;
+    }
+
+    if (p.isFlying()) {
+      return;
+    }
+
+    if (p.isSneaking()) {
+      return;
+    }
+
+    if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
+        || p.getInventory().getBoots() != null && p.getInventory().getBoots()
+        .equals(cloudBoots.toItemStack())) {
+
+      List<Block> blocks = new ArrayList<>();
+      blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
+
+      blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
+
+      if (areBlocksMaterial(blocks, Material.AIR)) {
+        Vector dir = p.getLocation().getDirection().multiply(0.5);
+        Vector vec = new Vector(dir.getX(), -0.001D, dir.getZ());
+        p.setVelocity(vec);
+        p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 1);
       }
     }
   }
