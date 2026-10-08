@@ -55,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.InventoryService
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MobService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
@@ -227,6 +228,7 @@ public class ServiceManager implements Enable {
     serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
         serviceContext.getPluginMetadataService()));
     serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter, serviceContext));
+    serviceContext.setMobService(new MobService());
   }
 
   /**
