@@ -158,10 +158,10 @@ public class NpcTradeHandler {
 
     int amount = clickedItem.getAmount();
 
-    if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+    if (isChestInventory(clickedInventory)) {
       handleBuy(clickedItem, player, playerEntry, buyPrice, itemDisplayName,
           isRightClick ? 64 : amount, slot);
-    } else if (clickedInventory.getType().equals(InventoryType.PLAYER)) {
+    } else if (isPlayerInventory(clickedInventory)) {
       handleSell(clickedItem, player, playerEntry, sellPrice, itemDisplayName, slot, isRightClick);
     }
   }
@@ -228,10 +228,10 @@ public class NpcTradeHandler {
     String itemDisplayName = resolveItemDisplayName(clickedItem);
     int amount = clickedItem.getAmount();
 
-    if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+    if (isChestInventory(clickedInventory)) {
       handleBuy(clickedItem, player, playerEntry, buyPrice, itemDisplayName,
           isRightClick ? 64 : amount, slot);
-    } else if (clickedInventory.getType().equals(InventoryType.PLAYER)) {
+    } else if (isPlayerInventory(clickedInventory)) {
       handleSell(clickedItem, player, playerEntry, sellPrice, itemDisplayName, slot, isRightClick);
     }
   }
@@ -466,5 +466,13 @@ public class NpcTradeHandler {
       }
     }
     return totalAmount;
+  }
+
+  protected boolean isChestInventory(Inventory inventory) {
+    return inventory.getType().equals(InventoryType.CHEST);
+  }
+
+  protected boolean isPlayerInventory(Inventory inventory) {
+    return inventory.getType().equals(InventoryType.PLAYER);
   }
 }
