@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.mobs;
 
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.UUID;
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
@@ -17,17 +18,21 @@ public class CustomMob {
   private final UUID entityUuid;
   private final EntityType entityType;
   private final LivingEntity livingEntity;
+  private final RelluEssentialsNamespacedKey definitionKey;
 
   /**
    * Creates a new CustomMob from a spawned LivingEntity.
    *
    * @param livingEntity the already spawned entity this CustomMob wraps
    * @param entityType   the type of the spawned entity
+   * @param definitionKey the namespaced key referencing the definition this mob was spawned from
    */
-  public CustomMob(@NonNull LivingEntity livingEntity, @NonNull EntityType entityType) {
+  public CustomMob(@NonNull LivingEntity livingEntity, @NonNull EntityType entityType,
+      @NonNull RelluEssentialsNamespacedKey definitionKey) {
     this.livingEntity = livingEntity;
     this.entityUuid = livingEntity.getUniqueId();
     this.entityType = entityType;
+    this.definitionKey = definitionKey;
   }
 
   /**
