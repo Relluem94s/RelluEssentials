@@ -77,7 +77,7 @@ public class CloudSailor implements ListenerConstruct {
       return;
     }
 
-    if(!cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())){
+    if (!cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
       return;
     }
 
