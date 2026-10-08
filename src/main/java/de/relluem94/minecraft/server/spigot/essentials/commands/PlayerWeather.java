@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
@@ -18,6 +17,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation that allows players to set their personal weather type.
+ *
+ * <p>Requires the sender to be a player with at least "vip" group authorization.
+ * Accepts a single {@link org.bukkit.WeatherType} argument to apply the weather effect
+ * exclusively to the executing player.
+ *
+ * @author rellu
+ */
 @CommandName("playerweather")
 public class PlayerWeather implements CommandConstruct {
 
@@ -81,14 +89,12 @@ public class PlayerWeather implements CommandConstruct {
       return tabList;
     }
 
-    Player p = (Player) commandSender;
-
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "vip")) {
       return tabList;
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getWeatherTypes());
+      tabList.addAll(serviceContext.getTabCompleterService().getWeatherTypes());
       return tabList;
     }
 

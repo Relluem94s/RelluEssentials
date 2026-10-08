@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
-import com.google.common.collect.Multimap;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ItemAttribute;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +26,6 @@ class CustomEnchantmentTest {
 
   @Mock
   private NamespacedKey namespacedKey;
-
-  @Mock
-  private Multimap<Attribute, AttributeModifier> attributes;
 
   private CustomEnchantment customEnchantment;
 
@@ -60,13 +57,16 @@ class CustomEnchantmentTest {
     Field enchantNameField = CustomEnchantment.class.getDeclaredField("enchantName");
     enchantNameField.setAccessible(true);
 
-    Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
-    attributesField.setAccessible(true);
+    Field itemAttributesField = CustomEnchantment.class.getDeclaredField("itemAttributes");
+    itemAttributesField.setAccessible(true);
 
-    assertAll(() -> assertNull(loreField.get(customEnchantment)), () -> assertNull(rarityField.get(customEnchantment)),
-        () -> assertNull(targetField.get(customEnchantment)), () -> assertNull(levelField.get(customEnchantment)),
+    assertAll(
+        () -> assertNull(loreField.get(customEnchantment)),
+        () -> assertNull(rarityField.get(customEnchantment)),
+        () -> assertNull(targetField.get(customEnchantment)),
+        () -> assertNull(levelField.get(customEnchantment)),
         () -> assertNull(enchantNameField.get(customEnchantment)),
-        () -> assertNull(attributesField.get(customEnchantment)));
+        () -> assertNull(itemAttributesField.get(customEnchantment)));
   }
 
   @Test
@@ -77,7 +77,8 @@ class CustomEnchantmentTest {
     Field actualLevelField = CustomEnchantment.class.getDeclaredField("actualLevel");
     actualLevelField.setAccessible(true);
 
-    assertAll(() -> assertEquals(0.0, (double) multiplyField.get(customEnchantment)),
+    assertAll(
+        () -> assertEquals(0.0, (double) multiplyField.get(customEnchantment)),
         () -> assertEquals(0, (int) actualLevelField.get(customEnchantment)));
   }
 
@@ -100,18 +101,20 @@ class CustomEnchantmentTest {
   }
 
   @Test
-  void getAttributesReturnsAssignedAttributes() throws Exception {
-    Field attributesField = CustomEnchantment.class.getDeclaredField("attributes");
-    attributesField.setAccessible(true);
-    attributesField.set(customEnchantment, attributes);
+  void getItemAttributesReturnsAssignedAttributes() throws Exception {
+    List<ItemAttribute> itemAttributes = new ArrayList<>();
+    itemAttributes.add(mock(ItemAttribute.class));
 
-    assertEquals(attributes, customEnchantment.getAttributes());
+    Field itemAttributesField = CustomEnchantment.class.getDeclaredField("itemAttributes");
+    itemAttributesField.setAccessible(true);
+    itemAttributesField.set(customEnchantment, itemAttributes);
+
+    assertEquals(itemAttributes, customEnchantment.getItemAttributes());
   }
 
   @Test
   void getKeyReturnsNullWhenConstructedWithNull() {
     CustomEnchantment enchantmentWithNullKey = new CustomEnchantment(null);
-
     assertNull(enchantmentWithNullKey.getKey());
   }
 
@@ -120,7 +123,8 @@ class CustomEnchantmentTest {
     NamespacedKey anotherKey = mock(NamespacedKey.class);
     CustomEnchantment anotherEnchantment = new CustomEnchantment(anotherKey);
 
-    assertAll(() -> assertEquals(anotherKey, anotherEnchantment.getKey()),
+    assertAll(
+        () -> assertEquals(anotherKey, anotherEnchantment.getKey()),
         () -> assertNotEquals(namespacedKey, anotherEnchantment.getKey()));
   }
 

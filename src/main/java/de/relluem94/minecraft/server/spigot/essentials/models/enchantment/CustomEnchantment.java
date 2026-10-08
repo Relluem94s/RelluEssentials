@@ -1,13 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.enchantment;
 
-import com.google.common.collect.Multimap;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ItemAttribute;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
+import java.util.List;
 import lombok.Getter;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 
+/**
+ * Represents a custom enchantment with configurable attributes, rarity, and level information.
+ *
+ * @author rellu
+ */
 public class CustomEnchantment {
 
   @Getter
@@ -20,11 +24,15 @@ public class CustomEnchantment {
   protected EnchantLevel level;
   protected EnchantName enchantName;
   @Getter
-  protected Multimap<Attribute, AttributeModifier> attributes;
-  @SuppressWarnings("unused")
+  protected List<ItemAttribute> itemAttributes;
   protected double multiply;
   protected int actualLevel;
 
+  /**
+   * Creates a new {@link CustomEnchantment} with the given {@link NamespacedKey}.
+   *
+   * @param key the unique {@link NamespacedKey} identifying this enchantment
+   */
   public CustomEnchantment(NamespacedKey key) {
     this.key = key;
   }

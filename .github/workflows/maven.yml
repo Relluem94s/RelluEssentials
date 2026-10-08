@@ -13,7 +13,6 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
 
 jobs:
   build:
@@ -35,6 +34,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Generate JaCoCo Badge
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       id: jacoco
       uses: cicirello/jacoco-badge-generator@v2.12.1
       with:
@@ -43,24 +43,29 @@ jobs:
         badges-directory: .github/badges
 
     - name: Log coverage percentage
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         echo "coverage = ${{ steps.jacoco.outputs.coverage}}"
         echo "branches = ${{ steps.jacoco.outputs.branches}}"
 
     - name: Stage badge files
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: git add .github/badges
 
     - name: Create new badges branch
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         git checkout -B badges
 
     - name: Commit coverage badges
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         git config --global user.name 'github-actions'
         git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
         git commit -m "Added coverage badges" -a || echo "Nothing to commit"
 
     - name: Push badges branch (force overwrite)
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

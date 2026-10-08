@@ -45,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.migration.Config
 import java.io.File;
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -149,6 +150,8 @@ public class DatabaseManager implements Enable {
 
   private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext,
       QueryExecutor queryExecutor, File dataFolder) {
+    ConsoleCommandSender consoleSender = serviceContext.getServerService().getConsoleSender();
+
     DatabaseMigrator databaseMigrator = new DatabaseMigrator(
         persistenceContext,
         queryExecutor,
@@ -159,7 +162,8 @@ public class DatabaseManager implements Enable {
             service.applyPatchedInformation(patchedInformation);
           }
         },
-        new ConfigMigrationService(dataFolder, serviceContext)
+        new ConfigMigrationService(dataFolder, serviceContext),
+        consoleSender
     );
 
     databaseMigrator.applyPatch(databaseMigrator.loadPluginInformation().getDbVersion());

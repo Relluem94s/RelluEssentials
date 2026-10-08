@@ -19,7 +19,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ShowPlayerSt
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ToggleDamageInfoCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -53,7 +52,7 @@ public class DevCommand implements CommandConstruct {
     this.serviceContext = context;
     subCommandRegistry = new SubCommandRegistry<>(
         List.of(
-            new CustomMobCommand(),
+            new CustomMobCommand(context),
             new RotateTestCommand(context),
             new DevPlattformCommand(context),
             new GivePickaxeCommand(context),
@@ -128,12 +127,13 @@ public class DevCommand implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
       return tabList;
     }
 
     return tabList;
   }
+
   /**
    * Defines the available sub-commands for the dev command.
    * Each entry represents a distinct dev mode.

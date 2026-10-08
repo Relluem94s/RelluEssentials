@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEn
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +51,9 @@ class AdminTest {
   private ServerService serverService;
 
   @Mock
+  private TabCompleterService tabCompleterService;
+
+  @Mock
   private NpcService npcService;
 
   @Mock
@@ -75,6 +78,7 @@ class AdminTest {
     lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
     lenient().when(serviceContext.getServerService()).thenReturn(serverService);
     lenient().when(serviceContext.getNpcService()).thenReturn(npcService);
+    lenient().when(serviceContext.getTabCompleterService()).thenReturn(tabCompleterService);
   }
 
   @Test
@@ -118,7 +122,7 @@ class AdminTest {
   @Test
   void commandsEnumNpcHasCorrectNameAndSubCommands() {
     assertEquals("npc", Admin.Commands.NPC.getName());
-    assertEquals(4, Admin.Commands.NPC.getSubCommands().length);
+    assertEquals(5, Admin.Commands.NPC.getSubCommands().length);
   }
 
   @Test
@@ -205,6 +209,8 @@ class AdminTest {
   @Test
   void onTabCompleteReturnsAllCommandsWhenOneArgProvided() {
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(tabCompleterService.getCommands(Admin.Commands.values()))
+        .thenReturn(List.of("afk", "cleanProtections", "cleanLocations", "chat", "info", "light", "npc", "ping", "top", "adminTools"));
 
     List<String> result = admin.onTabComplete(player, command, "admin", new String[]{"a"});
 
@@ -214,10 +220,8 @@ class AdminTest {
 
   @Test
   void onTabCompleteReturnsOnlinePlayersWhenTwoArgsAndFirstArgIsPing() {
-    Player onlinePlayer = mock(Player.class);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
-    when(onlinePlayer.getName()).thenReturn("OnlinePlayer");
+    when(tabCompleterService.getOnlinePlayerNames(player)).thenReturn(List.of("OnlinePlayer"));
 
     List<String> result = admin.onTabComplete(player, command, "admin", new String[]{"ping", "partial"});
 

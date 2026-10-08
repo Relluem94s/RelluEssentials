@@ -54,50 +54,70 @@ public class CloudSailor implements ListenerConstruct {
   @EventHandler
   public void mobDeath(@NonNull EntityDeathEvent event) {
     LivingEntity e = event.getEntity();
-    if (e instanceof Chicken) {
-      int i = random.nextInt(150);
+    if (!(e instanceof Chicken)) {
+      return;
+    }
 
-      if (i == 19 || i == 94) {
-        event.getDrops().clear();
-        event.setDroppedExp(30);
-        event.getDrops().add(cloudSailorItem.toItemStack());
-      }
+    int i = random.nextInt(150);
+
+    if (i == 19 || i == 94) {
+      event.getDrops().clear();
+      event.setDroppedExp(30);
+      event.getDrops().add(cloudSailorItem.toItemStack());
     }
   }
 
   @EventHandler
   public void cloudBootsCrafting(@NonNull PrepareItemCraftEvent e) {
-    if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta()
-        && cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
-      for (ItemStack is : e.getInventory().getMatrix()) {
-        if (is != null) {
-          if (is.hasItemMeta()) {
-            if (!cloudSailorItem.toItemStack().isSimilar(is)) {
-              e.getInventory().setResult(null);
-            }
-          } else {
-            e.getInventory().setResult(null);
-          }
-        }
+    if (e.getRecipe() == null) {
+      return;
+    }
+
+    if (!e.getRecipe().getResult().hasItemMeta()) {
+      return;
+    }
+
+    if (!cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
+      return;
+    }
+
+    for (ItemStack is : e.getInventory().getMatrix()) {
+      if (is == null) {
+        continue;
+      }
+
+      if (!is.hasItemMeta()) {
+        e.getInventory().setResult(null);
+        continue;
+      }
+
+      if (!cloudSailorItem.toItemStack().isSimilar(is)) {
+        e.getInventory().setResult(null);
       }
     }
   }
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFallDamage(@NonNull EntityDamageEvent e) {
-    if (e.getEntity() instanceof Player p) {
-      boolean useCloudSailor = serviceContext.getWorldGroupService()
-          .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
-      if (useCloudSailor) {
-        if (e.getCause().equals(DamageCause.FALL)) {
-          if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
-              .equals(cloudBoots.toItemStack())) {
-            e.setCancelled(true);
-          } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
-            e.setDamage(e.getDamage() / 2);
-          }
-        }
-      }
+    if (!(e.getEntity() instanceof Player p)) {
+      return;
+    }
+
+    boolean useCloudSailor = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+    if (!useCloudSailor) {
+      return;
+    }
+
+    if (!e.getCause().equals(DamageCause.FALL)) {
+      return;
+    }
+
+    if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
+        .equals(cloudBoots.toItemStack())) {
+      e.setCancelled(true);
+    } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
+      e.setDamage(e.getDamage() / 2);
     }
   }
 
@@ -106,31 +126,45 @@ public class CloudSailor implements ListenerConstruct {
     Player p = e.getPlayer();
     boolean useCloudSailor = serviceContext.getWorldGroupService()
         .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
-    if (useCloudSailor) {
-      if (e.getTo() != null && !e.getFrom().getBlock().getLocation()
-          .equals(e.getTo().getBlock().getLocation())) {
-        if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
-            || p.getInventory().getBoots() != null && p.getInventory().getBoots()
-            .equals(cloudBoots.toItemStack())) {
-          if (!p.isFlying() && !p.isSneaking()) {
 
-            List<Block> blocks = new ArrayList<>();
-            blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
+    if (!useCloudSailor) {
+      return;
+    }
 
-            blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
-            blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
+    if (e.getTo() == null) {
+      return;
+    }
 
-            if (areBlocksMaterial(blocks, Material.AIR)) {
-              Vector dir = p.getLocation().getDirection().multiply(0.5);
-              Vector vec = new Vector(dir.getX(), -0.001D, dir.getZ());
-              p.setVelocity(vec);
-              p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 1);
-            }
-          }
-        }
+    if (e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
+      return;
+    }
+
+    if (p.isFlying()) {
+      return;
+    }
+
+    if (p.isSneaking()) {
+      return;
+    }
+
+    if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
+        || p.getInventory().getBoots() != null && p.getInventory().getBoots()
+        .equals(cloudBoots.toItemStack())) {
+
+      List<Block> blocks = new ArrayList<>();
+      blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
+
+      blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
+      blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
+
+      if (areBlocksMaterial(blocks, Material.AIR)) {
+        Vector dir = p.getLocation().getDirection().multiply(0.5);
+        Vector vec = new Vector(dir.getX(), -0.001D, dir.getZ());
+        p.setVelocity(vec);
+        p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 1);
       }
     }
   }

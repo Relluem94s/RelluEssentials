@@ -19,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentReg
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.MobRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PositionRegistry;
@@ -55,6 +56,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.InventoryService
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MobService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
@@ -66,6 +68,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionServic
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -74,6 +77,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
+import lombok.AllArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
@@ -82,7 +86,10 @@ import org.bukkit.plugin.Plugin;
  * responsible for instantiating repositories, registries, and services, and wiring them together
  * into the {@link ServiceContext}.
  */
+@AllArgsConstructor
 public class ServiceManager implements Enable {
+
+  private final BukkitRegistryAdapter bukkitRegistryAdapter;
 
   @Override
   public void enable(Plugin plugin) {
@@ -221,6 +228,8 @@ public class ServiceManager implements Enable {
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
     serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
         serviceContext.getPluginMetadataService()));
+    serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter, serviceContext));
+    serviceContext.setMobService(new MobService(new MobRegistry(), serviceContext));
   }
 
   /**
@@ -243,6 +252,6 @@ public class ServiceManager implements Enable {
     serviceContext.setItemService(new ItemService(new ItemRegistry()));
     serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
     serviceContext.setEnchantmentService(
-        new EnchantmentService(new EnchantmentRegistry(new BukkitRegistryAdapter())));
+        new EnchantmentService(new EnchantmentRegistry(bukkitRegistryAdapter)));
   }
 }

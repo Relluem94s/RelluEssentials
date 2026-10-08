@@ -22,7 +22,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.admin.PluginInfo
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.TopCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -41,6 +40,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command handler for the /admin command.
+ *
+ * <p>Provides administrative functionality including NPC management, chat cleanup,
+ * location cleanup, protection cleanup, AFK simulation, light toggling, ping checks,
+ * plugin information and admin tools. Requires at least moderator group authorization.</p>
+ *
+ * @author rellu
+ */
 @CommandName("admin")
 public class Admin implements CommandConstruct {
 
@@ -90,16 +98,15 @@ public class Admin implements CommandConstruct {
     }
     Player player = (Player) commandSender;
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext.getTabCompleterService().getCommands(Commands.values()));
       return tabList;
     }
     if (strings.length == 2) {
       if (Commands.PING.getName().equalsIgnoreCase(strings[0])) {
-        tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
-            .map(Player::getName).toList());
+        tabList.addAll(serviceContext.getTabCompleterService().getOnlinePlayerNames(commandSender));
       }
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
-        tabList.addAll(List.of("create", "update", "delete", "dialogue", "equip"));
+        tabList.addAll(List.of(Commands.NPC.subCommands));
       }
       return tabList;
     }
@@ -314,7 +321,7 @@ public class Admin implements CommandConstruct {
    * Represents all available sub-commands for the /admin command.
    *
    * <p>Each entry defines the primary command name and optional nested sub-command names
-   * that are used for tab completion and command routing.
+   * that are used for tab completion and command routing.</p>
    */
   @Getter
   public enum Commands implements CommandsEnum {
@@ -325,7 +332,7 @@ public class Admin implements CommandConstruct {
     CHAT("chat"),
     INFO("info"),
     LIGHT("light"),
-    NPC("npc", "create", "update", "delete", "dialogue"),
+    NPC("npc", "create", "update", "delete", "dialogue", "equip"),
     PING("ping"),
     TOP("top"),
     ADMIN_TOOLS("adminTools");

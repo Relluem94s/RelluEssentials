@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +30,7 @@ public class CloneWorldCommand implements SubCommand {
   @Override
   public void execute(Player player, String[] args) {
     try {
-      WorldHelper.cloneWorld("world2", "world");
+      serviceContext.getServerService().cloneWorld("world2", "world");
     } catch (WorldNotFoundException ex) {
       Logger.getLogger(CloneWorldCommand.class.getName()).log(Level.SEVERE, null, ex);
     }

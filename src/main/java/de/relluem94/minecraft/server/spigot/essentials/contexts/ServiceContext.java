@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MobService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
@@ -32,6 +33,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TabCompleterService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -41,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupServic
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
+import java.lang.reflect.Field;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -90,7 +93,36 @@ public class ServiceContext {
   private SettingPlayerService settingPlayerService;
   private ItemService itemService;
   private InventoryService inventoryService;
+  private MobService mobService;
   private EnchantmentService enchantmentService;
   private CoinItemService coinItemService;
   private WorldMenuService worldMenuService;
+  private TabCompleterService tabCompleterService;
+
+  /**
+   * Copies all field values from the given {@link ServiceContext} into this instance.
+   *
+   * @param source the source context to copy from
+   */
+  public void copyFrom(ServiceContext source) {
+    for (Field field : ServiceContext.class.getDeclaredFields()) {
+      copyField(field, source);
+    }
+  }
+
+  /**
+   * Copies the value of a single field from the given {@link ServiceContext} source into this instance.
+   *
+   * @param field  the field to copy
+   * @param source the source context to read the field value from
+   * @throws RuntimeException if the field value cannot be accessed
+   */
+  protected void copyField(Field field, ServiceContext source) {
+    try {
+      field.setAccessible(true);
+      field.set(this, field.get(source));
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException("Failed to copy service field: " + field.getName(), e);
+    }
+  }
 }

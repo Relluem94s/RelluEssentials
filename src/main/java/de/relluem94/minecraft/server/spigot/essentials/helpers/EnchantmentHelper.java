@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ItemAttribute;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantName;
@@ -9,18 +9,16 @@ import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.R
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -29,6 +27,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @author rellu
  */
+@EqualsAndHashCode(callSuper = false)
 public class EnchantmentHelper extends CustomEnchantment {
 
   /**
@@ -48,17 +47,18 @@ public class EnchantmentHelper extends CustomEnchantment {
    * @param level       the level configuration of this enchantment
    * @param lore        the lore text displayed on items with this enchantment
    * @param rarity      the rarity of this enchantment
-   * @param attributes  the attribute modifiers applied by this enchantment
+   * @param itemAttributes  the attribute modifiers applied by this enchantment
+   * @param cost        the cost of this enchantment
    */
   public EnchantmentHelper(EnchantName enchantName, EnchantmentTarget target, EnchantLevel level,
-      String lore, Rarity rarity, Multimap<Attribute, AttributeModifier> attributes, int cost) {
+      String lore, Rarity rarity, List<ItemAttribute> itemAttributes, int cost) {
     super(new NamespacedKey(RelluEssentials.getInstance(), enchantName.name()));
     this.enchantName = enchantName;
     this.rarity = rarity;
     this.target = target;
     this.level = level;
     this.lore = lore;
-    this.attributes = attributes;
+    this.itemAttributes = itemAttributes;
     this.actualLevel = level.startLevel();
     this.cost = cost;
   }
@@ -90,7 +90,6 @@ public class EnchantmentHelper extends CustomEnchantment {
    *
    * @return the multiplier value
    */
-  @SuppressWarnings("unused")
   public double getMultiplier() {
     return multiply;
   }
@@ -162,17 +161,6 @@ public class EnchantmentHelper extends CustomEnchantment {
     return book;
   }
 
-  private @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
-      EnchantmentHelper enchantment) {
-    if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
-      meta.getPersistentDataContainer()
-          .set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
-      item.setItemMeta(meta);
-    }
-
-    return item;
-  }
-
   /**
    * Applies this enchantment to the given {@link ItemMeta} by adding attribute modifiers, updating
    * the item lore and storing the enchantment level in the persistent data container.
@@ -184,16 +172,11 @@ public class EnchantmentHelper extends CustomEnchantment {
       return;
     }
 
-    for (Attribute a : attributes.asMap().keySet()) {
-      if (a == null) {
+    for (ItemAttribute itemAttribute : itemAttributes) {
+      if (itemAttribute == null || itemAttribute.getAttribute() == null || itemAttribute.getModifier() == null) {
         continue;
       }
-      for (AttributeModifier am : attributes.asMap().get(a)) {
-        if (am == null) {
-          continue;
-        }
-        im.addAttributeModifier(a, am);
-      }
+      im.addAttributeModifier(itemAttribute.getAttribute(), itemAttribute.getModifier());
     }
 
     List<String> itemStackLore;
@@ -244,16 +227,11 @@ public class EnchantmentHelper extends CustomEnchantment {
       return;
     }
 
-    for (Attribute a : attributes.asMap().keySet()) {
-      if (a == null) {
+    for (ItemAttribute itemAttribute : itemAttributes) {
+      if (itemAttribute == null || itemAttribute.getAttribute() == null || itemAttribute.getModifier() == null) {
         continue;
       }
-      for (AttributeModifier am : attributes.asMap().get(a)) {
-        if (am == null) {
-          continue;
-        }
-        im.removeAttributeModifier(a, am);
-      }
+      im.removeAttributeModifier(itemAttribute.getAttribute(), itemAttribute.getModifier());
     }
 
     List<String> itemStackLore = im.getLore();
@@ -269,27 +247,5 @@ public class EnchantmentHelper extends CustomEnchantment {
 
     i.setItemMeta(im);
 
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    return o instanceof EnchantmentHelper && o.hashCode() == this.hashCode();
-  }
-
-  @Override
-  public int hashCode() {
-    int hash = 7;
-
-    hash = 19 * hash + actualLevel;
-
-    hash = 31 * hash + (enchantName == null ? 0 : enchantName.hashCode());
-    hash = 31 * hash + (rarity == null ? 0 : rarity.hashCode());
-    hash = 31 * hash + (target == null ? 0 : target.hashCode());
-    hash = 31 * hash + (level == null ? 0 : level.hashCode());
-    hash = 31 * hash + (lore == null ? 0 : lore.hashCode());
-    hash = 31 * hash + (attributes == null ? 0 : attributes.hashCode());
-    hash = 31 * hash + (super.getKey().hashCode());
-
-    return hash;
   }
 }

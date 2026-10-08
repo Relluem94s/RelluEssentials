@@ -1,7 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_LOADED;
+
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.bukkit.Keyed;
 import org.bukkit.OfflinePlayer;
@@ -296,6 +303,15 @@ public class ServerService {
   }
 
   /**
+   * Loads a world with the given name by creating it using a {@link WorldCreator}.
+   *
+   * @param worldName the name of the world to load
+   */
+  public void loadWorld(String worldName) {
+    server.createWorld(new WorldCreator(worldName));
+  }
+
+  /**
    * Unloads a world, optionally saving it before unloading.
    *
    * @param world the world to unload
@@ -304,5 +320,49 @@ public class ServerService {
    */
   public boolean unloadWorld(World world, boolean save) {
     return server.unloadWorld(world, save);
+  }
+
+  /**
+   * Unloads a world by name, optionally saving it before unloading.
+   *
+   * @param worldName the name of the world to unload
+   * @param save      whether to save the world before unloading
+   * @throws WorldNotLoadedException if no world with the given name is currently loaded
+   */
+  public void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException {
+    if (server.getWorld(worldName) != null) {
+      server.unloadWorld(worldName, save);
+    } else {
+      throw new WorldNotLoadedException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_LOADED, worldName));
+    }
+  }
+
+  /**
+   * Clones an existing world into a new world with the given name.
+   *
+   * @param clonedWorldName   the name of the new cloned world
+   * @param originalWorldName the name of the world to clone
+   * @throws WorldNotFoundException if no world with the given original name exists
+   */
+  public void cloneWorld(String clonedWorldName, String originalWorldName)
+      throws WorldNotFoundException {
+    World originalWorld = server.getWorld(originalWorldName);
+    if (originalWorld == null) {
+      throw new WorldNotFoundException(
+          String.format(PLUGIN_EXCEPTION_WORLD_NOT_FOUND, originalWorldName));
+    }
+    WorldCreator worldCreator = new WorldCreator(clonedWorldName);
+    worldCreator.copy(Objects.requireNonNull(originalWorld));
+    server.createWorld(worldCreator);
+  }
+
+  /**
+   * Checks whether a world with the given name exists on disk.
+   *
+   * @param worldName the name of the world to check
+   * @return {@code true} if the world folder exists in the world container, {@code false} otherwise
+   */
+  public boolean worldExists(String worldName) {
+    return new File(server.getWorldContainer(), worldName).exists();
   }
 }

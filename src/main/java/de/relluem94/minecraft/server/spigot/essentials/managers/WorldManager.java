@@ -7,7 +7,6 @@ import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
@@ -17,6 +16,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.Plugin;
 
@@ -63,10 +63,10 @@ public class WorldManager implements Enable, Disable {
           continue;
         }
 
-        if (!WorldHelper.worldExists(we.getName())) {
+        if (!serviceContext.getServerService().worldExists(we.getName())) {
           createWorld(we);
         } else if (plugin.getServer().getWorld(we.getName()) == null) {
-          WorldHelper.loadWorld(we.getName());
+          serviceContext.getServerService().loadWorld(we.getName());
           setStandardGameRules(we.getName());
         }
       }
@@ -88,7 +88,7 @@ public class WorldManager implements Enable, Disable {
             return;
           }
 
-          WorldHelper.unloadWorld(we.getName(), true);
+          serviceContext.getServerService().unloadWorld(we.getName(), true);
         } catch (WorldNotLoadedException e) {
           Logger.getLogger(WorldManager.class.getName()).log(Level.WARNING, e.getMessage());
         }
@@ -99,14 +99,19 @@ public class WorldManager implements Enable, Disable {
   private void createWorld(WorldEntry we) {
     WorldType type = WorldType.NORMAL;
     World.Environment worldEnvironment = getEnvironment(we.getName());
+    WorldCreator worldCreator = new WorldCreator(we.getName());
+    worldCreator.environment(worldEnvironment);
+    worldCreator.type(type);
 
     if (we.getName().equals("lobby")) {
-      WorldHelper.createWorld(we.getName(), type, worldEnvironment, false, 6203818585396731238L);
+      worldCreator.generateStructures(false);
+      worldCreator.seed(6203818585396731238L);
+
       setStandardGameRules(we.getName());
       setLobbySpawnLocation(we.getName());
-    } else {
-      WorldHelper.createWorld(we.getName(), type, worldEnvironment, false);
     }
+
+    serviceContext.getServerService().createWorld(worldCreator);
   }
 
   private World.Environment getEnvironment(String name) {

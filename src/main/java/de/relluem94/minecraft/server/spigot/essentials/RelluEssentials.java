@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ListenerManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.MobManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ServiceManager;
@@ -52,6 +53,7 @@ public class RelluEssentials extends JavaPlugin {
   private AutoSaveManager autoSaveManager;
   private ConfigManager configManager;
   private WorldManager worldManager;
+  private MobManager mobManager;
 
   /**
    * Constructor for unit testing purposes. Allows injecting a custom loader, description, data folder, and file without
@@ -80,7 +82,9 @@ public class RelluEssentials extends JavaPlugin {
     persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
     serviceContext.setServerService(new ServerService(this));
-    ServiceManager serviceManager = new ServiceManager();
+    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
+    bukkitRegistryAdapter.initializeGameRuleCache(this.getServer());
+    ServiceManager serviceManager = new ServiceManager(bukkitRegistryAdapter);
     serviceManager.preEnable(this);
     ConsoleCommandSender sender = getServer().getConsoleSender();
     setInstance(this);
@@ -131,8 +135,6 @@ public class RelluEssentials extends JavaPlugin {
     sender.sendMessage(PLUGIN_NAME_CONSOLE);
     sender.sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER);
 
-    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
-    bukkitRegistryAdapter.initializeGameRuleCache(this.getServer());
     worldManager = new WorldManager(bukkitRegistryAdapter);
     worldManager.enable(this);
     getServiceContext()
@@ -140,6 +142,9 @@ public class RelluEssentials extends JavaPlugin {
         .runTaskLater(() -> getServiceContext()
             .getNpcService()
             .loadAndSpawnNpcsInLoadedChunks(), 20L);
+
+    mobManager = new MobManager();
+    mobManager.enable(this);
   }
 
   @Override
@@ -159,5 +164,6 @@ public class RelluEssentials extends JavaPlugin {
     autoSaveManager.disable(this);
     worldManager.disable(this);
     configManager.disable(this);
+    mobManager.disable(this);
   }
 }

@@ -17,22 +17,25 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.modify.WallComma
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command handler for the /modify command, providing world editing capabilities
+ * such as setting, replacing, copying, pasting, and filling blocks.
+ *
+ * @author rellu
+ */
 @CommandName("modify")
 public class Modify implements CommandConstruct {
 
@@ -47,21 +50,15 @@ public class Modify implements CommandConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
 
-    this.subCommandRegistry = new SubCommandRegistry<>(List.of(
-        new CopyCommand(false, BLOCKS_PER_TICK, context),
-        new CopyCommand(true, BLOCKS_PER_TICK, context),
-        new CylinderCommand(context, BLOCKS_PER_TICK),
-        new FillCommand(context, false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
-        new FillCommand(context, true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
-        new ClipboardCommand(context),
-        new MoveCommand(context, BLOCKS_PER_TICK),
-        new PasteCommand(context, BLOCKS_PER_TICK),
-        new PlantCommand(context, BLOCKS_PER_TICK),
-        new ReplaceCommand(context, BLOCKS_PER_TICK),
-        new SetCommand(context, BLOCKS_PER_TICK),
-        new UndoCommand(context, BLOCKS_PER_TICK),
-        new WallCommand(context, BLOCKS_PER_TICK)
-    ));
+    this.subCommandRegistry = new SubCommandRegistry<>(
+        List.of(new CopyCommand(false, BLOCKS_PER_TICK, context), new CopyCommand(true, BLOCKS_PER_TICK, context),
+            new CylinderCommand(context, BLOCKS_PER_TICK),
+            new FillCommand(context, false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
+            new FillCommand(context, true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS), new ClipboardCommand(context),
+            new MoveCommand(context, BLOCKS_PER_TICK), new PasteCommand(context, BLOCKS_PER_TICK),
+            new PlantCommand(context, BLOCKS_PER_TICK), new ReplaceCommand(context, BLOCKS_PER_TICK),
+            new SetCommand(context, BLOCKS_PER_TICK), new UndoCommand(context, BLOCKS_PER_TICK),
+            new WallCommand(context, BLOCKS_PER_TICK)));
   }
 
   @Override
@@ -70,32 +67,37 @@ public class Modify implements CommandConstruct {
   }
 
   @Override
-  public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
-      @NotNull String string, @NotNull String[] strings) {
-    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
-      commandSender.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+  public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String string,
+      @NotNull String[] strings) {
+    if (!serviceContext
+        .getGroupService()
+        .isSenderAuthorized(commandSender, "mod")) {
+      commandSender.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(serviceContext
+          .getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
     if (strings.length == 0) {
-      p.sendMessage(serviceContext.getTranslationService()
+      p.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(strings);
     if (subCommand == null) {
-      p.sendMessage(serviceContext.getTranslationService()
+      p.sendMessage(serviceContext
+          .getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
@@ -105,16 +107,20 @@ public class Modify implements CommandConstruct {
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
-      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command,
+      @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext
+        .getGroupService()
+        .isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+      tabList.addAll(serviceContext
+          .getTabCompleterService()
+          .getCommands(Commands.values()));
       return tabList;
     }
 
@@ -134,16 +140,15 @@ public class Modify implements CommandConstruct {
 
       if (strings[0].equalsIgnoreCase(Commands.PLANT.getName())) {
         String input = strings[1].isEmpty() ? null : strings[1].toUpperCase();
-        tabList.addAll(Arrays.stream(Material.values())
-            .filter(ModifyHelper::isPlantMaterial)
-            .map(Material::name)
-            .filter(name -> input == null || name.startsWith(input))
-            .sorted()
-            .toList());
+        tabList.addAll(serviceContext
+            .getTabCompleterService()
+            .getMaterialsByPredicate(ModifyHelper::isPlantMaterial, input));
         return tabList;
       }
 
-      tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
+      tabList.addAll(serviceContext
+          .getTabCompleterService()
+          .getMaterials(strings[1].isEmpty() ? null : strings[1]));
       return tabList;
     }
 
@@ -152,29 +157,23 @@ public class Modify implements CommandConstruct {
         return tabList;
       }
 
-      tabList.addAll(TabCompleterHelper.getMaterials(strings[2].isEmpty() ? null : strings[2]));
+      tabList.addAll(serviceContext
+          .getTabCompleterService()
+          .getMaterials(strings[2].isEmpty() ? null : strings[2]));
       return tabList;
     }
 
     return tabList;
   }
 
-
+  /**
+   * Represents all available sub-commands for the /modify command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
-    SET("set"),
-    REPLACE("replace"),
-    MOVE("move"),
-    COPY("copy"),
-    CUT("cut"),
-    PASTE("paste"),
-    CLIPBOARD("clipboard", "rotate"),
-    UNDO("undo"),
-    WALL("wall"),
-    CYLINDER("cylinder"),
-    FILL("fill"),
-    FILLR("fillr"),
+    SET("set"), REPLACE("replace"), MOVE("move"), COPY("copy"), CUT("cut"), PASTE("paste"),
+    CLIPBOARD("clipboard", "rotate"), UNDO("undo"), WALL("wall"), CYLINDER("cylinder"), FILL("fill"), FILLR("fillr"),
     PLANT("plant");
 
     private final String name;
