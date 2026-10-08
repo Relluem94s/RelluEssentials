@@ -43,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupServic
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
+import java.lang.reflect.Field;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -97,4 +98,20 @@ public class ServiceContext {
   private CoinItemService coinItemService;
   private WorldMenuService worldMenuService;
   private TabCompleterService tabCompleterService;
+
+  /**
+   * Copies all field values from the given {@link ServiceContext} into this instance.
+   *
+   * @param source the source context to copy from
+   */
+  public void copyFrom(ServiceContext source) {
+    for (Field field : ServiceContext.class.getDeclaredFields()) {
+      try {
+        field.setAccessible(true);
+        field.set(this, field.get(source));
+      } catch (IllegalAccessException e) {
+        throw new RuntimeException("Failed to copy service field: " + field.getName(), e);
+      }
+    }
+  }
 }
