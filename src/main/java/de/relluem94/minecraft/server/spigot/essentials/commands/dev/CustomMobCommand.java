@@ -1,21 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMob;
-import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobDefinition;
-import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobEquipment;
-import java.util.List;
 import lombok.AllArgsConstructor;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -31,22 +22,13 @@ public class CustomMobCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
 
-  @Generated // Can't be tested Bukkit Architecture Problem
   @Override
   public void execute(Player player, String[] args) {
-    CustomMobEquipment customMobEquipment =
-        new CustomMobEquipment(new ItemStack(Material.WOODEN_SWORD, 1), new ItemStack(Material.SHIELD, 1),
-            new ItemStack(Material.LEATHER_HELMET, 1), new ItemStack(Material.LEATHER_CHESTPLATE, 1),
-            new ItemStack(Material.LEATHER_LEGGINGS, 1), new ItemStack(Material.LEATHER_BOOTS, 1));
-
-    CustomMobDefinition customMobDefinition = new CustomMobDefinition(new RelluEssentialsNamespacedKey(serviceContext
-        .getPluginMetadataService()
-        .getName(), "XÆAXII"), EntityType.ZOMBIE, "§aX Æ A-XII", true,
-        List.of(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1)), customMobEquipment, 20, false, false);
-
     serviceContext
         .getMobService()
-        .spawnMob(customMobDefinition, player.getLocation());
+        .spawnMob(new RelluEssentialsNamespacedKey(serviceContext
+            .getPluginMetadataService()
+            .getName(), "XÆAXII"), player.getLocation());
 
     player.sendMessage("Alive: " + serviceContext
         .getMobService()
