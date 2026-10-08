@@ -19,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentReg
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.MobRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PositionRegistry;
@@ -228,7 +229,7 @@ public class ServiceManager implements Enable {
     serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
         serviceContext.getPluginMetadataService()));
     serviceContext.setTabCompleterService(new TabCompleterService(bukkitRegistryAdapter, serviceContext));
-    serviceContext.setMobService(new MobService());
+    serviceContext.setMobService(new MobService(new MobRegistry()));
   }
 
   /**

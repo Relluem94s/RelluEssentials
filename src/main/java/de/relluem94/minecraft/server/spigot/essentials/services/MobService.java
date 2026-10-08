@@ -3,15 +3,16 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMob;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobDefinition;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobEquipment;
-import java.util.ArrayList;
-import java.util.List;
+import de.relluem94.minecraft.server.spigot.essentials.registries.MobRegistry;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
 
+@AllArgsConstructor
 public class MobService {
-  private final List<CustomMob> spawnedMobs = new ArrayList<>();
+  private final MobRegistry mobRegistry;
 
   public Optional<CustomMob> spawnMob(CustomMobDefinition definition, Location location) {
     World world = location.getWorld();
@@ -45,21 +46,20 @@ public class MobService {
     }
 
     CustomMob customMob = new CustomMob(livingEntity, definition.getEntityType());
-    spawnedMobs.add(customMob);
+    mobRegistry.register(customMob);
     return Optional.of(customMob);
   }
 
   public int countSpawnedMobs() {
-    return spawnedMobs.size();
+    return mobRegistry.findAll().size();
   }
 
   public int countAliveMobs() {
-    return (int) spawnedMobs.stream().filter(CustomMob::isAlive).count();
+    return mobRegistry.findAllAlive().size();
   }
 
   public void despawnAll() {
-    spawnedMobs.stream().filter(CustomMob::isAlive)
-        .forEach(mob -> mob.getLivingEntity().remove());
-    spawnedMobs.clear();
+    mobRegistry.findAllAlive().forEach(mob -> mob.getLivingEntity().remove());
+    mobRegistry.findAll().forEach(mob -> mobRegistry.unregister(mob.getLivingEntity().getUniqueId()));
   }
 }
