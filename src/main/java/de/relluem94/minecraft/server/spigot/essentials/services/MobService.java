@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsMobSpawnEvent;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMob;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMobDefinition;
@@ -23,6 +25,7 @@ import org.bukkit.persistence.PersistentDataType;
 @AllArgsConstructor
 public class MobService {
   private final MobRegistry mobRegistry;
+  private final ServiceContext serviceContext;
   private static final String NBT_MOB_DEFINITION_KEY = "mob_definition_key";
 
   /**
@@ -92,6 +95,15 @@ public class MobService {
     applyDefinitionKeyNbtTag(livingEntity, definition.key());
 
     CustomMob customMob = new CustomMob(livingEntity, definition.entityType(), definition.key());
+
+    RelluEssentialsMobSpawnEvent spawnEvent = new RelluEssentialsMobSpawnEvent(customMob, definition);
+    serviceContext.getPluginManagerService().callEvent(spawnEvent);
+
+    if (spawnEvent.isCancelled()) {
+      livingEntity.remove();
+      return Optional.empty();
+    }
+
     mobRegistry.registerSpawnedMob(customMob);
     return Optional.of(customMob);
   }
@@ -195,5 +207,15 @@ public class MobService {
    */
   public List<CustomMob> findAllSpawnedByDefinitionKey(RelluEssentialsNamespacedKey key) {
     return mobRegistry.findAllSpawnedByDefinitionKey(key);
+  }
+
+  /**
+   * Finds a spawned {@link CustomMob} by its entity UUID.
+   *
+   * @param entityUuid the UUID of the entity to find
+   * @return an {@link Optional} containing the mob if found, otherwise empty
+   */
+  public Optional<CustomMob> findSpawnedMobByUuid(UUID entityUuid) {
+    return mobRegistry.findSpawnedMobByUuid(entityUuid);
   }
 }

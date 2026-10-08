@@ -268,4 +268,41 @@ class MobRegistryTest {
     assertTrue(result.contains(firstMob));
     assertTrue(result.contains(secondMob));
   }
+
+  @Test
+  void findSpawnedMobByUuidReturnsMobWhenFound() {
+    UUID entityUuid = UUID.randomUUID();
+    when(firstMob.getLivingEntity()).thenReturn(firstLivingEntity);
+    when(firstLivingEntity.getUniqueId()).thenReturn(entityUuid);
+
+    mobRegistry.registerSpawnedMob(firstMob);
+
+    Optional<CustomMob> result = mobRegistry.findSpawnedMobByUuid(entityUuid);
+    assertTrue(result.isPresent());
+    assertEquals(firstMob, result.get());
+  }
+
+  @Test
+  void findSpawnedMobByUuidReturnsEmptyWhenNotFound() {
+    Optional<CustomMob> result = mobRegistry.findSpawnedMobByUuid(UUID.randomUUID());
+    assertFalse(result.isPresent());
+  }
+
+  @Test
+  void findSpawnedMobByUuidReturnsCorrectMobWhenMultipleSpawned() {
+    UUID firstUuid = UUID.randomUUID();
+    UUID secondUuid = UUID.randomUUID();
+
+    when(firstMob.getLivingEntity()).thenReturn(firstLivingEntity);
+    when(firstLivingEntity.getUniqueId()).thenReturn(firstUuid);
+    when(secondMob.getLivingEntity()).thenReturn(secondLivingEntity);
+    when(secondLivingEntity.getUniqueId()).thenReturn(secondUuid);
+
+    mobRegistry.registerSpawnedMob(firstMob);
+    mobRegistry.registerSpawnedMob(secondMob);
+
+    Optional<CustomMob> result = mobRegistry.findSpawnedMobByUuid(secondUuid);
+    assertTrue(result.isPresent());
+    assertEquals(secondMob, result.get());
+  }
 }
