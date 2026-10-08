@@ -282,7 +282,6 @@ class NpcTradeHandlerTest {
   @Test
   void handleSendsNotTradeableMessageWhenCustomHeadHasNoPrices() {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(serviceContext.getEnchantmentService()).thenReturn(enchantmentService);
 
     ItemStack headItemStack = mock(ItemStack.class);
     SkullMeta skullMeta = mock(SkullMeta.class);
@@ -339,10 +338,8 @@ class NpcTradeHandlerTest {
     when(playerInventory.firstEmpty()).thenReturn(0);
     when(headItemStack.clone()).thenReturn(headItemStack);
     when(skullMeta.getLore()).thenReturn(null);
-    when(purchasedPdc.has(any(), eq(PersistentDataType.INTEGER))).thenReturn(false);
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BUY), any(), any(), any(), any(),
         any())).thenReturn("Bought!");
-    when(buyBackService.hasBuyBackItems(player)).thenReturn(false);
 
     npcTradeHandler.handle(headItemStack, clickedInventory, player, playerEntry, 0, false);
 
@@ -775,9 +772,6 @@ class NpcTradeHandlerTest {
     when(playerInventory.firstEmpty()).thenReturn(0);
     when(regularItem.clone()).thenReturn(regularItem);
     when(itemMeta.getLore()).thenReturn(null);
-    lenient().when(player.getOpenInventory()).thenReturn(inventoryView);
-    lenient().when(inventoryView.getTopInventory()).thenReturn(topInventory);
-    lenient().when(buyBackService.hasBuyBackItems(player)).thenReturn(false);
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BUY), any(), any(), any(), any(),
         any())).thenReturn("Bought!");
 
@@ -818,9 +812,6 @@ class NpcTradeHandlerTest {
     when(playerInventory.firstEmpty()).thenReturn(0);
     when(regularItem.clone()).thenReturn(regularItem);
     when(itemMeta.getLore()).thenReturn(null);
-    when(player.getOpenInventory()).thenReturn(inventoryView);
-    when(inventoryView.getTopInventory()).thenReturn(topInventory);
-    when(buyBackService.hasBuyBackItems(player)).thenReturn(false);
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BUY), any(), any(), any(), any(),
         any())).thenReturn("Bought!");
 
@@ -831,7 +822,6 @@ class NpcTradeHandlerTest {
 
   @Test
   void handleDoesNothingWhenLeftClickSellAndSlotItemIsNull() {
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getEnchantmentService()).thenReturn(enchantmentService);
 
     ItemStack regularItem = mock(ItemStack.class);
