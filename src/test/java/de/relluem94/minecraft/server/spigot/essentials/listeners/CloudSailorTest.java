@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -16,9 +17,12 @@ import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupServic
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -28,6 +32,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.util.Vector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -105,6 +110,33 @@ class CloudSailorTest {
   private Location toBlockLocation;
 
   private CloudSailor listener;
+
+  @Mock
+  private Block blockBelowPlayer;
+
+  @Mock
+  private Block blockTwoBelowPlayer;
+
+  @Mock
+  private Block blockEastOfBelow;
+
+  @Mock
+  private Block blockNorthOfBelow;
+
+  @Mock
+  private Block blockSouthOfBelow;
+
+  @Mock
+  private Block blockWestOfBelow;
+
+  @Mock
+  private Location playerLocation;
+
+  @Mock
+  private Block playerLocationBlock;
+
+  @Mock
+  private Vector playerDirection;
 
   @BeforeEach
   void setUp() {
@@ -461,4 +493,98 @@ class CloudSailorTest {
     verify(serviceContext, Mockito.times(2)).getItemService();
     verify(itemService, Mockito.times(2)).find(any(RelluEssentialsNamespacedKey.class));
   }
+
+  @Test
+  void onSailDoesNothingWhenPlayerWearingCloudBootsAndBlocksBelowAreNotAir() {
+    stubWorldSettingActive(true);
+    stubBlockLocationsDifferent();
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getItemInOffHand()).thenReturn(Mockito.mock(ItemStack.class));
+    when(playerInventory.getBoots()).thenReturn(cloudBootsItemStack);
+    when(player.isFlying()).thenReturn(false);
+    when(player.isSneaking()).thenReturn(false);
+    stubPlayerLocationBlockChainWithMaterial(Material.STONE);
+
+    listener.onSail(playerMoveEvent);
+
+    verify(player, never()).setVelocity(any());
+  }
+
+  @Test
+  void onSailSetsVelocityAndPlaysEffectWhenPlayerWearingCloudBootsAndBlocksBelowAreAir() {
+    stubWorldSettingActive(true);
+    stubBlockLocationsDifferent();
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getItemInOffHand()).thenReturn(Mockito.mock(ItemStack.class));
+    when(playerInventory.getBoots()).thenReturn(cloudBootsItemStack);
+    when(player.isFlying()).thenReturn(false);
+    when(player.isSneaking()).thenReturn(false);
+    stubPlayerLocationBlockChainWithMaterial(Material.AIR);
+    stubPlayerDirectionAndWorld();
+
+    listener.onSail(playerMoveEvent);
+
+    verify(player).setVelocity(any(org.bukkit.util.Vector.class));
+    verify(world).playEffect(any(Location.class), any(Effect.class), anyInt());
+  }
+
+  @Test
+  void onSailSetsVelocityAndPlaysEffectWhenPlayerHoldsCloudSailorAndBlocksBelowAreAir() {
+    stubWorldSettingActive(true);
+    stubBlockLocationsDifferent();
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getItemInOffHand()).thenReturn(cloudSailorItemStack);
+    when(player.isFlying()).thenReturn(false);
+    when(player.isSneaking()).thenReturn(false);
+    stubPlayerLocationBlockChainWithMaterial(Material.AIR);
+    stubPlayerDirectionAndWorld();
+
+    listener.onSail(playerMoveEvent);
+
+    verify(player).setVelocity(any(org.bukkit.util.Vector.class));
+    verify(world).playEffect(any(Location.class), any(Effect.class), anyInt());
+  }
+
+  @Test
+  void onSailDoesNotSetVelocityWhenPlayerHoldsCloudSailorAndBlocksBelowAreNotAir() {
+    stubWorldSettingActive(true);
+    stubBlockLocationsDifferent();
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getItemInOffHand()).thenReturn(cloudSailorItemStack);
+    when(player.isFlying()).thenReturn(false);
+    when(player.isSneaking()).thenReturn(false);
+    stubPlayerLocationBlockChainWithMaterial(Material.STONE);
+
+    listener.onSail(playerMoveEvent);
+
+    verify(player, never()).setVelocity(any());
+    verify(world, never()).playEffect(any(), any(), anyInt());
+  }
+
+
+  private void stubPlayerLocationBlockChainWithMaterial(Material material) {
+    when(player.getLocation()).thenReturn(playerLocation);
+    when(playerLocation.getBlock()).thenReturn(playerLocationBlock);
+    when(playerLocationBlock.getRelative(BlockFace.DOWN)).thenReturn(blockBelowPlayer);
+    when(blockBelowPlayer.getRelative(BlockFace.DOWN)).thenReturn(blockTwoBelowPlayer);
+    when(blockBelowPlayer.getRelative(BlockFace.EAST)).thenReturn(blockEastOfBelow);
+    when(blockBelowPlayer.getRelative(BlockFace.NORTH)).thenReturn(blockNorthOfBelow);
+    when(blockBelowPlayer.getRelative(BlockFace.SOUTH)).thenReturn(blockSouthOfBelow);
+    when(blockBelowPlayer.getRelative(BlockFace.WEST)).thenReturn(blockWestOfBelow);
+    when(blockBelowPlayer.getType()).thenReturn(material);
+    when(blockTwoBelowPlayer.getType()).thenReturn(material);
+    when(blockEastOfBelow.getType()).thenReturn(material);
+    when(blockNorthOfBelow.getType()).thenReturn(material);
+    when(blockSouthOfBelow.getType()).thenReturn(material);
+    when(blockWestOfBelow.getType()).thenReturn(material);
+  }
+
+  private void stubPlayerDirectionAndWorld() {
+    when(playerLocation.getDirection()).thenReturn(playerDirection);
+    when(playerDirection.multiply(0.5)).thenReturn(playerDirection);
+    when(playerDirection.getX()).thenReturn(1.0);
+    when(playerDirection.getZ()).thenReturn(0.0);
+    when(player.getWorld()).thenReturn(world);
+  }
+
 }

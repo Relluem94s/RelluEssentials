@@ -87,19 +87,25 @@ public class CloudSailor implements ListenerConstruct {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onFallDamage(@NonNull EntityDamageEvent e) {
-    if (e.getEntity() instanceof Player p) {
-      boolean useCloudSailor = serviceContext.getWorldGroupService()
-          .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
-      if (useCloudSailor) {
-        if (e.getCause().equals(DamageCause.FALL)) {
-          if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
-              .equals(cloudBoots.toItemStack())) {
-            e.setCancelled(true);
-          } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
-            e.setDamage(e.getDamage() / 2);
-          }
-        }
-      }
+    if (!(e.getEntity() instanceof Player p)) {
+      return;
+    }
+
+    boolean useCloudSailor = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+    if (!useCloudSailor) {
+      return;
+    }
+
+    if (!e.getCause().equals(DamageCause.FALL)) {
+      return;
+    }
+
+    if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
+        .equals(cloudBoots.toItemStack())) {
+      e.setCancelled(true);
+    } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
+      e.setDamage(e.getDamage() / 2);
     }
   }
 
