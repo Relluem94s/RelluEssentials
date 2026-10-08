@@ -69,18 +69,30 @@ public class CloudSailor implements ListenerConstruct {
 
   @EventHandler
   public void cloudBootsCrafting(@NonNull PrepareItemCraftEvent e) {
-    if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta()
-        && cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
-      for (ItemStack is : e.getInventory().getMatrix()) {
-        if (is != null) {
-          if (is.hasItemMeta()) {
-            if (!cloudSailorItem.toItemStack().isSimilar(is)) {
-              e.getInventory().setResult(null);
-            }
-          } else {
-            e.getInventory().setResult(null);
-          }
-        }
+    if (e.getRecipe() == null) {
+      return;
+    }
+
+    if (!e.getRecipe().getResult().hasItemMeta()) {
+      return;
+    }
+
+    if(!cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())){
+      return;
+    }
+
+    for (ItemStack is : e.getInventory().getMatrix()) {
+      if (is == null) {
+        continue;
+      }
+
+      if (!is.hasItemMeta()) {
+        e.getInventory().setResult(null);
+        continue;
+      }
+
+      if (!cloudSailorItem.toItemStack().isSimilar(is)) {
+        e.getInventory().setResult(null);
       }
     }
   }

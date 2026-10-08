@@ -561,6 +561,26 @@ class CloudSailorTest {
     verify(world, never()).playEffect(any(), any(), anyInt());
   }
 
+  @Test
+  void onFallDamageHalvesDamageWhenPlayerHoldsCloudSailorInOffHandAndWearingOtherBoots() {
+    ItemStack otherBoots = Mockito.mock(ItemStack.class);
+
+    when(entityDamageEvent.getEntity()).thenReturn(player);
+    when(player.getWorld()).thenReturn(world);
+    when(world.getName()).thenReturn("world");
+    when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
+    when(worldGroupService.isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, "world")).thenReturn(true);
+    when(entityDamageEvent.getCause()).thenReturn(DamageCause.FALL);
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getBoots()).thenReturn(otherBoots);
+    when(playerInventory.getItemInOffHand()).thenReturn(cloudSailorItemStack);
+    when(entityDamageEvent.getDamage()).thenReturn(10.0);
+
+    listener.onFallDamage(entityDamageEvent);
+
+    verify(entityDamageEvent, never()).setCancelled(true);
+    verify(entityDamageEvent).setDamage(5.0);
+  }
 
   private void stubPlayerLocationBlockChainWithMaterial(Material material) {
     when(player.getLocation()).thenReturn(playerLocation);
