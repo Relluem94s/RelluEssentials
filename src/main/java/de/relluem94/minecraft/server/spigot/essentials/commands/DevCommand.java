@@ -52,7 +52,7 @@ public class DevCommand implements CommandConstruct {
     this.serviceContext = context;
     subCommandRegistry = new SubCommandRegistry<>(
         List.of(
-            new CustomMobCommand(),
+            new CustomMobCommand(context),
             new RotateTestCommand(context),
             new DevPlattformCommand(context),
             new GivePickaxeCommand(context),
