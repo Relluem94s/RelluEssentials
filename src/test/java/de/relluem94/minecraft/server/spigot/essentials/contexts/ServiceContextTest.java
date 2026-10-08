@@ -1,12 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
+import java.lang.reflect.Field;
 import org.junit.jupiter.api.Test;
 
 class ServiceContextTest {
@@ -88,6 +94,22 @@ class ServiceContextTest {
     extendedTarget.copyFrom(source);
 
     assertSame(clipboardService, extendedTarget.getClipboardService());
+  }
+
+  @Test
+  void copyField_shouldThrowRuntimeExceptionWhenFieldIsInaccessible() throws Exception {
+    ServiceContext target = new ServiceContext();
+    ServiceContext source = new ServiceContext();
+
+    var syntheticField = mock(Field.class);
+    when(syntheticField.getName()).thenReturn("simulatedField");
+    doThrow(new IllegalAccessException("simulated access denied"))
+        .when(syntheticField).get(source);
+
+    RuntimeException exception = assertThrows(RuntimeException.class,
+        () -> target.copyField(syntheticField, source));
+
+    assertInstanceOf(IllegalAccessException.class, exception.getCause());
   }
 
   private static class ExtendedServiceContext extends ServiceContext {

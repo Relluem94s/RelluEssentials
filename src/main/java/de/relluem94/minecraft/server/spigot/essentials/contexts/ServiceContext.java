@@ -106,12 +106,23 @@ public class ServiceContext {
    */
   public void copyFrom(ServiceContext source) {
     for (Field field : ServiceContext.class.getDeclaredFields()) {
-      try {
-        field.setAccessible(true);
-        field.set(this, field.get(source));
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException("Failed to copy service field: " + field.getName(), e);
-      }
+      copyField(field, source);
+    }
+  }
+
+  /**
+   * Copies the value of a single field from the given {@link ServiceContext} source into this instance.
+   *
+   * @param field  the field to copy
+   * @param source the source context to read the field value from
+   * @throws RuntimeException if the field value cannot be accessed
+   */
+  protected void copyField(Field field, ServiceContext source) {
+    try {
+      field.setAccessible(true);
+      field.set(this, field.get(source));
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException("Failed to copy service field: " + field.getName(), e);
     }
   }
 }
