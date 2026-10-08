@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.mobs.CustomMob;
@@ -21,6 +22,7 @@ import org.jspecify.annotations.NonNull;
  */
 public class CustomMobCommand implements SubCommand {
 
+  @Generated // Can't be tested Bukkit Architecture Problem
   @Override
   public void execute(Player player, String[] args) {
     CustomMob mh = new CustomMob(player.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);

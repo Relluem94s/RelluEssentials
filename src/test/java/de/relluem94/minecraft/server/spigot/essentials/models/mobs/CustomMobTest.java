@@ -117,13 +117,13 @@ class CustomMobTest {
   }
 
   @Test
-  void spawnSetsHealthToEntityHealthWhenConfiguredHealthExceedsEntityHealth() {
+  void spawnSetsConfiguredHealthEvenWhenExceedingEntityDefaultHealth() {
     CustomMob customMob = new CustomMob(location, EntityType.ZOMBIE, "Name", true);
     customMob.setHealth(100.0);
 
     customMob.spawn();
 
-    verify(livingEntity).setHealth(20.0);
+    verify(livingEntity).setHealth(100.0);
   }
 
   @Test
