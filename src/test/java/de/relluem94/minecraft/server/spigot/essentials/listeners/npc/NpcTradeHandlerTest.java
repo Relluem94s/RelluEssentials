@@ -131,7 +131,8 @@ class NpcTradeHandlerTest {
   void constructorThrowsNoSuchElementExceptionWhenDisabledItemNotFound() {
     when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
 
-    assertThrows(NoSuchElementException.class, () -> new NpcTradeHandler(serviceContext));
+    assertThrows(NoSuchElementException.class,
+        () -> new NpcTradeHandler(serviceContext, buyPriceKey, sellPriceKey));
   }
 
   @Test
