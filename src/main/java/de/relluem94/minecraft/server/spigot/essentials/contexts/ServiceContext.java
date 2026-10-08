@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MobService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
@@ -91,6 +92,7 @@ public class ServiceContext {
   private SettingPlayerService settingPlayerService;
   private ItemService itemService;
   private InventoryService inventoryService;
+  private MobService mobService;
   private EnchantmentService enchantmentService;
   private CoinItemService coinItemService;
   private WorldMenuService worldMenuService;
