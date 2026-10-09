@@ -91,8 +91,12 @@ public class InventoryClickNpc implements ListenerConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
-    tradeHandler = new NpcTradeHandler(context);
+    tradeHandler = createNpcTradeHandler(context);
     this.bankerDepositActions = initBankerDepositActions();
+  }
+
+  NpcTradeHandler createNpcTradeHandler(ServiceContext context) {
+    return new NpcTradeHandler(context);
   }
 
   /**

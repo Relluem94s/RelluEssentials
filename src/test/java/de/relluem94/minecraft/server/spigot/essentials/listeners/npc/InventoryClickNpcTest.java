@@ -41,6 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransacti
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
@@ -90,6 +91,9 @@ class InventoryClickNpcTest {
 
   private InventoryClickNpc listener;
 
+  @Mock
+  private NpcTradeHandler npcTradeHandler;
+
   @BeforeEach
   void setUp() {
     lenient().when(serviceContext.getTraderNpcService()).thenReturn(traderNpcService);
@@ -99,17 +103,35 @@ class InventoryClickNpcTest {
     lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
     lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     lenient().when(serviceContext.getTeleportService()).thenReturn(teleportService);
+    lenient().when(serviceContext.getBuyBackService()).thenReturn(mock(BuyBackService.class));
     lenient().when(pluginMetadataService.getName()).thenReturn("relluessentials");
     lenient().when(traderNpcService.getBankerNpc()).thenReturn(bankerNpc);
     lenient().when(bankerNpc.getTitle()).thenReturn("BankerTitle");
     lenient().when(traderNpcService.getTraderNpcTitles()).thenReturn(List.of("TraderTitle"));
 
-    CustomItem anyItem = mock(CustomItem.class);
-    ItemStack anyItemStack = mock(ItemStack.class);
-    when(anyItem.toItemStack()).thenReturn(anyItemStack);
-    when(itemService.find(any())).thenReturn(Optional.of(anyItem));
+    CustomItem disabledItem = mock(CustomItem.class);
+    ItemStack disabledItemStack = mock(ItemStack.class);
+    lenient().when(disabledItem.toItemStack()).thenReturn(disabledItemStack);
 
-    listener = new InventoryClickNpc();
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
+
+    CustomItem coinsItem = mock(CustomItem.class);
+    ItemStack coinsItemStack = mock(ItemStack.class);
+    lenient().when(coinsItem.toItemStack()).thenReturn(coinsItemStack);
+
+    lenient().when(itemService.find(any()))
+        .thenReturn(Optional.of(disabledItem))
+        .thenReturn(Optional.of(closeItem))
+        .thenReturn(Optional.of(coinsItem));
+
+    listener = new InventoryClickNpc() {
+      @Override
+      NpcTradeHandler createNpcTradeHandler(ServiceContext context) {
+        return npcTradeHandler;
+      }
+    };
     listener.injectContext(serviceContext);
   }
 
