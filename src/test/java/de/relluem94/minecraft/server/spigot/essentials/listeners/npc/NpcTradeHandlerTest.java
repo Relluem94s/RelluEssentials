@@ -491,7 +491,7 @@ class NpcTradeHandlerTest {
     when(enchantmentService.findByBookItemStack(regularItem)).thenReturn(Optional.empty());
     when(itemService.findByItemStack(regularItem)).thenReturn(Optional.empty());
     when(coinsItemStack.isSimilar(regularItem)).thenReturn(false);
-    when(itemMeta.getEnchants()).thenReturn(java.util.Map.of(mock(org.bukkit.enchantments.Enchantment.class), 1));
+    when(itemMeta.getEnchants()).thenAnswer(invocation -> java.util.Map.of("sharpness", 1));
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED)).thenReturn("Enchanted item");
 
     npcTradeHandler.handle(regularItem, clickedInventory, player, playerEntry, 0, false);
