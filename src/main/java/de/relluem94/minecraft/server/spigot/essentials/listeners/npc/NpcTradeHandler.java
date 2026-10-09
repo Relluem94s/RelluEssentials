@@ -489,13 +489,35 @@ public class NpcTradeHandler {
     return totalAmount;
   }
 
+  /**
+   * Checks whether the given inventory is a chest inventory.
+   *
+   * @param inventory the inventory to check
+   * @return {@code true} if the inventory type is {@link InventoryType#CHEST}, {@code false}
+   *         otherwise
+   */
   @Generated
   protected boolean isChestInventory(Inventory inventory) {
-    return inventory.getType().equals(InventoryType.CHEST);
+    if (inventory == null) {
+      return false;
+    }
+
+    return InventoryType.CHEST.equals(inventory.getType());
   }
 
+  /**
+   * Checks whether the given inventory is a player inventory.
+   *
+   * @param inventory the inventory to check
+   * @return {@code true} if the inventory type is {@link InventoryType#PLAYER}, {@code false}
+   *         otherwise
+   */
   @Generated
   protected boolean isPlayerInventory(Inventory inventory) {
-    return inventory.getType().equals(InventoryType.PLAYER);
+    if (inventory == null) {
+      return false;
+    }
+
+    return InventoryType.PLAYER.equals(inventory.getType());
   }
 }
