@@ -571,15 +571,15 @@ class NpcTradeHandlerTest {
     when(regularItem.getType()).thenReturn(Material.STONE);
     when(regularItem.getItemMeta()).thenReturn(itemMeta);
     when(itemMeta.getPersistentDataContainer()).thenReturn(pdc);
-    when(pdc.has(any(), eq(PersistentDataType.INTEGER))).thenReturn(false);
+    when(pdc.has(eq(sellPriceKey), eq(PersistentDataType.INTEGER))).thenReturn(true);
+    when(pdc.get(eq(sellPriceKey), eq(PersistentDataType.INTEGER))).thenReturn(0);
+    when(pdc.has(eq(buyPriceKey), eq(PersistentDataType.INTEGER))).thenReturn(true);
+    when(pdc.get(eq(buyPriceKey), eq(PersistentDataType.INTEGER))).thenReturn(10);
     when(regularItem.getAmount()).thenReturn(1);
     when(enchantmentService.findByBookItemStack(regularItem)).thenReturn(Optional.empty());
     when(itemService.findByItemStack(regularItem)).thenReturn(Optional.empty());
     when(coinsItemStack.isSimilar(regularItem)).thenReturn(false);
-    when(itemMeta.getEnchants()).thenReturn(java.util.Map.of());
     when(itemMeta.hasDisplayName()).thenReturn(false);
-    when(player.getInventory()).thenReturn(playerInventory);
-    when(playerInventory.getItem(anyInt())).thenReturn(regularItem);
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE)).thenReturn("No price");
 
     npcTradeHandler.handle(regularItem, clickedInventory, player, playerEntry, 0, false);
