@@ -90,8 +90,7 @@ public class NpcTradeHandler {
    * item service.
    *
    * @param serviceContext the service context providing access to all required services
-   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the
-   *     item service
+   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the item service
    */
   public NpcTradeHandler(ServiceContext serviceContext) {
     this(serviceContext, itemBuyPrice(), itemSellPrice());

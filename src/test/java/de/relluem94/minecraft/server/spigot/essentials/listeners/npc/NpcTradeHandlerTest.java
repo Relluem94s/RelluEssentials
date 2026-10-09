@@ -319,7 +319,6 @@ class NpcTradeHandlerTest {
     org.bukkit.profile.PlayerProfile ownerProfile = mock(org.bukkit.profile.PlayerProfile.class);
     PersistentDataContainer pdc = mock(PersistentDataContainer.class);
     Inventory clickedInventory = mock(Inventory.class);
-    PersistentDataContainer purchasedPdc = mock(PersistentDataContainer.class);
 
     UUID nonBagCustomHeadUuid = findNonBagCustomHeadUuid();
 
@@ -490,7 +489,7 @@ class NpcTradeHandlerTest {
     when(enchantmentService.findByBookItemStack(regularItem)).thenReturn(Optional.empty());
     when(itemService.findByItemStack(regularItem)).thenReturn(Optional.empty());
     when(coinsItemStack.isSimilar(regularItem)).thenReturn(false);
-    when(itemMeta.getEnchants()).thenAnswer(invocation -> java.util.Map.of("sharpness", 1));
+    when(itemMeta.getEnchants()).thenAnswer(_ -> java.util.Map.of("sharpness", 1));
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED)).thenReturn("Enchanted item");
 
     npcTradeHandler.handle(regularItem, clickedInventory, player, playerEntry, 0, false);
@@ -755,8 +754,6 @@ class NpcTradeHandlerTest {
     ItemMeta itemMeta = mock(ItemMeta.class);
     PersistentDataContainer pdc = mock(PersistentDataContainer.class);
     Inventory clickedInventory = mock(Inventory.class);
-    org.bukkit.inventory.InventoryView inventoryView = mock(org.bukkit.inventory.InventoryView.class);
-    Inventory topInventory = mock(Inventory.class);
 
     when(regularItem.isSimilar(closeItemStack)).thenReturn(false);
     when(disabledItemStack.isSimilar(regularItem)).thenReturn(false);
@@ -795,8 +792,6 @@ class NpcTradeHandlerTest {
     ItemMeta itemMeta = mock(ItemMeta.class);
     PersistentDataContainer pdc = mock(PersistentDataContainer.class);
     Inventory clickedInventory = mock(Inventory.class);
-    org.bukkit.inventory.InventoryView inventoryView = mock(org.bukkit.inventory.InventoryView.class);
-    Inventory topInventory = mock(Inventory.class);
 
     when(regularItem.isSimilar(closeItemStack)).thenReturn(false);
     when(disabledItemStack.isSimilar(regularItem)).thenReturn(false);
