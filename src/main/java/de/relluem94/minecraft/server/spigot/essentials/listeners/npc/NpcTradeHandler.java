@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
@@ -90,7 +91,6 @@ public class NpcTradeHandler {
    * item service.
    *
    * @param serviceContext the service context providing access to all required services
-   * @throws java.util.NoSuchElementException if any required GUI item cannot be found in the item service
    */
   public NpcTradeHandler(ServiceContext serviceContext) {
     this(serviceContext, itemBuyPrice(), itemSellPrice());
@@ -489,10 +489,12 @@ public class NpcTradeHandler {
     return totalAmount;
   }
 
+  @Generated
   protected boolean isChestInventory(Inventory inventory) {
     return inventory.getType().equals(InventoryType.CHEST);
   }
 
+  @Generated
   protected boolean isPlayerInventory(Inventory inventory) {
     return inventory.getType().equals(InventoryType.PLAYER);
   }
